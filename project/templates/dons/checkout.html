@@ -1,0 +1,51 @@
+{%extends 'base.html' %}
+{% load static  %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout page</title>
+
+    
+</head>
+<body>
+    {% block content %}
+    <h1>Checkout for don: {{don.id}}</h1>
+    <div class="don-container">
+        <div class="dons">
+            <p>don:{{don.id}}</p>
+            <p>Montant: {{don.montantDons}} $</p>
+            <!-- <button>Purchase</button> -->
+            {{paypal.render}}
+        </div>
+    </div>
+    <style>
+        body {
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .don-container {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 100vh;
+        }
+        .img {
+            width: 60%;
+            border-radius: 50px;
+        }
+        button {
+            padding: 10px;
+            border-radius: 5px;
+            background-color: dodgerblue;
+            color: white;
+            border: none;
+        }
+    </style>
+
+    
+    {% endblock content %}
+</body>
+</html>

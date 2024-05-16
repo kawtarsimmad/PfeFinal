@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mettre à jour le statut de la réclamation {{ reclamation.id }}</title>
+</head>
+<body>
+    <h1>Mettre à jour le statut de la réclamation {{ reclamation.id }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="status">Nouveau statut :</label>
+        <select name="status" id="status">
+            <option value="Pending">En attente</option>
+            <option value="Resolved">Résolu</option>
+            <option value="Refused">Refusé</option>
+        </select>
+        <button type="submit">Enregistrer</button>
+    </form>
+</body>
+</html>

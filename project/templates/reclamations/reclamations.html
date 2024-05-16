@@ -1,0 +1,240 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Espace Admin</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f8f9fa; /* Light background color */
+            color: #333; /* Default text color */
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            padding-top: 20px;
+            background-color: #343a40; /* Dark background color */
+            color: #fff; /* White text color */
+        }
+
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 16px;
+            color: #fff;
+            display: block;
+        }
+
+        .sidebar a:hover {
+            background-color: #cd9c4c;
+        }
+
+        .main-content {
+            margin-left: 250px; /* Adjust margin to accommodate sidebar width */
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 28px; /* Custom font size */
+            margin-bottom: 20px; /* Bottom margin */
+            padding-bottom: 8px; /* Bottom padding */
+            border-bottom: 2px solid #343a40; /* Bottom border */
+        }
+
+        .info_ecriture {
+            font-family: 'Times New Roman', Times, serif;
+            padding: 10px 10px;
+            padding-bottom: 10px;
+        }
+
+        .info_ecriture:hover {
+            color: #cd9c4c;
+        }
+
+        .info {
+            float: right;
+            border: 2px solid rgb(234, 234, 234);
+            font-size: medium;
+            width: 45%;
+            box-shadow: 5px 2px 10px rgb(208, 210, 208);
+            margin: -13% 20%;
+        }
+
+        .sec {
+            list-style-type: square;
+            margin-top: 10%;
+            margin-left: 10%;
+            width: 15%;
+            box-shadow: 8px 8px 5px rgb(215, 215, 215);
+            background-color: rgb(215, 215, 215);
+            overflow: initial;
+        }
+
+        .nav {
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .nav-item {
+            margin-left: 1rem;
+            margin-right: 1rem;
+        }
+
+        .nav-link {
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+            background-color: #cd9c4c;
+        }
+
+        .nav-link i {
+            margin-right: 0.5rem;
+        }
+        .dropdown-menu {
+            background-color: #959292; /* Dark background color for dropdown */
+            
+        }
+        .dropdown-item {
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .dropdown-item:hover {
+            color: #fff;
+            background-color: #cd9c4c;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table th,
+        .table td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ddd; /* Light border */
+        }
+        .thead-dark {
+            background-color: #343a40; /* Dark background color for table header */
+            color: #fff; /* White text color for table header */
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link text-white" href="/"><i class="fas fa-home me-2"></i>Accueil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'dashboardAdmin' %}"><i class="bi bi-person-workspace"></i></i> Espace personnel</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'donors' %}"><i class="fas fa-user me-2"></i>Donors</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'associations' %}"><i class="fas fa-users me-2"></i>Associations</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'dons' %}"><i class="fas fa-donate me-2"></i>Dons</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'publications' %}"><i class="bi bi-journals me-2"></i>Publications</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'events' %}"><i class="bi bi-calendar3 me-2"></i>Events</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'reclamations' %}"><i class="bi bi-chat-right-dots me-2"></i>Reclamations</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Se déconnecter</a>
+            </li>
+        </ul>
+    </div>
+
+
+    <div class="main-content">
+
+            <h1>Liste des réclamations</h1>          
+                <table class="table table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th style="text-align: center">Type </th>
+                            <th style="text-align: center">Demandeur</th>
+                            <th style="text-align: center">Description</th>
+                            <th style="text-align: center">Date de Création</th>
+                            <th style="text-align: center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for x in rc %}
+                        <tr>
+                            <td style="text-align: center">{{ x.recl_type }}</td>
+                            <td style="text-align: center">{{ x.user.first_name }}</td>
+                            <td style="text-align: center">{{ x.description }}</td>
+                            <td style="text-align: center">{{ x.created_at }}</td>
+                            <td style="text-align: center">
+                                <form id="updateStatusForm_{{ x.id }}" method="post" action="{% url 'update_reclamation_status' x.id %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <select name="status" onchange="submitForm({{ x.id }})">
+                                        <option value="Pending" {% if x.status == "Pending" %} selected {% endif %}> Pending </option>
+                                        <option value="Resolved" {% if x.status == "Resolved" %} selected {% endif %}> Resolved </option>
+                                        <option value="Refused" {% if x.status == "Refused" %} selected {% endif %}> Refused </option>
+                                    </select>
+                                </form>
+                            </td>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            
+    </div>
+
+    <!-- Bootstrap JS Bundle (Popper.js included) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function submitForm(reclamationId) {
+            var formId = "updateStatusForm_" + reclamationId;
+            var form = document.getElementById(formId);
+            var formData = new FormData(form);
+    
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", form.action, true);
+            xhr.setRequestHeader("X-CSRFToken", formData.get("csrfmiddlewaretoken"));
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // La requête a été traitée avec succès, vous pouvez mettre à jour l'affichage si nécessaire
+                    console.log("Statut mis à jour avec succès !");
+                }
+            };
+            xhr.send(formData);
+        }
+    </script>
+
+</body>
+</html>

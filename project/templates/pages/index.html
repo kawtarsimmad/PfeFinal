@@ -1,0 +1,388 @@
+{%extends 'base.html' %}
+{%  load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<body  >
+
+  {% block content %}
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="d-flex align-items-center"style="background-image: url('/static/assets/img/Mine.jpg')">
+    <div class="container" data-aos="zoom-out" data-aos-delay="100">
+      <h1>Welcome to <span> HopeBloom      </span></h1>
+      <h2> Together, We're Here </h2>
+      <div class="d-flex">
+        <a href="#about" class="btn-get-started scrollto">Get Started</a>
+      </div>
+    </div>
+  </section><!-- End Hero -->
+
+  <main id="main">
+
+     <!-- ======= Urgent cases Section ======= -->
+     <section id="Urgent-cases" class="services">
+      <div class="container" data-aos="fade-up">
+        <div class="section-title">
+          <h2>Urgent Cases</h2>
+        </div>
+
+        <div class="row">
+          {% if publications %}
+            {% for category in categories %}
+              {% if category.name == 'Urgent' %}
+                {% for publication in publications %}
+                  {% if publication.category == category %}
+                  {% if forloop.counter <= 3 %}
+                    <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="200">
+                      <div class="card" data-aos="fade-up" data-aos-delay="100">
+                        <img src="{{ MEDIA_URL }}{{ publication.image.url }}" class="card-img-top" alt="{{ publication.titre }}">
+                        <div class="card-body">
+                          <h5 class="card-title">{{ publication.titre }}</h5>
+                          <p class="card-text">{{ publication.contenu | truncatechars:150 }}</p>
+                          <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{ publication.progress_percent }}%;" aria-valuenow="{{ publication.progress_percent }}%" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                          {% if publication.Montant_rest > 0 %}
+                              <div style="font-style: italic; text-decoration: underline;" ><strong>Montant restant {{ publication.Montant_rest|floatformat:2 }}$</strong></div>
+                          {% else %}
+                                <div style="font-style: italic; text-decoration: underline;" ><strong>Objectif atteint</strong></div>
+                          {% endif %}
+                          <br>
+                          <a href="{% url 'faire_don' publication.id %}" class="btn btn-primary">faire un Don</a>                
+                          <a href="{% url 'detail' publication.id %}" class="btn btn-primary">Read More</a>
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            <div class="col-12">
+              <p>No publications found.</p>
+            </div>
+          {% endif %}
+        </div>
+
+          <div class="text-center mt-4">
+            <a href="{% url 'Urgent' %}" class="btn btn-primary">View All Cases</a>
+          </div>
+      </div>
+    </section>
+    <!-- End Urgent Cases Section -->
+
+    
+    <!-- ======= Posts Section ======= -->
+    <section id="latest-publications" class="services">
+      <div class="container" data-aos="fade-up">
+        <div class="section-title">
+          <h2>Latest Publications</h2>
+        </div>
+
+        <div class="row">
+          {% if publications %}
+            {% for publication in publications %}
+            {% if forloop.counter <= 3 %} {# Limit to 3 publications #}
+              <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="200">
+                <div class="card" data-aos="fade-up" data-aos-delay="100">
+                  <img src="{{ MEDIA_URL }}{{ publication.image.url }}" class="card-img-top" alt="{{ publication.titre }}">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ publication.titre }}</h5>
+                    <p class="card-text">{{ publication.contenu | truncatechars:150 }}</p>
+                    <div class="progress">
+                      <div class="progress-bar" role="progressbar" style="width: {{ publication.progress_percent }}%;" aria-valuenow="{{ publication.progress_percent }}%" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    {% if publication.Montant_rest > 0 %}
+                        <div style="font-style: italic; text-decoration: underline;" ><strong>Montant restant {{ publication.Montant_rest|floatformat:2 }}$</strong></div>
+                    {% else %}
+                          <div style="font-style: italic; text-decoration: underline;" ><strong>Objectif atteint</strong></div>
+                    {% endif %}
+                    <br>
+                    <a href="{% url 'faire_don' publication.id %}" class="btn btn-primary">faire un Don</a>                
+                    <a href="{% url 'detail' publication.id %}" class="btn btn-primary">Read More</a>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+            {% endfor %}
+          {% else %}
+            <div class="col-12">
+              <p>No publications found.</p>
+            </div>
+          {% endif %}
+        </div>
+
+          <div class="text-center mt-4">
+            <a href="{% url 'publicationIndex' %}" class="btn btn-primary">View All Publications</a>
+          </div>
+      </div>
+    </section>
+    <!-- End Posts Section -->
+
+    <!-- ======= Events Section ======= -->
+    <section id="events" class="events">
+      <div class="container" data-aos="fade-up">
+        <div class="section-title">
+          <h2>Upcoming Events</h2>
+        </div>
+
+        <div class="row">
+          {% if events %}
+          {% for event_data in events %}
+          <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title">{{ event_data.event.title }}</h5>
+                <img src="{{ event_data.event.image.url }}" class="card-img-top" alt="{{ event_data.event.title }}">
+                <p class="card-text">{{ event_data.event.description | truncatechars:150 }}</p>
+                <div class="progress">
+                  <div class="progress-bar" role="progressbar" style="width: {{ event_data.progress_percent }}%;" aria-valuenow="{{ event_data.progress_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div><p>{{ event_data.progress_percent }}% Complete</p></div>
+                </div>
+                <br>
+                <a href="{% url 'participate_event' event_data.event.pk %}" class="btn btn-primary">Participer</a>
+                <a href="{% url 'detail_events' pk=event_data.event.id %}" class="btn btn-primary">Learn More</a>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+            <div class="col-12">
+              <p>No upcoming events at the moment.</p>
+            </div>
+          {% endfor %}
+        
+          {% else %}
+            <div class="col-12">
+              <p>No upcoming events at the moment.</p>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="text-center mt-4">
+          <a href="{% url 'eventIndex' %}" class="btn btn-primary">View All Events</a>
+        </div>
+      </div>
+    </section>
+    <!-- End Events Section -->
+    
+
+    <!-- ======= Categories Services Section ======= -->
+    <section id="Categories-services" class="Categories-services">
+      <div class="container" data-aos="fade-up">
+        <div class="section-title">
+          <h2>Categories</h2>
+        </div>
+        <div class="row">
+          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+            <div class="icon-box" data-aos="fade-up" data-aos-delay="100">
+              <div class="icon"><i class="bi bi-hospital"></i></div>
+              <h4 class="title"><a href="{% url 'Health' %}">Healthcare</a></h4>
+              <p class="description">Help individuals cover medical bills for surgeries, treatments, medications, and medical equipment.</p>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+            <div class="icon-box" data-aos="fade-up" data-aos-delay="200">
+              <div class="icon">
+                <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+                <i class="fas fa-book"></i></div>
+              <h4 class="title"><a href="{% url 'Education' %}">Education</a></h4>
+              <p class="description">Support educational initiatives such as scholarships, school supplies, and infrastructure development to ensure access to quality education for all.</p>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+            <div class="icon-box" data-aos="fade-up" data-aos-delay="300">
+                <div class="icon">
+                  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+                    <i class="bi bi-people"></i>
+                </div>
+                <h4 class="title"><a href="{% url 'Children' %}">Children</a></h4>
+                <p class="description">Support local children with vital resources and opportunities for a brighter future. Your donations directly assist with essentials like food and clothing support.</p>
+            </div>
+        </div>
+        
+
+          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+            <div class="icon-box" data-aos="fade-up" data-aos-delay="300">
+              <div class="icon">
+                <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+                <i class="fas fa-leaf"></i></div>
+              <h4 class="title"><a href="{% url 'Environment' %}">Environment</a></h4>
+              <p class="description">Fund efforts to protect ecosystems, wildlife habitats, and natural resources through initiatives like reforestation, conservation projects, and sustainable development.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Categories Services Section -->
+
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about section-bg">
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+          <h2>About</h2>
+          <h3>Find Out More <span>About Us</span></h3>
+          <p>At HopeBloom, we believe in the power of collective generosity to create positive change in the world.</p>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-6 aos-init aos-animate" data-aos="fade-right" data-aos-delay="100">
+            <img src="static/assets/img/download.jpeg" class="img-fluid" alt>
+          </div>
+
+          <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-left aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+            <h3>we understand the importance of trust and accountability when it comes to charitable giving.</h3>
+            <p class="fst-italic" style="">
+        
+            </p>
+            <ul>
+              <li>
+                <i class="bi bi-clipboard2-check-fill"></i>
+                <div>
+                  <h5>Accountability</h5>
+                  <p>We carefully vet every charity and project to ensure transparency and ethical conduct.</p>
+                </div>
+              </li>
+              <li>
+                <i class="bi bi-balloon-heart"></i>
+                <div>
+                  <h5>Impact</h5>
+                  <p>We track and report on the outcomes of every project, so you can see the difference your donation makes.</p>
+                </div>
+              </li>
+              <li>
+                <i class="bi bi-person-lock"></i>
+                <div>
+                  <h5>Protection</h5>
+                  <p>Your security and privacy are our top priorities. We use advanced encryption technology to keep your information safe.</p>
+                </div>
+              </li>
+              <li>
+                <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+                <i class="fas fa-users"></i>
+                <div>
+                  <h5>Community </h5>
+                  <p>Join a community of like-minded individuals who share your passion for making a difference.</p>
+                </div>
+              </li>
+            </ul>
+            <p>
+              Join us and embrace the opportunity to be part of something meaningful. Together, let's empower change and create a brighter tomorrow
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End About Section -->
+
+
+    <!-- ======= Counts Section ======= -->
+    <section id="counts" class="counts">
+      <div class="container" data-aos="fade-up">
+
+        <div class="row">
+
+          <div class="col-lg-3 col-md-6">
+            <div class="count-box">
+              <i class="bi bi-buildings"></i>
+              <span data-purecounter-start="0" data-purecounter-end="{{ associations.count }}" data-purecounter-duration="1" class="purecounter"></span>
+              <p> Associations</p>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 mt-5 mt-md-0">
+            <div class="count-box">
+              <i class="bi bi-journal-richtext"></i>
+              <span data-purecounter-start="0" data-purecounter-end="{{ pub.count }}" data-purecounter-duration="1" class="purecounter"></span>
+              <p>publications</p>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
+            <div class="count-box">
+              <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+              <i class="fas fa-th-large"></i>
+              <span data-purecounter-start="0" data-purecounter-end="{{categories.count}}" data-purecounter-duration="1" class="purecounter"></span>
+              <p>Categories </p>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
+            <div class="count-box">
+              <i class="bi bi-cash-coin"></i>
+              <span data-purecounter-start="0" data-purecounter-end="0" data-purecounter-duration="1" class="purecounter"></span>
+              <p>Donations raised</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Counts Section -->
+
+     <!-- ======= Association List Section ======= -->
+     <section id="association-list" class="services">
+      <div class="container" data-aos="fade-up">
+          <div class="section-title">
+              <h2>Associations</h2>
+          </div>
+          <p>If you want to explore the list of associations available on our platform or contact them for assistance with your own case, please use the button below:</p>
+          <div class="text-center mt-4">
+            <a href="{% url 'association_list' %}">
+                <i class="fas fa-arrow-alt-circle-right fa-3x" style="color: #007bff;"></i>
+            </a>
+        </div>
+      </div>
+    </section>
+
+    
+
+    <!-- ======= Contact Section ======= -->
+    <section id="contact" class="contact">
+      <div class="container" data-aos="fade-up">
+          <div class="section-title">
+              <h2>Contact</h2>
+              <h3><span>Contact Us</span></h3>
+          </div>
+  
+          <div class="row" >
+              <div class="col-lg-3 col-md-6 " >
+                  <div class="info-box mb-4 d-flex align-items-center justify-content-center"> <!-- Added d-flex and align-items-center -->
+                      <i class="bx bx-envelope"></i>
+                      <div>
+                          <h3>Email Us</h3>
+                          <p>contact@example.com</p>
+                      </div>
+                  </div>
+              </div>
+  
+              <div class="col-lg-3 col-md-6 justify-content-end" >
+                  <div class="info-box mb-4 d-flex align-items-center justify-content-center"> <!-- Added d-flex and align-items-center -->
+                      <i class="bx bx-phone-call"></i>
+                      <div>
+                          <h3>Call Us</h3>
+                          <p>+212 611111111</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+  
+      </div>
+    </section><!-- End Contact Section -->
+   
+
+
+  </main><!-- End #main -->
+    
+
+  
+
+  {% endblock content %}
+
+</body>
+
+</html>

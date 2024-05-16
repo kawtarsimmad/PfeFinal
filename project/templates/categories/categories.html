@@ -1,0 +1,11 @@
+{% extends 'base.html' %} 
+{%  block content %}
+    <br>
+    <br>
+    <br>
+    <h1>list category</h1>
+    {% for x in ct %}
+        <h1> {{x.name}}</h1>
+        <br>
+    {% endfor %}
+{%  endblock content %}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dons associés à la publication</title>
+</head>
+<body>
+    <p>Total des dons pour toutes les publications: {{ total_dons_all }}</p>
+
+    <h1>Dons associés à la publication "{{ publication.id }} : {{ publication.titre }}"</h1>
+    <p>Auteur de la publication: {{ publication.user.first_name }}</p>
+    <p>Contenu de la publication: {{ publication.contenu }}</p>
+    <p>Date de publication: {{ publication.date }}</p>
+    
+    <h2>Liste des dons associés:</h2><p>Montant total des dons: {{ total_dons }}</p>
+    <ul>
+        {% for don in dons %}
+            <li>
+                <p>Donor: {{ don.user.first_name }}</p>
+                <p>Montant du don: {{ don.montantDons }}</p>
+                <p>Date du don: {{ don.date }}</p>
+                <!-- Ajoutez d'autres informations sur le don ici si nécessaire -->
+            </li>
+        {% empty %}
+            <li>Aucun don associé à cette publication pour le moment.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

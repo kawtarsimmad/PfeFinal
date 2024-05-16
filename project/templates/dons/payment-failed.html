@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment failed</title>
+     <!-- Bootstrap CSS -->
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+     <!-- Font Awesome -->
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+ 
+     <!-- Bootstrap Icons -->
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+ 
+    <style>
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            padding-top: 20px;
+            background-color: #343a40; /* Dark background color */
+            color: #fff; /* White text color */
+        }
+
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 16px;
+            color: #fff;
+            display: block;
+        }
+
+        .sidebar a:hover {
+            background-color: #cd9c4c;
+        }
+
+        .main-content {
+            margin-left: 250px; /* Adjust margin to accommodate sidebar width */
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 28px; /* Custom font size */
+            margin-bottom: 20px; /* Bottom margin */
+            padding-bottom: 8px; /* Bottom padding */
+            border-bottom: 2px solid #343a40; /* Bottom border */
+        
+        }
+        
+
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="/"><i class="fas fa-home"></i>Acceuil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'dashboard_donor' %}"><i class="bi bi-person-workspace"></i></i>Espace Personnel</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'viewDons' %}"><i class="fas fa-donate me-2"></i>Dons</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link " href="{% url 'view_reclamations' %}" role="button"  ><i class="bi bi-chat-right-dots"></i>Reclamations</a>
+            
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i>Déconnexion</a>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="main-content" style="height: 100vh; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
+       
+        <div style="text-align: center;">
+            <h1>Payment  failed for don :{{don.id}}</h1>            
+        </div>
+    </div>
+    
+   
+    <!-- Bootstrap JS Bundle (Popper.js included) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

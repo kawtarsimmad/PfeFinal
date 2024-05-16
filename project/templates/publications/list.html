@@ -1,0 +1,214 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Publications</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f8f9fa; /* Light background color */
+            color: #333; /* Default text color */
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            padding-top: 20px;
+            background-color: #343a40; /* Dark background color */
+            color: #fff; /* White text color */
+        }
+
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 16px;
+            color: #fff;
+            display: block;
+        }
+
+        .sidebar a:hover {
+            background-color: #cd9c4c;
+        }
+
+        .main-content {
+            margin-left: 250px; /* Adjust margin to accommodate sidebar width */
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 28px; /* Custom font size */
+            margin-bottom: 20px; /* Bottom margin */
+            padding-bottom: 8px; /* Bottom padding */
+            border-bottom: 2px solid #343a40; /* Bottom border */
+        }
+
+        .info_ecriture {
+            font-family: 'Times New Roman', Times, serif;
+            padding: 10px 10px;
+            padding-bottom: 10px;
+        }
+
+        .info_ecriture:hover {
+            color: #cd9c4c;
+        }
+
+        .info {
+            float: right;
+            border: 2px solid rgb(234, 234, 234);
+            font-size: medium;
+            width: 45%;
+            box-shadow: 5px 2px 10px rgb(208, 210, 208);
+            margin: -13% 20%;
+        }
+
+        .sec {
+            list-style-type: square;
+            margin-top: 10%;
+            margin-left: 10%;
+            width: 15%;
+            box-shadow: 8px 8px 5px rgb(215, 215, 215);
+            background-color: rgb(215, 215, 215);
+            overflow: initial;
+        }
+
+        .nav {
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .nav-item {
+            margin-left: 1rem;
+            margin-right: 1rem;
+        }
+
+        .nav-link {
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+            background-color: #cd9c4c;
+        }
+
+        .nav-link i {
+            margin-right: 0.5rem;
+        }
+        .dropdown-menu {
+            background-color: #959292; /* Dark background color for dropdown */
+            
+        }
+        .dropdown-item {
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .dropdown-item:hover {
+            color: #fff;
+            background-color: #cd9c4c;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="/"><i class="fas fa-home"></i>Acceuil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'dashboard_association' %}"><i class="bi bi-person-workspace"></i></i>Espace Personnel</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'PubList' %}"><i class="bi bi-journals me-2"></i>Mes Publications</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'event_list' %}"><i class="bi bi-journals me-2"></i>Mes Evenements</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link " href="{% url 'view_reclamations' %}" role="button"  ><i class="bi bi-chat-right-dots"></i>Reclamations</a>
+                
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i>Déconnexion</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- List de publication Header -->
+        <h1 class="mt-4">Liste des publications</h1>
+
+        <br>
+        <a href="{% url 'create' %}" class="btn btn-primary">Create new post</a>
+        <br>
+        <br>
+        <br>
+
+        {% if publications %}
+            <div class="table-responsive mt-4">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th style="text-align: center">Titre</th>
+                            <th style="text-align: center">Date_Creation</th>
+                            <th style="text-align: center">Objectif </th>
+                            <th style="text-align: center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in publications %}
+                        <tr>
+                            <td style="text-align: center">
+                                <a href="{% url 'detail' p.id %}">{{ p.titre }}</a>
+                            </td>
+                            <td style="text-align: center"> {{ p.date }}</td>
+                            <td style="text-align: center"> {{ p.montant }}</td>
+                            <td style="text-align: center">
+                                <a href="{% url 'update' p.id %}" class="btn btn-info"><i class="fas fa-pencil-alt"></i> Update</a>
+                                <button class="btn btn-danger" onclick="confirmDelete({{ p.id }})"><i class="fas fa-trash"></i> Delete</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>Sorry, no pending posts.</p>
+        {% endif %}
+    </div>
+
+    <!-- Bootstrap JS Bundle (Popper.js included) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function confirmDelete(publicationId) {
+            if (confirm("Are you sure you want to delete this publication?")) {
+                window.location.href = "{% url 'delete' publication_id=0 %}".replace('0', publicationId);
+            }
+        }
+    </script>
+
+</body>
+</html>
