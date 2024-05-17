@@ -1,0 +1,182 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Page Title</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome (for icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static  'assets/css/style.css' %}" >
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <!-- Vendor CSS Files -->
+    <link href="{% static  'assets/vendor/aos/aos.css'%}" rel="stylesheet">
+    <link href="{% static  'assets/vendor/bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
+    <link href="{% static  'assets/vendor/bootstrap-icons/bootstrap-icons.css'%}" rel="stylesheet">
+    <link href="{% static  'assets/vendor/boxicons/css/boxicons.min.css'%}" rel="stylesheet">
+    <link href="{% static  'assets/vendor/glightbox/css/glightbox.min.css'%}" rel="stylesheet">
+    <link href="{% static  'assets/vendor/swiper/swiper-bundle.min.css'%}" rel="stylesheet">
+
+    <style>
+        body {
+            background: #eee;
+        }
+        #side_nav {
+            background: #000;
+            min-width: 250px;
+            max-width: 250px;
+            transition: all 0.3s;
+        }
+        .content {
+            min-height: 100vh;
+            width: 100%;
+        }
+        .h-color {
+            border: 0;
+            height: 1px;
+            background: #eee;
+            margin: 0.5em 0;
+        }
+        .mx-2 {
+            margin-left: 0.5rem;
+            margin-right: 0.5rem;
+        }
+        .sidebar li.active {
+            background: #eee;
+            border-radius: 8px;
+        }
+        .sidebar li.active a, .sidebar li.active a:hover {
+            color: #000;
+        }
+        .sidebar li a {
+            color: #fff;
+        }
+        @media(max-width: 767px) {
+            #side_nav {
+                margin-left: -250px;
+                position: absolute;
+                min-height: 100vh;
+                z-index: 1;
+            }
+            #side_nav.active {
+                margin-left: 0;
+            }
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="main-container d-flex">
+        <div class="sidebar" id="side_nav">
+            <div class="header-box px-2 pt-3 pb-4 d-flex justify-content-between">
+                <h1 class="fs-4"><span class="bg-white text-dark rounded shadow px-2 me-2">HP</span> <span class="text-white">HopeBloom</span></h1>
+                <button class="btn d-md-none d-block close-btn px-1 py-0 text-white"><i class="fas fa-stream"></i></button>
+            </div>
+
+            <ul class="list-unstyled px-2">
+                <li><a href="/" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-home"></i> Home</a></li>
+                {% if user.is_authenticated %}
+                    {% if user.is_donor %}
+                        <li ><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'dashboard_donor' %}"><i class="bi bi-person-workspace"></i> Espace Personnel</a></li>
+                    {% elif user.is_association %}
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'dashboard_association' %}"><i class="bi bi-person-workspace"></i> Espace Personnel</a></li>
+                    {% else %}
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'dashboardAdmin' %}"><i class="bi bi-person-workspace"></i> Espace Personnel</a></li>
+                    {% endif %}
+                    {% if user.is_admin %}
+                        <li><a href="{% url 'donors' %}" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-user me-2"></i> Donors</a></li>
+                        <li><a href="{% url 'associations' %}" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-users"></i> Associations</a></li>
+                        <li><a href="{% url 'publications' %}" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-list"></i> Publications</a></li>
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'dons' %}"><i class="fas fa-donate me-2"></i> Dons</a></li>
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'events' %}"><i class="bi bi-calendar3 me-2"></i>Events</a></li>
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'reclamations' %}"><i class="bi bi-chat-right-dots me-2"></i> Reclamations</a></li>
+                    {% elif user.is_association %}
+                        <li><a href="{% url 'PubList' %}" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-list"></i> Mes Publications</a></li>
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'event_list' %}"><i class="bi bi-calendar3 me-2"></i>Mes Events</a></li>
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'view_reclamations' %}"><i class="bi bi-chat-right-dots"></i> Reclamations</a></li>
+                    {% elif user.is_donor %}
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'viewDons' %}"><i class="fas fa-donate me-2"></i> Dons</a></li>
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'donor_event_list' %}"><i class="bi bi-calendar3 me-2"></i>Mes Events</a></li>
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'view_reclamations' %}"><i class="bi bi-chat-right-dots"></i> Reclamations</a></li>
+                    {% endif %}
+                {% endif %}
+                
+            </ul>
+            <hr class="h-color mx-2">
+            <ul class="list-unstyled px-2">
+                <li><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-bars"></i> Settings</a></li>
+                <li><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li class="nav-item">
+                    <a class="text-decoration-none px-3 py-2 d-block" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Se déconnecter</a>
+                </li>
+            </ul>
+        </div>
+        <div class="content">
+           
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle (Popper.js included) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+     <!-- jQuery -->
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <!-- Bootstrap JS Bundle (includes Popper.js) -->
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Template Main JS File -->
+    <script src="{% static 'assets/js/main.js'%}"></script>  
+    <!-- Vendor JS Files -->
+    <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js'%}"></script>
+    <script src="{% static 'assets/vendor/aos/aos.js'%}"></script>
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
+    <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js'%}"></script>
+    <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js'%}"></script>
+    <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js'%}"></script>
+    <script src="{% static 'assets/vendor/waypoints/noframework.waypoints.js'%}"></script>
+    <script src="{% static 'assets/vendor/php-email-form/validate.js'%}"></script>
+    <script>
+        $(document).ready(function () {
+            // Remove active class from all <li> elements
+            $(".sidebar ul li a").click(function () {
+                $(".sidebar ul li.active").removeClass('active');
+                $(this).parent().addClass('active');
+            });
+
+            // Mobile sidebar toggle
+            $('.open-btn').click(function () {
+                $('#side_nav').addClass('active');
+            });
+
+            $('.close-btn').click(function () {
+                $('#side_nav').removeClass('active');
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            var currentPath = window.location.pathname;
+            $(".sidebar ul li a").each(function () {
+                if ($(this).attr('href') === currentPath) {
+                    $(this).parent().addClass('active');
+                }
+            });
+    
+            // Mobile sidebar toggle
+            $('.open-btn').click(function () {
+                $('#side_nav').addClass('active');
+            });
+    
+            $('.close-btn').click(function () {
+                $('#side_nav').removeClass('active');
+            });
+        });
+    </script>
+</body>
+</html>

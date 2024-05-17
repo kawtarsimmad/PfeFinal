@@ -1,15 +1,18 @@
+{% extends 'sidebar.html' %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Mettre à jour la réclamation {{ form.instance.id }}</title>
 </head>
 <body>
+{% block content %}
     <h1>Mettre à jour la réclamation {{ form.instance.id }}</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Enregistrer</button>
     </form>
+    {% endblock content %}
+
 </body>
 </html>
