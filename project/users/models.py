@@ -30,7 +30,7 @@ class Donor(models.Model):
 class Association(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='dashboard_association')
     phone_number = models.CharField(max_length=20, null=True, blank=True)
-    stat_juridique=models.CharField(max_length=50, null=True, blank=True)
+    stat_juridique = models.FileField(upload_to='documents/', null=True, blank=True)
     adresse=models.CharField(max_length=150,null=True,default=None,verbose_name='address')
     paypal_email=models.EmailField(max_length=254, default='sb-association@gmail.com',verbose_name='paypal address')
     image = models.ImageField(upload_to='admin/profile', default='Default/user.png')

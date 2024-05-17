@@ -87,6 +87,7 @@ def PubDetail(request, pk):
 def PubCreate(request):
     if request.method == "POST":
         form=PublicationForm(request.POST, request.FILES)
+        user=request.user
         if form.is_valid():
             publication=form.save(commit=False)
             association_instance = get_object_or_404(Association, user=request.user)
@@ -98,8 +99,12 @@ def PubCreate(request):
                 send_email_alert(publication)  # Then send email alert
             else:
                 publication.save()  # Save the publication
-
-            return redirect('PubList')
+                
+            if user.is_admin:
+                  return redirect('publications')
+            elif user.is_association:
+                 return redirect('PubList')
+            
     else:
         form = PublicationForm()
     return render(request, 'publications/form.html', {'form': form})

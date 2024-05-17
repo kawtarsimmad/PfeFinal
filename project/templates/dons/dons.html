@@ -97,25 +97,25 @@
                     <table class="table table-bordered">
                         <thead class="table-dark">
                             <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Nom du Donateur</th>
-                                <th scope="col">Nom du Bénéficiaires</th>
-                                <th scope="col">Id_Pub</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Montant</th>
-                                <th scope="col">est_paye</th>
+                                <th scope="col"  style="text-align: center">ID</th>
+                                <th scope="col" style="text-align: center">Nom du Donateur</th>
+                                <th scope="col" style="text-align: center">Nom du Bénéficiaires</th>
+                                <th scope="col" style="text-align: center">Id_Pub</th>
+                                <th scope="col" style="text-align: center">Date</th>
+                                <th scope="col" style="text-align: center">Montant</th>
+                                <th scope="col" style="text-align: center">est_paye</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for donation in dn %}
                             <tr>
-                                <td>{{ donation.id }}</td>
-                                <td>{{ donation.user.first_name }}</td>
-                                <td>{{ donation.publication.association.user.first_name }}</td>
-                                <td>{{ donation.publication.id }}</td>
-                                <td>{{ donation.date }}</td>
-                                <td>{{ donation.montantDons }}</td>
-                                <td>{{ donation.est_paye }}</td>
+                                <td style="text-align: center">{{ donation.id }}</td>
+                                <td style="text-align: center">{{ donation.user.first_name }}</td>
+                                <td style="text-align: center">{{ donation.publication.association.user.first_name }}</td>
+                                <td style="text-align: center">{{ donation.publication.id }}</td>
+                                <td style="text-align: center">{{ donation.date }}</td>
+                                <td style="text-align: center">{{ donation.montantDons }}</td>
+                                <td style="text-align: center">{{ donation.est_paye }}</td>
 
                             </tr>
                             {% endfor %}

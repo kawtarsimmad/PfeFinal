@@ -187,6 +187,7 @@
                         <tr>
                             <th style="text-align: center">Type </th>
                             <th style="text-align: center">Demandeur</th>
+                            <th style="text-align: center">Email</th>
                             <th style="text-align: center">Description</th>
                             <th style="text-align: center">Date de Création</th>
                             <th style="text-align: center">Status</th>
@@ -197,6 +198,7 @@
                         <tr>
                             <td style="text-align: center">{{ x.recl_type }}</td>
                             <td style="text-align: center">{{ x.user.first_name }}</td>
+                            <td style="text-align: center">{{ x.user.username}}</td>
                             <td style="text-align: center">{{ x.description }}</td>
                             <td style="text-align: center">{{ x.created_at }}</td>
                             <td style="text-align: center">

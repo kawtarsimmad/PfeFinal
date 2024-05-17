@@ -62,11 +62,11 @@ def index(request):
         'users' : users,
         'associations':associations,
         'donors' : donors,
-        #'total_dons_all' : total_dons_all,
+        'total_dons_all' : total_dons_all,
         'events': event_data,
         'publication_data': publication_data,
-        #'totalDons':totalDons,
-        #'Montant_rest':Montant_rest
+        'totalDons':totalDons,
+        'Montant_rest':Montant_rest
     }
     #publications = Publication.objects.order_by('date')[:2]
      #######admin_user = User.objects.filter(is_superuser=True).first()

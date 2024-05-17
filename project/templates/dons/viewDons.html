@@ -179,6 +179,7 @@
                                     <thead class="table-dark">
                                         <tr>
                                             <th scope="col">ID</th>
+                                            <th scope="col">Nom Bénéficiaires </th>
                                             <th scope="col">Bénéficiaires </th>
                                             <th scope="col">Id_Pub</th>
                                             <th scope="col">Date </th>
@@ -191,8 +192,11 @@
                                         {% for don in dons %}
                                             <tr>
                                                 <td>{{ don.id }}</td>
-                                                <td>{{ don.publication.user.username }}</td>
-                                                <td>{{ don.publication.id }}</td>
+                                                <td>{{ don.publication.association.user.first_name }}</td>
+                                                <td>{{ don.publication.association.user.username }}</td>
+                                                <td>
+                                                    <a href="{% url 'detail' don.publication.id %}">{{ don.publication.id }}</a>
+                                                </td>
                                                 <td>{{ don.date }}</td>
                                                 <td>{{ don.montantDons }}</td>
                                                 <td>{{ don.est_paye }}</td>

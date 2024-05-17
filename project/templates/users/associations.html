@@ -129,7 +129,9 @@
                     <td style="text-align: center">{{ association.id }}</td>
                     <td style="text-align: center">{{ association.user.first_name }}</td>
                     <td style="text-align: center">{{ association.user.email }}</td>
-                    <td style="text-align: center">{{ association.stat_juridique }}</td>
+                    <td style="text-align: center">
+                        <a href="{{ association.stat_juridique.url }}" target="_blank">Statut Juridique</a>
+                    </td>
                     <td style="text-align: center">
                         <!--<a href="{% url 'update_association' association_id=association.id %}" class="btn btn-info"><i class="fas fa-pencil-alt"></i> Update</a>-->
                     

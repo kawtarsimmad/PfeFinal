@@ -120,7 +120,6 @@ def DonorSignup(request):
         donor = Donor.objects.create(
             user=utilisateur,
             phone_number=telephone,
-            adresse=adresse,  
         )
         donor.image=photo
         donor.save()
@@ -190,7 +189,7 @@ def AssociationSignup(request):
         password = request.POST.get('password', None)
         repassword = request.POST.get('repassword', None)
         telephone = request.POST.get('telephone', None)
-        stat_juridique=request.POST.get('stat_juridique',None)
+        stat_juridique=request.FILES.get('stat_juridique',None)
         adresse=request.POST.get('adresse',None)
         paypal_email=request.POST.get('paypal_email',None)
 
@@ -460,7 +459,7 @@ def add_association(request):
         email = request.POST.get('email', None)
         password = request.POST.get('password', None)
         telephone = request.POST.get('telephone', None)
-        stat_juridique=request.POST.get('stat_juridique',None)
+        stat_juridique=request.FILES.get('stat_juridique',None)
         adresse=request.POST.get('adresse',None)
         image=request.POST.get('image',None)
         paypal_email=request.POST.get('paypal_email',None)
@@ -505,7 +504,6 @@ def update_association(request, association_id):
         name = request.POST.get('name')
         email = request.POST.get('email')
         phone_number = request.POST.get('phone_number')
-        stat_juridique = request.POST.get('stat_juridique')
         adresse = request.POST.get('adresse')
         image = request.POST.get('image')
         paypal_email = request.POST.get('paypal_email')
@@ -513,7 +511,6 @@ def update_association(request, association_id):
         association.user.first_name = name
         association.user.email = email
         association.phone_number = phone_number
-        association.stat_juridique = stat_juridique
         association.adresse = adresse
         association.image=image
         association.paypal_email = paypal_email
