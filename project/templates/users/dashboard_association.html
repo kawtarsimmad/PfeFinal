@@ -19,8 +19,9 @@
                 <div class="row">
                     <div class="col-md-3">
                         {% if association.image %}
+                        <div class="user-image-container" style="max-width: 100px; margin: 0 auto;">
                             <img src="{{ association.image.url }}" alt="User Image" class="img-fluid rounded-circle">
-                        {% else %}
+                        </div>                        {% else %}
                             <i class="fas fa-user-circle fa-5x text-secondary"></i>
                         {% endif %}
                     </div>

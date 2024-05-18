@@ -16,8 +16,9 @@
                 <div class="row">
                     <div class="col-md-3">
                         {% if admin.image %}
-                            <img src="{{ admin.image.url }}" alt="User Image" class="img-fluid rounded-circle">
-                        {% else %}
+                        <div class="user-image-container" style="max-width: 100px; margin: 0 auto;">
+                            <img src="{{ donor.image.url }}" alt="User Image" class="img-fluid rounded-circle">
+                        </div>                        {% else %}
                             <i class="fas fa-user-circle fa-5x text-secondary"></i>
                         {% endif %}
                     </div>

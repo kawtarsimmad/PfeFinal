@@ -3,6 +3,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        .main-content .user-image-container img {
+            max-width: 80px; /* Adjust the max-width to your desired size */
+            margin: 0 auto; /* Centers the image horizontally */
+        }
+    </style>
 </head>
 <body>
 {% block content %}
@@ -18,7 +24,9 @@
             <div class="row">
                 <div class="col-md-3">
                     {% if donor.image %}
+                    <div class="user-image-container" style="max-width: 100px; margin: 0 auto;">
                         <img src="{{ donor.image.url }}" alt="User Image" class="img-fluid rounded-circle">
+                    </div>
                     {% else %}
                         <i class="fas fa-user-circle fa-5x text-secondary"></i>
                     {% endif %}
@@ -29,6 +37,7 @@
                 </div>
             </div>
         </div>
+        
     </main>
 </div>
 

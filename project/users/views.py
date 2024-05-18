@@ -36,6 +36,8 @@ from .models import User,Admin, Donor, Association ###########
 from publications.models import Publication
 from categories.models import Category
 from dons.models import Don
+from django.core.exceptions import ValidationError
+from django.http import HttpResponseBadRequest
 
 
 #
@@ -429,17 +431,28 @@ def update_donor(request, donor_id):
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
-        image = request.POST.get('image')
+        image = request.FILES.get('image')
         phone_number = request.POST.get('phone_number')
 
-        donor.user.first_name = name
-        donor.user.email = email
-        donor.phone_number = phone_number
-        donor.image = image
-        donor.user.save()
-        donor.save()
+        try:
+            # Update donor attributes if corresponding data is provided
+            
+            if name:
+                donor.user.first_name = name
+            if email:
+                donor.user.email = email
+            if phone_number:
+                donor.phone_number = phone_number
+            if image:
+                donor.image = image
 
-        return redirect('donors')
+            # Save donor and associated user
+            donor.user.save()
+            donor.save()
+
+        except ValidationError as e:
+            # Handle validation errors
+            return HttpResponseBadRequest(e)
 
     return render(request, 'users/update_donor.html', {'donor': donor})
 
@@ -505,20 +518,29 @@ def update_association(request, association_id):
         email = request.POST.get('email')
         phone_number = request.POST.get('phone_number')
         adresse = request.POST.get('adresse')
-        image = request.POST.get('image')
+        image = request.FILES.get('image')
         paypal_email = request.POST.get('paypal_email')
 
-        association.user.first_name = name
-        association.user.email = email
-        association.phone_number = phone_number
-        association.adresse = adresse
-        association.image=image
-        association.paypal_email = paypal_email
-
-        association.user.save()
-        association.save()
-
-        return redirect('associations')
+        try:
+                if name:
+                    association.user.first_name=name
+                if email:
+                    association.user.email = email
+                if phone_number:
+                    association.phone_number=phone_number
+                if adresse:
+                    association.adresse=adresse
+                if image:
+                    association.image=image
+                if paypal_email:
+                    association.paypal_email=paypal_email
+                
+                association.user.save()
+                association.save()
+                
+        except ValidationError as e:
+                # Handle validation errors
+                return HttpResponseBadRequest(e)
 
     return render(request, 'users/update_association.html', {'association': association})
 
