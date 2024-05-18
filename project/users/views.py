@@ -38,6 +38,7 @@ from categories.models import Category
 from dons.models import Don
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseBadRequest
+from django.contrib.auth import update_session_auth_hash
 
 
 #
@@ -433,6 +434,9 @@ def update_donor(request, donor_id):
         email = request.POST.get('email')
         image = request.FILES.get('image')
         phone_number = request.POST.get('phone_number')
+        old_password = request.POST.get('old_password')
+        new_password1 = request.POST.get('new_password1')
+        new_password2 = request.POST.get('new_password2')
 
         try:
             # Update donor attributes if corresponding data is provided
@@ -445,6 +449,17 @@ def update_donor(request, donor_id):
                 donor.phone_number = phone_number
             if image:
                 donor.image = image
+            
+            if old_password and new_password1 and new_password2:
+                if not donor.user.check_password(old_password):
+                    raise ValidationError("Old password is incorrect")
+                if new_password1 != new_password2:
+                    raise ValidationError("New passwords do not match")
+                donor.user.set_password(new_password1)
+                update_session_auth_hash(request, donor.user)
+                authenticated_user = authenticate(request, username=email, password=new_password1)
+                if authenticated_user is not None:
+                     login(request, authenticated_user)
 
             # Save donor and associated user
             donor.user.save()
@@ -520,6 +535,9 @@ def update_association(request, association_id):
         adresse = request.POST.get('adresse')
         image = request.FILES.get('image')
         paypal_email = request.POST.get('paypal_email')
+        old_password = request.POST.get('old_password')
+        new_password1 = request.POST.get('new_password1')
+        new_password2 = request.POST.get('new_password2')
 
         try:
                 if name:
@@ -534,6 +552,17 @@ def update_association(request, association_id):
                     association.image=image
                 if paypal_email:
                     association.paypal_email=paypal_email
+                    
+                if old_password and new_password1 and new_password2:
+                    if not association.user.check_password(old_password):
+                        raise ValidationError("Old password is incorrect")
+                    if new_password1 != new_password2:
+                        raise ValidationError("New passwords do not match")
+                    association.user.set_password(new_password1)
+                    update_session_auth_hash(request, association.user)
+                    authenticated_user = authenticate(request, username=email, password=new_password1)
+                    if authenticated_user is not None:
+                        login(request, authenticated_user)
                 
                 association.user.save()
                 association.save()
@@ -562,11 +591,6 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     
     success_url = reverse_lazy('password-reset/done')
 
-
-class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
-    template_name = 'users/change_password.html'
-    success_message = "Successfully Changed Your Password"
-    success_url = reverse_lazy('DonorSignIn')
 
 
 

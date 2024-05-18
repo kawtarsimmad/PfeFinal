@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from . import views
 from django.contrib.auth import views as auth_views
-from users.views import ResetPasswordView, ChangePasswordView 
+from users.views import ResetPasswordView
 from django.contrib.auth.views import PasswordResetDoneView
 
 urlpatterns = [
@@ -46,8 +46,6 @@ urlpatterns = [
     path('password-reset-complete/',
          auth_views.PasswordResetCompleteView.as_view(template_name='users/password_reset_complete.html'),
          name='password_reset_complete'),
-
-    path('password-change/', ChangePasswordView.as_view(), name='password_change'),
 
     #re_path(r'^oauth/', include('social_django.urls', namespace='social')),
     
