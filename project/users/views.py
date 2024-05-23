@@ -626,7 +626,10 @@ def contact_association(request, association_id):
             fail_silently=False,  # Set to True to ignore errors during email sending
         )
 
-        return redirect('contact_success')  # Redirect to contact success page
+        return render(request, 'users/contact_association.html', {
+            'association': association,
+            'success': True
+        })
 
     else:
         # Retrieve the association details
@@ -634,6 +637,7 @@ def contact_association(request, association_id):
 
         return render(request, 'users/contact_association.html', {'association': association})
     
+ 
 
 def contact_success(request):
     return render(request, 'users/contact_success.html')
