@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% block content %}
 <style>
   .people-nearby .google-maps{
@@ -29,9 +28,8 @@
     border-radius: 50%;
   }
 </style>
-            <br><br><br>
-            <div class="container">
-                <h2>List of Associations</h2>
+<br><br><br><br>
+            <div class="container" style="justify-content: center;">
                 {% if association_list %}
                     <div class="row">
                         {% for association in association_list %}
@@ -40,14 +38,14 @@
                                     <div class="nearby-user">
                                         <div class="row">
                                             <div class="col-md-2 col-sm-2">
-                                                <img src=src="{{ association.image.url }}" alt="user" class="profile-photo-lg">
+                                                <img src="{{ association.image.url }}" alt="user" class="profile-photo-lg">
                                             </div>
                                             <div class="col-md-7 col-sm-7">
                                                 <h5><a href="#" class="profile-link">{{ association.user.first_name }}</a></h5>
-                                                <p>{{ association.user.username }}</p>
-                                                <!--<p class="text-muted">Location: {{ association.user.location }}</p>-->
+                                                <p>Email: {{ association.user.username }}</p>
+                                                <p class="text-muted">Location:<a href="https://www.google.com/maps/search/{{ association.adresse }}" target="_blank"> {{ association.adresse }}</a></p>
                                             </div>
-                                            <div class="col-md-3 col-sm-3">
+                                            <div class="col-md-3 col-sm-3" style="justify-content: center;">
                                                 <a href="{% url 'contact_association' association.id%}" class="btn btn-primary pull-right">contact</a>
                                             </div>
                                         </div>
