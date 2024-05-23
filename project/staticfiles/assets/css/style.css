@@ -604,7 +604,7 @@ section {
 /*--------------------------------------------------------------
 # Featured Services
 --------------------------------------------------------------*/
-.featured-services .icon-box {
+.Categories-services .icon-box {
   padding: 30px;
   position: relative;
   overflow: hidden;
@@ -615,7 +615,7 @@ section {
   z-index: 1;
 }
 
-.featured-services .icon-box::before {
+.Categories-services .icon-box::before {
   content: "";
   position: absolute;
   background: #cbe0fb;
@@ -627,45 +627,45 @@ section {
   z-index: -1;
 }
 
-.featured-services .icon-box:hover::before {
+.Categories-services .icon-box:hover::before {
   background: #5d6876;
   top: 0;
   border-radius: 0px;
 }
 
-.featured-services .icon {
+.Categories-services .icon {
   margin-bottom: 15px;
 }
 
-.featured-services .icon i {
+.Categories-services .icon i {
   font-size: 48px;
   line-height: 1;
   color: #5d6876;
   transition: all 0.3s ease-in-out;
 }
 
-.featured-services .title {
+.Categories-services .title {
   font-weight: 700;
   margin-bottom: 15px;
   font-size: 18px;
 }
 
-.featured-services .title a {
+.Categories-services .title a {
   color: #111;
 }
 
-.featured-services .description {
+.Categories-services .description {
   font-size: 15px;
   line-height: 28px;
   margin-bottom: 0;
 }
 
-.featured-services .icon-box:hover .title a,
-.featured-services .icon-box:hover .description {
+.Categories-services .icon-box:hover .title a,
+.Categories-services .icon-box:hover .description {
   color: #fff;
 }
 
-.featured-services .icon-box:hover .icon i {
+.Categories-services .icon-box:hover .icon i {
   color: #fff;
 }
 

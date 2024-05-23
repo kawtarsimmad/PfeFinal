@@ -1,122 +1,34 @@
-{% load static %}
-<!DOCTYPE html>
- <html>
-    <head>
-        <meta charset="utf-8">
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-          
-        <title>HopeBloom</title>
-        <meta content="" name="description">
-        <meta content="" name="keywords">
-          
-            <!-- Favicons -->
-        <link href="{% static  'assets/img/bloom-lg.png'%}" rel="icon">
-        <link href="{% static  'assets/img/apple-touch-icon.png'%}" rel="apple-touch-icon">
-          
-            <!-- Google Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-          
-            <!-- Vendor CSS Files -->
-        <link href="{% static  'assets/vendor/aos/aos.css'%}" rel="stylesheet">
-        <link href="{% static  'assets/vendor/bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
-        <link href="{% static  'assets/vendor/bootstrap-icons/bootstrap-icons.css'%}" rel="stylesheet">
-        <link href="{% static  'assets/vendor/boxicons/css/boxicons.min.css'%}" rel="stylesheet">
-        <link href="{% static  'assets/vendor/glightbox/css/glightbox.min.css'%}" rel="stylesheet">
-        <link href="{% static  'assets/vendor/swiper/swiper-bundle.min.css'%}" rel="stylesheet">
-            
-            <!-- Template Main CSS File -->
-        <link rel="stylesheet" type="text/css" href="{% static  'assets/css/style.css' %}" >
+{% extends 'base.html' %}
 
-        <style>
-
-            .people-nearby .google-maps{
-                background: #f8f8f8;
-                border-radius: 4px;
-                border: 1px solid #f1f2f2;
-                padding: 20px;
-                margin-bottom: 20px;
-              }
-              
-              .people-nearby .google-maps .map{
-                height: 300px;
-                width: 100%;
-                border: none;
-              }
-              
-              .people-nearby .nearby-user{
-                padding: 20px 0;
-                border-top: 1px solid #f1f2f2;
-                border-bottom: 1px solid #f1f2f2;
-                margin-bottom: 20px;
-              }
-              
-              img.profile-photo-lg{
-                height: 80px;
-                width: 80px;
-                border-radius: 50%;
-              }
-        </style>
-    </head>
-    <body>
-           
-
-        <header id="header" class="d-flex align-items-center">
-            <div class="container d-flex align-items-center justify-content-between">
-        
-              <h1 class="logo">
-                <a href="/">
-                  <img src="{% static 'assets/img/bloom.png' %}" alt="">
-                    HopeBloom
-                </a>
-              </h1>
-              <!-- Fixed navbar-->
-            <nav id="navbar" class="navbar">
-                <ul>
-                   
-                    <li><a class="nav-link scrollto active" href="/">Home</a></li>
-                    <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
-                      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="{%url 'Health' %}" >Healthcare</a></li>
-                        <li><a class="dropdown-item" href="{%url 'Education' %}">Education</a></li>
-                        <li><a class="dropdown-item" href="{%url 'Children' %}">Children</a></li>
-                        <li><a class="dropdown-item" href="{%url 'Environment' %}">Environment</a></li>
-                        <li><a class="dropdown-item" href="{%url 'Urgent' %}">Urgent</a></li>
-                      </ul>   
-                    </li>
-                    {% if user.is_authenticated %}
-                        {%if user.is_donor%}
-                          <li><a class="nav-link" href="{% url 'dashboard_donor'%}"><i class="bi bi-person-circle"></i></a></li>
-                          {%elif user.is_association%}
-                            <li><a class="nav-link" href="{% url 'dashboard_association'%}"><i class="bi bi-person-circle"></i></a></li>
-                          {%else%}
-                            <li><a class="nav-link" href="{% url 'dashboardAdmin'%}"><i class="bi bi-person-circle"></i></a></li>
-                        {% endif %}
-                    {% else %}
-                      <li>
-                        <a class="nav-link" role="button" href="{%url 'DonorSignIn' %}">Log In</a>
-                      </li>
-
-                      <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          Sign up
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                          <li><a class="dropdown-item" href="{% url 'DonorSignup' %}">As Donor</a></li>
-                          <li><a class="dropdown-item" href="{% url 'AssociationSignup' %}">As Association</a></li>
-                          <li><a class="dropdown-item" href="{% url 'signupadmin' %}">As Admin</a></li>
-                        </ul>
-                      </li>
-                    {% endif%}
-                </ul>
-                
-                <i class="bi mobile-nav-toggle bi-list">
-                  
-                </i>
-            </nav>
-            </div>
-        </header>
-        {% block content %}
+{% block content %}
+<style>
+  .people-nearby .google-maps{
+    background: #f8f8f8;
+    border-radius: 4px;
+    border: 1px solid #f1f2f2;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .people-nearby .google-maps .map{
+    height: 300px;
+    width: 100%;
+    border: none;
+  }
+  
+  .people-nearby .nearby-user{
+    padding: 20px 0;
+    border-top: 1px solid #f1f2f2;
+    border-bottom: 1px solid #f1f2f2;
+    margin-bottom: 20px;
+  }
+  
+  img.profile-photo-lg{
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+  }
+</style>
             <br><br><br>
             <div class="container">
                 <h2>List of Associations</h2>
@@ -128,7 +40,7 @@
                                     <div class="nearby-user">
                                         <div class="row">
                                             <div class="col-md-2 col-sm-2">
-                                                <img src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="user" class="profile-photo-lg">
+                                                <img src=src="{{ association.image.url }}" alt="user" class="profile-photo-lg">
                                             </div>
                                             <div class="col-md-7 col-sm-7">
                                                 <h5><a href="#" class="profile-link">{{ association.user.first_name }}</a></h5>
@@ -148,88 +60,4 @@
                     <p>No associations found.</p>
                 {% endif %}
             </div>
-        {% endblock %}
-
-    
-        <footer id="footer">
-
-            <div class="footer-top">
-              <div class="container">
-                <div class="row">
-        
-                  <div class="col-lg-3 col-md-6 footer-contact">
-                    <h3>  HopeBloom <span>.</span></h3>
-                    <p>
-                      <strong>Phone:</strong> +212 611111111<br>
-                      <strong>Email:</strong> hopeBloom@gmail.com<br>
-                    </p>
-                  </div>
-        
-                  <div class="col-lg-3 col-md-6 footer-links">
-                    <h4>Useful Links</h4>
-                    <ul>
-                      <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-                      <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-                      <li><i class="bx bx-chevron-right"></i> <a href="#">Categories</a></li>
-                      <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
-                    </ul>
-                  </div>
-        
-                  <div class="col-lg-3 col-md-6 footer-links">
-                    <h4>Our Services</h4>
-                    <ul>
-                      <!--<li><i class="bx bx-chevron-right"></i> <a href="#">  </a></li>-->
-                      <li><i class="bx bx-chevron-right"></i> <a href="#"> !!coming soon!!  </a></li>
-                    </ul>
-                  </div>
-        
-                  <div class="col-lg-3 col-md-6 footer-links">
-                    <h4>Our Social Networks</h4>
-                    <p>to keep up with us more </p>
-                    <div class="social-links mt-3">
-                      <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-                      <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-                      <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-                    </div>
-                  </div>
-        
-                </div>
-              </div>
-            </div>
-        
-            <div class="container py-4">
-              <div class="copyright">
-                &copy; Copyright <strong><span>HopeBloom</span></strong>. All Rights Reserved
-              </div>
-             
-            </div>
-          </footer><!-- End Footer -->
-                 
-          <div id="preloader"></div>
-          <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-        
-        
-            <!-- Vendor JS Files -->
-            <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js'%}"></script>
-            <script src="{% static 'assets/vendor/aos/aos.js'%}"></script>
-            <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
-            <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js'%}"></script>
-            <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js'%}"></script>
-            <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js'%}"></script>
-            <script src="{% static 'assets/vendor/waypoints/noframework.waypoints.js'%}"></script>
-            <script src="{% static 'assets/vendor/php-email-form/validate.js'%}"></script>
-        
-            <script>
-              const searchButton = document.getElementById('search-button');
-              const searchInput = document.getElementById('search-input');
-              searchButton.addEventListener('click', () => {
-                const inputValue = searchInput.value;
-                alert(inputValue);
-              });
-           </script>
-        
-             <!-- Template Main JS File -->
-             <script src="{% static 'assets/js/main.js'%}"></script>    
-    </body>
-</html>
-        
+{% endblock %}     
