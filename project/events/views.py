@@ -5,6 +5,7 @@ from users.models import Association
 from django.contrib.contenttypes.models import ContentType
 from .models import Event
 from .forms import EventForm
+from publications.models import Publication
 
 
 @login_required
@@ -75,14 +76,14 @@ def EventDetail(request, pk):
     num_attendees = events.attendees.count()
     content_type = ContentType.objects.get_for_model(events)
     comments = Comment.objects.filter(content_type=content_type, object_id=events.id)
-
+    publications = Publication.objects.order_by('-date')[:3]  # Filter by 'association' field
     
     if events.max_attendees > 0:
         progress_percent = (num_attendees / events.max_attendees) * 100
     else:
         progress_percent = 0
 
-    return render(request, 'events/event_detail.html', {'events': events, 'progress_percent': progress_percent,'comments': comments})
+    return render(request, 'events/event_detail.html', {'events': events, 'progress_percent': progress_percent,'comments': comments, 'publications': publications})
  
 
 @login_required
