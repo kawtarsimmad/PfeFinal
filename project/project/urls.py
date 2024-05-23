@@ -29,6 +29,7 @@ urlpatterns = [
     path('categories/', include('categories.urls')),
     path('paypal', include('paypal.standard.ipn.urls')),
     path('events/', include('events.urls')),
+    path('commentaires/', include('commentaires.urls')),
 
 
 

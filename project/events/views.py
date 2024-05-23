@@ -1,13 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-# Create your views here.
+from commentaires.models import Comment
+from users.models import Association
+from django.contrib.contenttypes.models import ContentType
 from .models import Event
 from .forms import EventForm
 
+
 @login_required
 def event_list(request):
-    events = Event.objects.filter(user=request.user)  
-    return render(request, 'events/event_list.html', {'events': events})
+    if hasattr(request.user, 'dashboard_association'):
+        association = request.user.dashboard_association
+    events = Event.objects.filter(user=request.user)
+    return render(request, 'events/event_list.html', {'events': events,'association': association})
 
 def events(request):
     events = Event.objects.all() # Retrieve all events from the database
@@ -16,7 +21,7 @@ def events(request):
 def donor_event_list(request):
     donor = request.user
     events_attended = donor.attended_events.all()
-    return render(request, 'events/donor_event_list.html', {'events_attended': events_attended})
+    return render(request, 'events/donor_event_list.html', {'events_attended': events_attended,'donor':donor})
 
 def eventIndex (request):
     events = Event.objects.all()
@@ -31,6 +36,12 @@ def eventIndex (request):
     return render(request, 'events/eventIndex.html', {'events': events})
 
 def create_event(request):
+    association = None
+    donor=None
+    if hasattr(request.user, 'dashboard_association'):
+            association = request.user.dashboard_association
+    elif hasattr(request.user, 'dashboard_donor'):
+            donor = request.user.dashboard_donor
     if request.method == 'POST':
         form = EventForm(request.POST, request.FILES)
         if form.is_valid():
@@ -46,7 +57,7 @@ def create_event(request):
     else:
         form = EventForm()
     
-    return render(request, 'events/create_event.html', {'form': form})
+    return render(request, 'events/create_event.html', {'form': form,'association':association,'donor':donor})
 
 def participate_event(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
@@ -62,13 +73,16 @@ def participate_event(request, event_id):
 def EventDetail(request, pk):
     events = get_object_or_404(Event, pk=pk)
     num_attendees = events.attendees.count()
+    content_type = ContentType.objects.get_for_model(events)
+    comments = Comment.objects.filter(content_type=content_type, object_id=events.id)
+
     
     if events.max_attendees > 0:
         progress_percent = (num_attendees / events.max_attendees) * 100
     else:
         progress_percent = 0
 
-    return render(request, 'events/event_detail.html', {'events': events, 'progress_percent': progress_percent})
+    return render(request, 'events/event_detail.html', {'events': events, 'progress_percent': progress_percent,'comments': comments})
  
 
 @login_required

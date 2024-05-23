@@ -159,6 +159,32 @@
                 <p><a href="{% url 'DonorSignIn' %}">Log in</a> to attend this events.</p>
             {% endif %}
           </div>
+          <h4>Commentaires</h4>
+          {% for comment in comments %}
+              <div>
+                  <p><strong>{{ comment.auteur.username }}:</strong> {{ comment.content }}</p>
+                  <p><em>{{ comment.date_posted }}</em></p>
+                  
+                  {% if comment.auteur == request.user %}
+                      <!-- Lien de mise à jour -->
+                      <a href="{% url 'update_comment' comment.id %}">Modifier</a>
+                  
+                      <!-- Lien de suppression --> 
+                      <form method="post" action="{% url 'delete_comment' comment.id %}">
+                          {% csrf_token %}
+                          <button type="submit">Supprimer</button>
+                      </form>
+                  {% endif %}
+                  
+              </div>
+          {% endfor %}
+      
+          <h3>Ajouter un commentaire</h3>
+          <form method="post" action="{% url 'create_comment' 'event' events.id %}">
+            {% csrf_token %}
+              <textarea name="content" required></textarea><br>
+              <button type="submit">Envoyer</button>
+          </form>
         </div>
 
 

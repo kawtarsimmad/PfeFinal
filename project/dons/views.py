@@ -31,7 +31,9 @@ def faire_don(request, publication_id):
 
 def viewDons(request):
     dons = Don.objects.filter(user=request.user)
-    return render(request, 'dons/viewDons.html', {'dons': dons})
+    if hasattr(request.user, 'dashboard_donor'):
+        donor = request.user.dashboard_donor
+    return render(request, 'dons/viewDons.html', {'dons': dons,'donor':donor})
 
 def delete_don(request, don_id):
     reclamation = get_object_or_404(Don, id=don_id)

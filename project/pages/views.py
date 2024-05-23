@@ -22,7 +22,6 @@ def index(request):
     total_dons_all = Publication.calculate_total_dons_all()####total des dons  de tous les publications 
 
     events=Event.objects.order_by('-date')[:3]
-    publication_data = []
     event_data = []
 
     for publication in publications:
@@ -64,7 +63,6 @@ def index(request):
         'donors' : donors,
         'total_dons_all' : total_dons_all,
         'events': event_data,
-        'publication_data': publication_data,
         'totalDons':totalDons,
         'Montant_rest':Montant_rest
     }

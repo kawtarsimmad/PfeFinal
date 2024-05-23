@@ -13,6 +13,11 @@ from django.urls import reverse
 from django.core.mail import send_mail
 from categories.models import Category
 from users.models import Donor,Association
+from commentaires.models import Comment
+from django.contrib.contenttypes.models import ContentType
+from django.contrib import messages
+
+
 
 def publication(request):
     if request.method == "POST":
@@ -27,7 +32,19 @@ def publication(request):
 def publications(request):
     publications = Publication.objects.all()
     dons = Don.objects.all()
-    return render(request, 'publications/publications.html', {'publications': publications,'dons':dons})
+    for publication in publications:
+            total_dons = publication.calculate_total_dons()
+            if   total_dons >= publication.montant  :
+                if 'notified_publications' not in request.session:
+                    request.session['notified_publications'] = []
+                
+                if publication.id not in request.session['notified_publications']:
+                    messages.info(request, f"Votre publication {publication.id}. \"{publication.titre}\" a atteint son objectif de financement.")
+                    # Ajouter l'ID de la publication à la liste des publications notifiées
+                    request.session['notified_publications'].append(publication.id)
+                    request.session.modified = True   
+
+    return render(request, 'publications/publications.html', {'publications': publications,'dons':dons,'nombre_publications_total_dons':nombre_publications_total_dons})
 
 def publicationIndex(request):
     publications = Publication.objects.order_by('-date')
@@ -59,7 +76,9 @@ def publicationIndex(request):
 def PubDetail(request, pk):
     publication = get_object_or_404(Publication, pk=pk)
     dons = publication.dons.filter(est_paye=True) # Récupérer tous les dons associés à cette publication
-    
+    content_type = ContentType.objects.get_for_model(publication)
+    comments = Comment.objects.filter(content_type=content_type, object_id=publication.id)
+
     montant_obj = publication.montant
     totalDons=publication.calculate_total_dons()  
     Montant_rest= (montant_obj - totalDons )
@@ -77,7 +96,8 @@ def PubDetail(request, pk):
         'dons': dons,
         'totalDons':totalDons,
         'Montant_rest':Montant_rest,
-        'progress_percent':progress_percent
+        'progress_percent':progress_percent,
+        'comments': comments
     }
 
     return render(request, 'publications/detail.html', context)
@@ -85,6 +105,8 @@ def PubDetail(request, pk):
 
 
 def PubCreate(request):
+    if hasattr(request.user, 'dashboard_association'):
+        association = request.user.dashboard_association
     if request.method == "POST":
         form=PublicationForm(request.POST, request.FILES)
         user=request.user
@@ -107,7 +129,7 @@ def PubCreate(request):
             
     else:
         form = PublicationForm()
-    return render(request, 'publications/form.html', {'form': form})
+    return render(request, 'publications/form.html', {'form': form,'association':association})
 
 #################### send an alert email ############################
 def send_email_alert(publication):
@@ -135,6 +157,8 @@ def send_email_alert(publication):
 
 @login_required
 def PubUpdate(request, pk):
+    if hasattr(request.user, 'dashboard_association'):
+        association = request.user.dashboard_association
     publication = get_object_or_404(Publication, pk=pk)
     if request.method == 'POST':
         form = PublicationForm(request.POST, request.FILES, instance=publication)
@@ -148,7 +172,7 @@ def PubUpdate(request, pk):
                
     else:
         form = PublicationForm(instance=publication)
-    return render(request, 'publications/form.html', {'form': form})
+    return render(request, 'publications/form.html', {'form': form,'association':association})
 
 
 @login_required
@@ -169,11 +193,22 @@ def PubDelete(request, publication_id):
 def PubList(request):
     if hasattr(request.user, 'dashboard_association'):
         association = request.user.dashboard_association
-        # Now you can use association in your query
         publications = Publication.objects.filter(association=association)
-        return render(request, 'publications/list.html', {'publications': publications})
-  
-
+        for publication in publications:
+            total_dons = publication.calculate_total_dons()
+            if   total_dons >= publication.montant  :
+                if 'notified_publications' not in request.session:
+                    request.session['notified_publications'] = []
+                
+                if publication.id not in request.session['notified_publications']:
+                    messages.info(request, f"Votre publication {publication.id}. \"{publication.titre}\" a atteint son objectif de financement.")
+                    # Ajouter l'ID de la publication à la liste des publications notifiées
+                    request.session['notified_publications'].append(publication.id)
+                    request.session.modified = True    
+        return render(request, 'publications/list.html', {'association':association,'publications': publications})
+    else:
+        messages.error(request, "Vous n'avez pas de droits d'accès à cette page.")
+        return render(request, 'publications/list.html', {'publications': []})
 
 def dons_associes(request, publication_id):
 
@@ -183,3 +218,14 @@ def dons_associes(request, publication_id):
     total_dons_all = Publication.calculate_total_dons_all()
     
     return render(request, 'publications/dons_associes.html', {'publication': publication, 'dons': dons,'total_dons_all': total_dons_all})
+#######################################################""
+def nombre_publications_total_dons():
+    publications = Publication.objects.all()
+    count = 0
+    for publication in publications:
+        montant_voulu=publication.montant
+        total_dons = publication.calculate_total_dons()
+        if total_dons >= montant_voulu:
+            count += 1
+    return count
+

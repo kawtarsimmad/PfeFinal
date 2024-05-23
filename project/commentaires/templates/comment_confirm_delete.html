@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Supprimer le Commentaire</title>
+</head>
+<body>
+    <h1>Supprimer le Commentaire</h1>
+    <p>Êtes-vous sûr de vouloir supprimer ce commentaire ?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Oui, supprimer</button>
+    </form>
+    <a href="{{ comment.content_object.get_absolute_url }}">Non, revenir</a>
+</body>
+</html>

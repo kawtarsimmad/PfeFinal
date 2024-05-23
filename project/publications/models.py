@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.urls import reverse
 from users.models import Association
 from categories.models import Category
 
@@ -19,6 +20,9 @@ class Publication(models.Model):
     def __str__(self) :
         return self.titre 
     
+    
+    def get_absolute_url(self):
+        return reverse('detail', args=[str(self.id)])
     
     def calculate_total_dons(self):
         total_dons = sum(d.montantDons for d in self.dons.filter(est_paye=True))

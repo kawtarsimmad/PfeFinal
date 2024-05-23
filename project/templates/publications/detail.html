@@ -152,6 +152,33 @@
                 <li class="no-don">Aucun don associé à cette publication pour le moment.</li>
             {% endfor %}
         </ul>
+        <h4>Commentaires</h4>
+        {% for comment in comments %}
+            <div>
+                <p><strong>{{ comment.auteur.username }}:</strong> {{ comment.content }}</p>
+                <p><em>{{ comment.date_posted }}</em></p>
+  
+                <!-- Lien de mise à jour -->
+                {% if comment.auteur == request.user %}
+                  <a href="{% url 'update_comment' comment.id %}">Modifier</a>
+                {% endif %}
+                
+                <!-- Lien de suppression -->
+                {% if comment.auteur == request.user %}
+                    <form method="post" action="{% url 'delete_comment' comment.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Supprimer</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% endfor %}
+    
+        <h3>Ajouter un commentaire</h3>
+        <form method="post" action="{% url 'create_comment' model_name='publication' object_id=publication.id %}">
+            {% csrf_token %}
+            <textarea name="content" required></textarea><br>
+            <button type="submit">Envoyer</button>
+        </form>
 
         <!-- Template Main JS File -->
         <script src="{% static 'assets/js/main.js'%}"></script>  

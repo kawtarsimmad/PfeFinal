@@ -35,6 +35,7 @@ from django.contrib import messages
 from .models import User,Admin, Donor, Association ###########
 from publications.models import Publication
 from categories.models import Category
+from reclamations.models import Reclamation
 from dons.models import Don
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseBadRequest
@@ -363,6 +364,7 @@ def dashboardAdmin(request):
 
     
     total_dons_all = Publication.calculate_total_dons_all()####total des dons  de tous les publications ou d'une pub 
+    pending_reclamations_count = Reclamation.objects.filter(status='Pending').count()
 
 
     context = {
@@ -375,6 +377,8 @@ def dashboardAdmin(request):
         'donors' : donors,
         'total_dons_all' : total_dons_all,
         'categories': categories,
+        'pending_reclamations_count': pending_reclamations_count,
+
 
     }
     return render(request, 'users/dashboardAdmin.html', context)
