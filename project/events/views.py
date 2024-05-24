@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from commentaires.models import Comment
-from users.models import Association
+from users.models import Association, User
 from django.contrib.contenttypes.models import ContentType
 from .models import Event
 from .forms import EventForm
@@ -77,13 +77,15 @@ def EventDetail(request, pk):
     content_type = ContentType.objects.get_for_model(events)
     comments = Comment.objects.filter(content_type=content_type, object_id=events.id)
     publications = Publication.objects.order_by('-date')[:3]  # Filter by 'association' field
+    association = Association.objects.get(user=events.user)  # Get the association related to the event
+
     
     if events.max_attendees > 0:
         progress_percent = (num_attendees / events.max_attendees) * 100
     else:
         progress_percent = 0
 
-    return render(request, 'events/event_detail.html', {'events': events, 'progress_percent': progress_percent,'comments': comments, 'publications': publications})
+    return render(request, 'events/event_detail.html', {'events': events, 'progress_percent': progress_percent,'comments': comments, 'publications': publications, 'association': association})
  
 
 @login_required

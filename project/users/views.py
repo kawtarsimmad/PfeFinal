@@ -32,7 +32,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth import authenticate, login, logout
 from . tokens import generate_token
 from django.contrib import messages
-from .models import User,Admin, Donor, Association ###########
+from .models import User,Admin, Donor, Association, Alert ###########
 from publications.models import Publication
 from categories.models import Category
 from reclamations.models import Reclamation
@@ -361,7 +361,7 @@ def dashboardAdmin(request):
     associations=Association.objects.all()
     donors=Donor.objects.all()
     categories= Category.objects.all()
-
+    alert = Alert.objects.first()
     
     total_dons_all = Publication.calculate_total_dons_all()####total des dons  de tous les publications ou d'une pub 
     pending_reclamations_count = Reclamation.objects.filter(status='Pending').count()
@@ -378,7 +378,7 @@ def dashboardAdmin(request):
         'total_dons_all' : total_dons_all,
         'categories': categories,
         'pending_reclamations_count': pending_reclamations_count,
-
+        'alert': alert
 
     }
     return render(request, 'users/dashboardAdmin.html', context)
@@ -642,5 +642,42 @@ def contact_association(request, association_id):
 def contact_success(request):
     return render(request, 'users/contact_success.html')
 
-##########################################################################################
+####################################### Activate/desactivat Alert ###################################################
+def activate_alert(request):
+    if request.method == "POST":
+        alert = Alert.objects.first()
+        associations = Association.objects.filter(user__is_association=True, user__email__isnull=False).exclude(user__email='')
+        donors = Donor.objects.filter(user__is_donor=True, user__email__isnull=False).exclude(user__email='')
+        recipient_list_donor = [donor.user.email for donor in donors]
+        recipient_list_association = [association.user.email for association in associations]
+        from_email= settings.EMAIL_HOST_USER
+        site_domain="http://127.0.0.1:8000/"
+        message1=f"An alert has been activated. Please post the urgent cases about this alert situation as soon as possible on the platforme. {site_domain}"
+        message2=f"An alert has been activated. Please check the platforme {site_domain} for details."
+        subject='Alert Mode Activated'
+
+        # Assuming there is only one alert object
+        if not alert:
+            alert = Alert.objects.create(is_active=True)
+        else:
+            alert.is_active = True
+            alert.save()
+        
+        # Send email to all users
+        send_mail(subject, message1, from_email, recipient_list_association)
+
+        send_mail(subject, message2, from_email, recipient_list_donor)
+        
+        return redirect('dashboardAdmin')
+    return render(request, 'activate_alert')
+
+def desactivate_alert(request):
+    if request.method == "POST":
+        alert = Alert.objects.first()
+        if alert:
+            alert.is_active = False
+            alert.save()
+        return redirect('dashboardAdmin')
+    return render(request, 'deactivate_alert.html')
+
 

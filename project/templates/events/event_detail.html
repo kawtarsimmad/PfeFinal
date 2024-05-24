@@ -2,6 +2,25 @@
 
 {% block content %}
 <style>
+      .widget-author .media {
+        display: flex;
+        align-items: center;
+    }
+
+    .widget-author .media .avatar img {
+        width: 70px;  /* Adjust the width as needed */
+        height: 70px; /* Adjust the height as needed */
+        border-radius: 50%;
+        margin-right: 15px; /* Space between the image and the text */
+    }
+
+    .widget-author .media-body h6 {
+        margin-bottom: 5px; /* Adjust space as needed */
+    }
+    .event-image {
+      width: 100%; /* Set the width to 100% */
+      height: auto; /* Automatically adjust the height */
+    }
     .blog-listing {
         padding-top: 30px;
         padding-bottom: 30px;
@@ -24,7 +43,7 @@
     }
     .blog-grid .blog-img .date {
       position: absolute;
-      background: #fc5356;
+      background: #ce4a86;
       color: #ffffff;
       padding: 8px 15px;
       left: 10px;
@@ -83,7 +102,7 @@
     .blog-aside .widget-title h3 {
       font-size: 20px;
       font-weight: 700;
-      color: #fc5356;
+      color: #ce4a86;
       margin: 0;
     }
     .blog-aside .widget-author .media {
@@ -97,14 +116,16 @@
       width: 70px;
       height: 70px;
       border-radius: 50%;
+      margin-right: 15px; /* Space between the image and the text */
       overflow: hidden;
     }
     .blog-aside .widget-author h6 {
       font-weight: 600;
-      color: #20247b;
+      color: #505c6a;
       font-size: 22px;
       margin: 0;
       padding-left: 20px;
+      margin-bottom: 5px; /* Adjust space as needed */
     }
     .blog-aside .post-aside {
       margin-bottom: 15px;
@@ -167,7 +188,7 @@
       margin-bottom: 4px;
     }
     .tag-cloud a:hover {
-      background: #fc5356;
+      background: #ce4a86;
     }
 
     .blog-single {
@@ -193,11 +214,11 @@
     }
     .article .article-title h6 a {
       text-transform: uppercase;
-      color: #fc5356;
-      border-bottom: 1px solid #fc5356;
+      color: #ce4a86;
+      border-bottom: 1px solid #ce4a86;
     }
     .article .article-title h2 {
-      color: #20247b;
+      color: #505c6a;
       font-weight: 600;
     }
     .article .article-title .media {
@@ -216,7 +237,7 @@
     }
     .article .article-title .media .media-body label {
       font-weight: 600;
-      color: #fc5356;
+      color: #ce4a86;
       margin: 0;
     }
     .article .article-title .media .media-body span {
@@ -241,7 +262,7 @@
     .article .article-content blockquote p {
       font-size: 20px;
       font-weight: 500;
-      color: #fc5356;
+      color: #ce4a86;
       margin: 0;
     }
     .article .article-content blockquote .blockquote-footer {
@@ -323,7 +344,7 @@
       box-shadow: none !important;
     }
     .contact-form .form-control:focus {
-      border-bottom: 1px solid #fc5356;
+      border-bottom: 1px solid #ce4a86;
     }
     .contact-form .form-control.invalid {
       border-bottom: 1px solid #ff0000;
@@ -342,7 +363,7 @@
         color: #20247b;
         font-size: 45px;
         margin: 0 0 15px;
-        border-left: 5px solid #fc5356;
+        border-left: 5px solid #ce4a86;
         padding-left: 15px;
     }
     .section-title {
@@ -435,19 +456,6 @@
     .comment-content {
         margin-bottom: 10px;
     }
-    .login-alert {
-      background-color: #eee;
-      border-color: #eee;
-      color: #0c5460;
-      padding: 15px;
-      border-radius: 5px;
-    }
-    
-    .login-alert .alert-text {
-        margin: 0;
-        
-    }
-  
   
 </style>
 <br><br><br>
@@ -457,15 +465,12 @@
           <div class="col-lg-8 m-15px-tb">
               <article class="article">
                   <div class="article-img">
-                      <img src="{{ events.image.url }}" alt="{{ events.title }}" class="img-fluid">
+                      <img src="{{ events.image.url }}" alt="{{ events.title }}" class="img-fluid event-image">
                   </div>
                   <div class="article-title">
-                      <h6><a href="#">Event</a></h6>
+                      <h6><a href="">Event</a></h6>
                       <h2>{{ events.title }}</h2>
                       <div class="media">
-                          <div class="avatar">
-                              <img src="{{ events.user.image.url }}" alt="{{ events.user.username }}" class="img-fluid">
-                          </div>
                           <div class="media-body">
                               <label>{{ events.user.first_name }}</label>
                               <span>{{ events.created_at }}</span>
@@ -476,7 +481,7 @@
                       <p>{{ events.description }}</p>
                       
                       <div class="progress mb-3">
-                          <div class="progress-bar" role="progressbar" style="width: {{ progress_percent }}%;" aria-valuenow="{{ progress_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+                          <div class="progress-bar custom-progress-ba" role="progressbar" style="width: {{ progress_percent }}%; background-color: #c54c81;" aria-valuenow="{{ progress_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
                       </div>
                       <p>{{ progress_percent }}% Complete</p>
                       <div class="mt-4">
@@ -488,7 +493,7 @@
                             {% elif events.attendees.count < events.max_attendees %}
                                 <form method="post" action="{% url 'participate_event' events.pk %}">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-primary">Attend Event</button>
+                                    <button type="submit" class="btn btn-secondary">Attend Event</button>
                                 </form>
                             {% else %}
                                 <div class="alert alert-warning" role="alert">
@@ -496,9 +501,9 @@
                                 </div>
                             {% endif %}
                         {% else %}
-                          <div class="alert alert-info login-alert" role="alert">
-                            <span class="alert-text">Please <a href="{% url 'DonorSignIn' %}" style="color:#FF0000">log in</a> to attend this event.</span>
-                          </div>
+                            <div class="alert alert-secondary" role="alert">
+                                <a href="{% url 'DonorSignIn' %}">Log in</a> to attend this event.
+                            </div>
                         {% endif %}
                     </div>
                   </div>
@@ -511,7 +516,7 @@
                       <div class="form-group">
                           <textarea class="form-control" name="content" placeholder="Votre commentaire" required></textarea>
                       </div><br>
-                      <button type="submit" class="btn btn-primary">Envoyer</button>
+                      <button type="submit" class="btn btn-secondary">Envoyer</button>
                   </form>
                 </div>
               </div>
@@ -559,7 +564,7 @@
                               {% elif events.attendees.count < events.max_attendees %}
                                   <form method="post" action="{% url 'participate_event' events.pk %}">
                                       {% csrf_token %}
-                                      <button type="submit" class="btn btn-primary">Attend Event</button>
+                                      <button type="submit" class="btn btn-secondary">Attend Event</button>
                                   </form>
                               {% else %}
                                   <div class="alert alert-warning" role="alert">
@@ -567,38 +572,32 @@
                                   </div>
                               {% endif %}
                           {% else %}
-                            <div class="alert alert-info login-alert" role="alert">
-                              <span class="alert-text">Please <a href="{% url 'DonorSignIn' %}" style="color:#FF0000">log in</a> to attend this event.</span>
-                            </div>                        
+                              <div class="alert alert-secondary" role="alert">
+                                  <a href="{% url 'DonorSignIn' %}">Log in</a> to attend this event.
+                              </div>
                           {% endif %}
                       </div>
                   </div>
               </div>
-             <!-- Latest Post -->
-             <div class="col-lg-15 m-15px-tb">
-              <div class="widget widget-latest-post">
+               <!-- Author -->
+              <div class="widget widget-author">
                   <div class="widget-title">
-                      <h3>Latest Post by {{ events.user.first_name }}</h3>
+                      <h3>Author</h3>
                   </div>
                   <div class="widget-body">
-                      <!-- Latest post loop -->
-                      {% for publication in publications %}
-                      <div class="latest-post-aside media">
-                          <div class="lpa-left media-body">
-                              <div class="lpa-title">
-                                  <h5><a href="{% url 'detail' publication.id %}">{{ publication.titre }}</a></h5>
-                              </div>
-                              <div class="lpa-meta">
-                                  <a class="name" href="#">{{ events.user.name }}</a> <!-- Assuming 'name' is the attribute for the association name -->
-                                  <a class="date" href="#">{{ publication.date }}</a>
-                              </div>
+                      <div class="media align-items-center">
+                          <div class="avatar">
+                              <img src="{{ association.image.url }}" title="{{ events.user.username }}" alt="">Hello
+                          </div>
+                          <div class="media-body">
+                              <h6>Hello, I'm {{ events.user.first_name }} </h6>
                           </div>
                       </div>
-                      {% endfor %}
+                      <p>Email: <a href="{% url 'contact_association' association.id%}">{{ events.user.username }}</a></p>
+                      <p>Location:<a href="https://www.google.com/maps/search/{{ association.adresse }}" target="_blank"> {{ association.adresse }}</a></p>
                   </div>
               </div>
-            </div>
-          <!-- End Latest Post --> 
+            <!-- End Author -->
           </div>
       </div>
   </div>

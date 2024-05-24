@@ -4,6 +4,7 @@ from categories.models import Category
 from dons.models import Don
 from users.models import Association,User,Donor
 from events.models import Event
+from users.models import Alert
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from .forms import SearchForm
@@ -21,6 +22,8 @@ def index(request):
     associations=Association.objects.all()
     donors=Donor.objects.all()
     total_dons_all = Publication.calculate_total_dons_all()####total des dons  de tous les publications 
+    alert = Alert.objects.first()
+
 
     events=Event.objects.order_by('-date')[:3]
     event_data = []
@@ -66,7 +69,9 @@ def index(request):
         'total_dons_all' : total_dons_all,
         'events': event_data,
         'totalDons':totalDons,
-        'Montant_rest':Montant_rest
+        'Montant_rest':Montant_rest,
+        'alert' : alert,
+
     }
 
     return render(request, 'pages/index.html', context)

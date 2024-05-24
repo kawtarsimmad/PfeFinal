@@ -49,4 +49,9 @@ class Admin(models.Model):
     
     def __str__(self):
         return "Admin Name : " + self.user.first_name
- 
+
+class Alert(models.Model):
+    is_active = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "Active" if self.is_active else "Inactive"

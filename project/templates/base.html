@@ -29,6 +29,11 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
         <style>
+          /* Increase the size of the navbar icon */
+          #navbar .nav-link i {
+              font-size: 24px; /* Adjust the size as needed */
+              margin-right: 5px; /* Optional: Add some spacing */
+          }  
           .navbar {
               display: flex;
               justify-content: space-between;
@@ -139,13 +144,29 @@
             left: 20px;
             font-size: 12px;
           }
+          /* Optionally, reduce padding and margin of the alert */
+          #alert {
+            padding-top: 0%; /* Adjust as needed */
+            padding-bottom: 0%; /* Adjust as needed */
+            margin-top: 0; /* Adjust as needed */
+            margin-bottom: 0; /* Adjust as needed */
+          } 
+          #alert .alert {
+          font-size: 16px; /* Adjust as needed */
+          padding: 8px 15px; /* Adjust as needed */
+          } 
         
         </style>
         {% block extra_styles %}{% endblock %}
     </head>
     <body>
-           
-
+      <section id="alert">
+        {% if alert.is_active %}
+          <div class="alert alert-danger text-center">
+              <br><strong>Alert!</strong> The platform is currently in alert mode.
+          </div>
+        {% endif %}
+      </section>     
       <header id="header" class="d-flex align-items-center">
           <div class="container d-flex align-items-center justify-content-between">
               <!-- Barre de recherche -->

@@ -1,6 +1,7 @@
 {% extends 'sidebar.html' %}
 {% load static %}
 <!DOCTYPE html>
+{% block content %}
 <html lang="en">
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -16,6 +17,10 @@
         }
     
         .count-box {
+            flex: 1; /* Adjusts to take equal space in the container */
+            min-width: 150px; /* Minimum width for each box to ensure they don't get too small */
+            max-width: 200px; /* Maximum width for each box */
+            padding: 10px;
             background-color: #f8f9fa; /* Box background color */
             border-radius: 10px; /* Box border radius */
             padding: 10px; /* Padding inside the box */
@@ -23,7 +28,6 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Box shadow */
             transition: all 0.3s ease; /* Smooth transition */
             margin: 10px; /* Add some margin between count boxes */
-            max-width: 120px; /* Limit maximum width of the count boxes */
         }
     
         .count-box:hover {
@@ -67,11 +71,17 @@
         .badge-custom-color {
             color: black; /* Couleur personnalisée du texte */
         }
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap; /* Allows items to wrap to the next line if needed */
+            justify-content: space-around; /* Adjust spacing as needed */
+            align-items: center;
+            margin: 20px 0; /* Adjust spacing around the container as needed */
+        }
     </style>
-
+    
 </head>
 <body>
-{% block content %}
     <div class="main-content">
      
         <h1 class="mt-4">Espace Admin</h1>
@@ -102,43 +112,68 @@
                 </div>
             
 
-            <section id="cnt" class="cnt">
-                <div class="row">
-                    <div class="count-box">
-                        <i class="fas fa-user me-2"></i>
-                        <span data-purecounter-start="0" data-purecounter-end="{{ users.count }}" data-purecounter-duration="1" class="purecounter"></span>
-                        <p> Users</p>
+                <section id="cnt" class="cnt">
+                    <div class="row flex-container">
+                        <div class="count-box">
+                            <i class="fas fa-user me-2"></i>
+                            <span data-purecounter-start="0" data-purecounter-end="{{ users.count }}" data-purecounter-duration="1" class="purecounter"></span>
+                            <p> Users</p>
+                        </div>
+                        <div class="count-box">
+                            <i class="bi bi-journal-richtext"></i>
+                            <span data-purecounter-start="0" data-purecounter-end="{{ pub.count }}" data-purecounter-duration="1" class="purecounter"></span>
+                            <p>Publications</p>
+                        </div>
+                        <div class="count-box">
+                            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+                            <i class="fas fa-th-large"></i>
+                            <span data-purecounter-start="0" data-purecounter-end="{{ categories.count }}" data-purecounter-duration="1" class="purecounter"></span>
+                            <p>Categories </p>
+                        </div>
+                        <div class="count-box">
+                            <i class="bi bi-cash-coin"></i>
+                            {% if don.est_paye %}
+                                <span>{{ dons.count }}</span>
+                            {% else %}
+                                <span data-purecounter-start="0" data-purecounter-end="{{ dons.count }}" data-purecounter-duration="1" class="purecounter"></span>
+                            {% endif %}
+                            <p>Dons</p>
+                        </div>
+                        <div class="count-box">
+                            <i class="bi bi-cash-coin"></i>
+                            <span data-purecounter-start="0" data-purecounter-end="{{ total_dons_all }}" data-purecounter-duration="1" class="purecounter"></span>
+                            <p>Donations raised</p>
+                        </div>
                     </div>
-                
-                    <div class="count-box">
-                        <i class="bi bi-journal-richtext"></i>
-                        <span data-purecounter-start="0" data-purecounter-end="{{ pub.count }}" data-purecounter-duration="1" class="purecounter"></span>
-                        <p>publications</p>
+                </section>
+
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Alert Control</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-check form-switch">
+                                        <form action="{% url 'activate_alert' %}" method="post">
+                                            {% csrf_token %}
+                                            <input class="form-check-input" type="checkbox" role="switch" id="alertSwitch" name="alertSwitch" onchange="this.form.submit()" {% if alert and alert.is_active %}checked{% endif %} />
+                                            <label class="form-check-label" for="alertSwitch">Activate Alert</label>
+                                        </form>
+                                    </div>
+                                    <div class="form-check form-switch mt-3">
+                                        <form action="{% url 'desactivate_alert' %}" method="post">
+                                            {% csrf_token %}
+                                            <input class="form-check-input" type="checkbox" role="switch" id="alertSwitchOff" name="alertSwitchOff" onchange="this.form.submit()" {% if alert and not alert.is_active %}checked{% endif %} />
+                                            <label class="form-check-label" for="alertSwitchOff">Deactivate Alert</label>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div class="count-box">
-                        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-                        <i class="fas fa-th-large"></i>
-                        <span data-purecounter-start="0" data-purecounter-end="{{categories.count}}" data-purecounter-duration="1" class="purecounter"></span>
-                        <p>Categories </p>
-                    </div>
-                    
-                    <div class="count-box">
-                        <i class="bi bi-cash-coin"></i>
-                        {% if don.est_paye %}
-                            <span>{{ dons.count }}</span>
-                        {% else %}
-                            <span data-purecounter-start="0" data-purecounter-end="{{ dons.count }}" data-purecounter-duration="1" class="purecounter"></span>
-                        {% endif %}
-                        <p>Dons</p>
-                    </div>
-                    <div class="count-box">
-                        <i class="bi bi-cash-coin"></i>
-                        <span data-purecounter-start="0" data-purecounter-end="{{ total_dons_all }}" data-purecounter-duration="1" class="purecounter"></span>
-                        <p>Donations raised</p>
-                    </div>
-                </div>
-            </section>
+                </div>     
         </div>
         </main>
     </div>
