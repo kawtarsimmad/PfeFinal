@@ -8,41 +8,45 @@
 {% block content %}
 
     <div class="main-content">
-
-            <h1>Liste des réclamations</h1>          
-                <table class="table table-bordered">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th style="text-align: center">Type </th>
-                            <th style="text-align: center">Demandeur</th>
-                            <th style="text-align: center">Email</th>
-                            <th style="text-align: center">Description</th>
-                            <th style="text-align: center">Date de Création</th>
-                            <th style="text-align: center">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for x in rc %}
-                        <tr>
-                            <td style="text-align: center">{{ x.recl_type }}</td>
-                            <td style="text-align: center">{{ x.user.first_name }}</td>
-                            <td style="text-align: center">{{ x.user.username}}</td>
-                            <td style="text-align: center">{{ x.description }}</td>
-                            <td style="text-align: center">{{ x.created_at }}</td>
-                            <td style="text-align: center">
-                                <form id="updateStatusForm_{{ x.id }}" method="post" action="{% url 'update_reclamation_status' x.id %}" style="display: inline;">
-                                    {% csrf_token %}
-                                    <select name="status" onchange="submitForm({{ x.id }})">
-                                        <option value="Pending" {% if x.status == "Pending" %} selected {% endif %}> Pending </option>
-                                        <option value="Resolved" {% if x.status == "Resolved" %} selected {% endif %}> Resolved </option>
-                                        <option value="Refused" {% if x.status == "Refused" %} selected {% endif %}> Refused </option>
-                                    </select>
-                                </form>
-                            </td>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            
+            <h1 class="m-4">Liste des réclamations</h1> 
+            <div class="container mt-5">
+                <div class="row"> 
+                    <div class="col-md-12">          
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th style="text-align: center">Type </th>
+                                <th style="text-align: center">Demandeur</th>
+                                <th style="text-align: center">Email</th>
+                                <th style="text-align: center">Description</th>
+                                <th style="text-align: center">Date de Création</th>
+                                <th style="text-align: center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for x in rc %}
+                            <tr>
+                                <td style="text-align: center">{{ x.recl_type }}</td>
+                                <td style="text-align: center">{{ x.user.first_name }}</td>
+                                <td style="text-align: center">{{ x.user.username}}</td>
+                                <td style="text-align: center">{{ x.description }}</td>
+                                <td style="text-align: center">{{ x.created_at }}</td>
+                                <td style="text-align: center">
+                                    <form id="updateStatusForm_{{ x.id }}" method="post" action="{% url 'update_reclamation_status' x.id %}" style="display: inline;">
+                                        {% csrf_token %}
+                                        <select name="status" onchange="submitForm({{ x.id }})">
+                                            <option value="Pending" {% if x.status == "Pending" %} selected {% endif %}> Pending </option>
+                                            <option value="Resolved" {% if x.status == "Resolved" %} selected {% endif %}> Resolved </option>
+                                            <option value="Refused" {% if x.status == "Refused" %} selected {% endif %}> Refused </option>
+                                        </select>
+                                    </form>
+                                </td>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Bootstrap JS Bundle (Popper.js included) -->

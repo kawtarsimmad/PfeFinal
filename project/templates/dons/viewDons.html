@@ -8,38 +8,36 @@
 {% block content %}
 
     <div class="main-content">
-        <h1 class="mt-4">Listes Des Dons</h1>
-                        
-                        
-                        <br><br>
-
-                            {% if dons %}
-                                
+        <h1 class="m-4">Listes Des Dons</h1>
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-12">          
+                            {% if dons %}                                
                                 <table class="table table-bordered">
                                     <thead class="table-dark">
                                         <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Nom Bénéficiaires </th>
-                                            <th scope="col">Bénéficiaires </th>
-                                            <th scope="col">Id_Pub</th>
-                                            <th scope="col">Date </th>
-                                            <th scope="col">Montant</th>
-                                            <th scope="col">est_paye</th>
+                                            <th scope="col" style="text-align: center">ID</th>
+                                            <th scope="col" style="text-align: center">Nom Bénéficiaires </th>
+                                            <th scope="col" style="text-align: center">Bénéficiaires </th>
+                                            <th scope="col" style="text-align: center">Id_Pub</th>
+                                            <th scope="col" style="text-align: center">Date </th>
+                                            <th scope="col" style="text-align: center">Montant</th>
+                                            <th scope="col" style="text-align: center">est_paye</th>
                                             
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% for don in dons %}
                                             <tr>
-                                                <td>{{ don.id }}</td>
-                                                <td>{{ don.publication.association.user.first_name }}</td>
-                                                <td>{{ don.publication.association.user.username }}</td>
-                                                <td>
+                                                <td style="text-align: center">{{ don.id }}</td>
+                                                <td style="text-align: center">{{ don.publication.association.user.first_name }}</td>
+                                                <td style="text-align: center">{{ don.publication.association.user.username }}</td>
+                                                <td style="text-align: center">
                                                     <a href="{% url 'detail' don.publication.id %}">{{ don.publication.id }}</a>
                                                 </td>
-                                                <td>{{ don.date }}</td>
-                                                <td>{{ don.montantDons }}</td>
-                                                <td>{{ don.est_paye }}</td>
+                                                <td style="text-align: center">{{ don.date }}</td>
+                                                <td style="text-align: center">{{ don.montantDons }}</td>
+                                                <td style="text-align: center">{{ don.est_paye }}</td>
                                                                                                 
                                             </tr>
                                         {% endfor %}
@@ -48,7 +46,10 @@
                             {% else %}
                                 <br><br><p>Sorry, no pending dons.</p>
                             {% endif %}
-    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
     <!-- Bootstrap JS Bundle (Popper.js included) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
