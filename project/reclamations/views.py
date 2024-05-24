@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 from .models import Reclamation
 from .forms import ReclamationForm
 
-# Create your views here.
 
 def reclamation(request):
     if request.method == "POST":

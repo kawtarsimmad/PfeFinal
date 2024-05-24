@@ -26,84 +26,186 @@
             
             <!-- Template Main CSS File -->
         <link rel="stylesheet" type="text/css" href="{% static  'assets/css/style.css' %}" >
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
         <style>
-          /* Increase the size of the navbar icon */
-          #navbar .nav-link i {
-              font-size: 24px; /* Adjust the size as needed */
-              margin-right: 5px; /* Optional: Add some spacing */
-          }         
+          .navbar {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 10px 20px;
+          }
+          .navbar-left, .navbar-center, .navbar-right {
+              display: flex;
+              align-items: center;
+              list-style: none;
+              margin: 0;
+              padding: 0;
+          }
+          .navbar-left {
+              margin-right: auto;
+          }
+          .navbar-center {
+              margin: 0 auto;
+          }
+          .navbar-right {
+              margin-left: auto;
+          }
+          .input-group {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+            width: 100%;
+          }
+          
+          .form-outline {
+              display: flex;
+              align-items: center;
+              position: relative;
+              flex: 1;
+              max-width: 600px;
+              margin: auto; 
+          }
+          
+          .form-outline input[type="search"] {
+              padding: 10px 15px;
+              width: 50%;
+              border: 1px solid #ddd;
+              border-radius: 20px 0 0 20px;
+              outline: none;
+              transition: all 0.3s ease-in-out;
+          }
+          
+          .form-outline input[type="search"]:focus {
+              border-color: #68889e;
+              box-shadow: 0 0 5px rgba(21, 110, 162, 0.6);
+          }
+          
+          .form-outline label {
+              position: absolute;
+              top: 50%;
+              left: 15px;
+              transform: translateY(-50%);
+              color: #888;
+              pointer-events: none;
+              transition: all 0.3s ease-in-out;
+          }
+          
+          .form-outline input[type="search"]:focus + .form-label {
+              top: 0%;
+              left: 20px;
+              font-size: 10px;
+              color: #68889e;
+          }
+          
+          .search-button-header {
+              padding: 10px 18px;
+              border: none;
+              background-color: #68889e;
+              color: white;
+              cursor: pointer;
+              border-radius: 0 25px 25px 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              transition: background-color 0.3s ease-in-out;
+              box-shadow: 0 6px 20px rgba(104, 136, 158, 0.19);
+    
+          }
+          
+          .search-button-header i {
+              font-size: 25px;
+          }
+          
+          .search-button-header:hover {
+              background-color: white;
+          }
+          input[type="search"]::-webkit-search-cancel-button {
+            -webkit-appearance: none;
+            appearance: none;
+          }
+          
+          .animate__animated.animate__fadeIn {
+              animation-duration: 1s;
+              animation-fill-mode: both;
+          }
+          .form-outline label.active {
+            top: 0%;
+            left: 20px;
+            font-size: 12px;
+            color: #68889e; /* Couleur du libellé lorsque la zone de recherche est active */
+          }
+        
         </style>
+        {% block extra_styles %}{% endblock %}
     </head>
     <body>
            
 
-        <header id="header" class="d-flex align-items-center">
-            <div class="container d-flex align-items-center justify-content-between">
-        
+      <header id="header" class="d-flex align-items-center">
+          <div class="container d-flex align-items-center justify-content-between">
+              <!-- Barre de recherche -->
+              <div class="input-group animate__animated animate__fadeIn">
+                <form method="get" action="{% url 'search' %}" class="form-outline">
+                    <input id="search-input" name="query" type="search" class="form-control" />
+                    <label class="form-label" for="search-input">Search</label>
+                    <button id="search-button" type="submit" class="btn search-button-header">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+              </div>
+
               <h1 class="logo">
                 <a href="#">
                   <img src="{% static 'assets/img/bloom.png' %}" alt="">
                     HopeBloom
                 </a>
               </h1>
-              <!-- Fixed navbar-->
-            <nav id="navbar" class="navbar">
-                <ul>
-                   
-                    <li><a class="nav-link scrollto active" href="/">Home</a></li>
-                    <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
-                      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="{%url 'Health' %}" >Healthcare</a></li>
-                        <li><a class="dropdown-item" href="{%url 'Education' %}">Education</a></li>
-                        <li><a class="dropdown-item" href="{%url 'Children' %}">Children</a></li>
-                        <li><a class="dropdown-item" href="{%url 'Environment' %}">Environment</a></li>
-                        <li><a class="dropdown-item" href="{%url 'Urgent' %}">Urgent</a></li>
-                      </ul>   
-                    </li>
-                    {% if user.is_authenticated %}
-                        {%if user.is_donor%}
-                          <li><a class="nav-link" href="{% url 'dashboard_donor'%}"><i class="bi bi-person-circle"></i></a></li>
-                          {%elif user.is_association%}
-                            <li><a class="nav-link" href="{% url 'dashboard_association'%}"><i class="bi bi-person-circle"></i></a></li>
-                          {%else%}
-                            <li><a class="nav-link" href="{% url 'dashboardAdmin'%}"><i class="bi bi-person-circle"></i></a></li>
+              <nav id="navbar" class="navbar">
+                <ul>                  
+                  <li><a class="nav-link scrollto active" href="/">Home</a></li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <li><a class="dropdown-item" href="{%url 'Health' %}" >Healthcare</a></li>
+                      <li><a class="dropdown-item" href="{%url 'Education' %}">Education</a></li>
+                      <li><a class="dropdown-item" href="{%url 'Children' %}">Children</a></li>
+                      <li><a class="dropdown-item" href="{%url 'Environment' %}">Environment</a></li>
+                      <li><a class="dropdown-item" href="{%url 'Urgent' %}">Urgent</a></li>
+                    </ul>   
+                  </li>
+                  {% if user.is_authenticated %}
+                      {%if user.is_donor%}
+                        <li><a class="nav-link" href="{% url 'dashboard_donor'%}"><i class="bi bi-person-circle"></i></a></li>
+                        {%elif user.is_association%}
+                          <li><a class="nav-link" href="{% url 'dashboard_association'%}"><i class="bi bi-person-circle"></i></a></li>
+                        {%else%}
+                          <li><a class="nav-link" href="{% url 'dashboardAdmin'%}"><i class="bi bi-person-circle"></i></a></li>
                         {% endif %}
-                    {% else %}
-                      <li>
-                        <a class="nav-link" role="button" href="{%url 'DonorSignIn' %}">Log In</a>
-                      </li>
-
-                      <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          Sign up
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                          <li><a class="dropdown-item" href="{% url 'DonorSignup' %}">As Donor</a></li>
-                          <li><a class="dropdown-item" href="{% url 'AssociationSignup' %}">As Association</a></li>
-                          <li><a class="dropdown-item" href="{% url 'signupadmin' %}">As Admin</a></li>
-                        </ul>
-                      </li>
-                    {% endif%}
-                </ul>
-                
-                <i class="bi mobile-nav-toggle bi-list">
-                  
-                </i>
-            </nav>
-            </div>
-        </header>
+                      {% else %}
+                        <li><a class="nav-link" role="button" href="{%url 'DonorSignIn' %}">Log In</a></li>
+                        <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Sign up</a>
+                          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{% url 'DonorSignup' %}">As Donor</a></li>
+                            <li><a class="dropdown-item" href="{% url 'AssociationSignup' %}">As Association</a></li>
+                            <li><a class="dropdown-item" href="{% url 'signupadmin' %}">As Admin</a></li>
+                          </ul>
+                        </li>
+                  {% endif%}
+                </ul>           
+                <i class="bi mobile-nav-toggle bi-list"></i>                                
+              </nav>
+          </div>
+      </header>
         {% block content %}
         {% endblock %}
     
          <!-- ======= Footer ======= -->
   <footer id="footer">
-
     <div class="footer-top">
       <div class="container">
         <div class="row">
-
           <div class="col-lg-3 col-md-6 footer-contact">
             <h3>  HopeBloom <span>.</span></h3>
             <p>
@@ -111,7 +213,6 @@
               <strong>Email:</strong> hopeBloom@gmail.com<br>
             </p>
           </div>
-
           <div class="col-lg-3 col-md-6 footer-links">
             <h4>Useful Links</h4>
             <ul>
@@ -121,7 +222,6 @@
               <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
             </ul>
           </div>
-
           <div class="col-lg-3 col-md-6 footer-links">
             <h4>Our Services</h4>
             <ul>
@@ -129,7 +229,6 @@
               <li><i class="bx bx-chevron-right"></i> <a href="#"> !!coming soon!!  </a></li>
             </ul>
           </div>
-
           <div class="col-lg-3 col-md-6 footer-links">
             <h4>Our Social Networks</h4>
             <p>to keep up with us more </p>
@@ -139,16 +238,13 @@
               <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
             </div>
           </div>
-
         </div>
       </div>
     </div>
-
     <div class="container py-4">
       <div class="copyright">
         &copy; Copyright <strong><span>HopeBloom</span></strong>. All Rights Reserved
       </div>
-     
     </div>
   </footer><!-- End Footer -->
          
@@ -165,17 +261,34 @@
     <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js'%}"></script>
     <script src="{% static 'assets/vendor/waypoints/noframework.waypoints.js'%}"></script>
     <script src="{% static 'assets/vendor/php-email-form/validate.js'%}"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"></script>
     <script>
       const searchButton = document.getElementById('search-button');
       const searchInput = document.getElementById('search-input');
-      searchButton.addEventListener('click', () => {
-        const inputValue = searchInput.value;
-        alert(inputValue);
-      });
-   </script>
+      const searchGroup = document.querySelector('.input-group');
+      const searchLabel = document.querySelector('.form-outline label');
 
-     <!-- Template Main JS File -->
-     <script src="{% static 'assets/js/main.js'%}"></script>    
+      
+      searchButton.addEventListener('click', (event) => {
+          event.preventDefault();
+          const inputValue = searchInput.value;
+          if(inputValue.trim()) {
+              searchGroup.classList.add('animate__animated', 'animate__bounceOutUp');
+              setTimeout(() => {
+                  document.querySelector('.form-outline').submit();
+              }, 10); // Delay to allow animation to complete
+          }
+      });
+      searchInput.addEventListener('input', () => {
+        if (searchInput.value.trim() !== '') {
+            searchLabel.classList.add('active');
+        } else {
+            searchLabel.classList.remove('active');
+        }
+      });
+    </script>
+
+    <!-- Template Main JS File -->
+    <script src="{% static 'assets/js/main.js'%}"></script>    
 </body>
 </html>

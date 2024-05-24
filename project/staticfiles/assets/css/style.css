@@ -227,7 +227,7 @@ h6 {
   opacity: 0;
   visibility: hidden;
   background: #fff;
-  box-shadow: 0px 0px 30px rgba(127, 137, 161, 0.25);
+  box-shadow: 0px 0px 30px rgba(67, 44, 74, 0.25);
   transition: 0.3s;
 }
 
@@ -404,8 +404,6 @@ h6 {
 #hero {
   width: 100%;
   height: 75vh;
-  /*background-image: url("project\static\assets\img\Mine.jpg") top left;*/
- /* background-color: #4b4e52;*/
   background-size: cover;
   position: relative;
 }
@@ -422,6 +420,8 @@ h6 {
 
 #hero .container {
   position: relative;
+  margin-top: 20px;
+  margin-left: 50px;
 }
 
 #hero h1 {
@@ -429,16 +429,16 @@ h6 {
   font-size: 48px;
   font-weight: 700;
   line-height: 56px;
-  color: #222222;
+  color: #5c778e;
   font-family: "Poppins", sans-serif;
 }
 
 #hero h1 span {
-  color: #5d6876;
+  color: #3a4c62;
 }
 
 #hero h2 {
-  color: #555555;
+  color: #78a0bb;
   margin: 5px 0 30px 0;
   font-size: 24px;
   font-weight: 400;
@@ -455,11 +455,11 @@ h6 {
   border-radius: 4px;
   transition: 0.5s;
   color: #fff;
-  background: #5d6876;
+  background: #7da2bc;
 }
 
 #hero .btn-get-started:hover {
-  background: #4b4e52;
+  background: #a5acb6;
 }
 
 @media (min-width: 1024px) {

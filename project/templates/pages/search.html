@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Page</title>
+  {% block extra_styles %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        h1, h2, h3 {
+            color: #333;
+            text-align: center;
+        }
+        .search-form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .results-container {
+            max-width: 800px;
+            margin: 80px auto;
+            padding: 40px 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .results-container h3 {
+            margin-top: 0;
+        }
+        .results-container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .results-container ul li {
+            background-color: #fafafa;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .results-container ul li a {
+            text-decoration: none;
+            color: #333;
+        }
+        .results-container ul li a:hover {
+            text-decoration: underline;
+        }
+    </style>
+  {% endblock %}
+
+</head>
+<body>
+ {% block content %}
+
+    <div class="container mt-5 results-container">
+        {% if query %} 
+         {% if not association_results and not publication_results and not event_results %}
+            <br>
+            <h3>No results found for "{{ query }}".</h3>
+            <br>
+         {% else %}
+            <h2>Results for "{{ query }}":</h2>
+            {% if association_results %}
+                <h3>Associations</h3>
+                <ul>
+                    {% for association in association_results %}
+                        <li>Pour contacter l'association : <a href="{% url 'contact_association' association.id %}">{{ association.user.username }}</a></li>
+                        {% empty %}
+                        <li>No associations found.</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if publication_results %}
+                <h3>Publications</h3>
+                <ul>
+                    {% for publication in publication_results %}
+                        <li><a href="{% url 'detail' publication.id %}">{{ publication.titre }}</a></li>
+                        {% empty %}
+                        <li>No publications found.</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if event_results %}
+                <h3>Events</h3>
+                <ul>
+                    {% for event in event_results %}
+                        <li><a href="{% url 'detail_events' event.id %}">{{ event.title }}</a></li>
+                        {% empty %}
+                        <li>No events found.</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+          {% endif %}
+        {%else%}
+            <br>
+            <h3>Please enter a search term.</h3>  
+            <br>
+        {% endif %}
+    </div>
+
+  {% endblock%}
+</body>
+</html>

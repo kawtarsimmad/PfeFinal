@@ -6,7 +6,8 @@ from users.models import Association,User,Donor
 from events.models import Event
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
-
+from .forms import SearchForm
+from django.db.models import Q
 
 
 
@@ -51,8 +52,9 @@ def index(request):
         })
 
     
-
+    form = SearchForm()
     context = {
+        'form': form,
         'events': events,
         'categories': categories,
         'publications': publications,
@@ -66,24 +68,43 @@ def index(request):
         'totalDons':totalDons,
         'Montant_rest':Montant_rest
     }
-    #publications = Publication.objects.order_by('date')[:2]
-     #######admin_user = User.objects.filter(is_superuser=True).first()
-    #if admin_user:
-        # Filtrer les publications créées par l'administrateur
-        #publications = Publication.objects.filter(user=admin_user)
-    #else:
-        #publications = []  # Aucun administrateur trouvé, donc aucune publication à afficher
-
-    #children_category = Category.objects.filter(id="1").first()
-
-    #if children_category:
-        # Filtrer les publications appartenant à la catégorie "children"
-        #publications = Publication.objects.filter(category_id=children_category)
-    #else:
-        #publications = []  # Aucune catégorie "children" trouvée, donc aucune publication à afficher
 
     return render(request, 'pages/index.html', context)
 
+
+def search(request):
+    form = SearchForm()
+    query = None
+    publication_results = []
+    event_results = []
+    user_results = []
+    association_results = []
+
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            publication_results = Publication.objects.filter(titre__icontains=query)
+            event_results = Event.objects.filter(title__icontains=query)
+            user_results = User.objects.filter(username__icontains=query)
+            user_results = User.objects.filter(first_name__icontains=query)
+            association_results = Association.objects.filter(
+                            Q(user__username__icontains=query) | 
+                            Q(user__first_name__icontains=query)
+            )
+            if association_results.exists():
+                association = association_results.first()
+                publication_results = Publication.objects.filter(association=association)
+                event_results=Event.objects.filter(user=association.user)
+
+    return render(request, 'pages/search.html', {
+        'form': form,
+        'query': query,
+        'publication_results': publication_results,
+        'event_results': event_results,
+        'user_results': user_results,
+        'association_results': association_results,
+     })
 
 def latest_publications(request):
     # Retrieve latest publications ordered by date (newest first)
