@@ -29,7 +29,6 @@ def faire_don(request, publication_id):
     totalDons=publication.calculate_total_dons()  
     Montant_rest= (montant_obj - totalDons )
     publication.Montant_rest = Montant_rest
-    #if request.user.has_perm('your_app_name.can_make_donation'):#
     if request.method == 'POST':
         form = PaiementForm(request.POST)
         if form.is_valid():
