@@ -7,9 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Search Page</title>
   {% block extra_styles %}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,7 +14,15 @@
             margin: 0;
             padding: 0;
         }
-        h1, h2, h3 {
+        .results-container h2 {
+            margin-bottom: 40px;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(206, 74, 134, 1), rgba(93, 119, 143, 1)); /* Dégradé de fond */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; 
+       
+        }
+        h3 {
             color: #333;
             text-align: center;
         }
@@ -28,89 +33,122 @@
             margin: 20px 0;
         }
         .results-container {
-            max-width: 800px;
-            margin: 80px auto;
-            padding: 40px 20px;
-            background: #fff;
+            max-width: 1200px; 
+            margin: 70px auto; 
+            padding: 60px; 
+            background: #f4f4f9;
+            border-radius: 8px;
+        }
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px; 
+        }
+        .card {
+            background-color: #fafafa;
+            margin: 10px;
+            padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            max-width: 50%;
+            box-sizing: border-box;
+            transition: transform 0.2s;
         }
-        .results-container h3 {
+        .card-row .card {
+            flex: 1;
+            margin: 10px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: scale(1.02);
+        }
+        .card h3 {
             margin-top: 0;
         }
-        .results-container ul {
-            list-style-type: none;
+        .card ul {
+            list-style: none;
             padding: 0;
         }
-        .results-container ul li {
-            background-color: #fafafa;
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 4px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        .card li {
+            margin: 5px 0;
         }
-        .results-container ul li a {
+        .card li img {
+            margin-right: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%; /* Forme circulaire */
+        }
+        .card a {
             text-decoration: none;
-            color: #333;
+            background: linear-gradient(to bottom, rgba(206, 74, 134, 1), rgba(93, 119, 143, 1)); /* Dégradé de fond */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .results-container ul li a:hover {
+        .card a:hover {
             text-decoration: underline;
         }
     </style>
   {% endblock %}
-
 </head>
 <body>
  {% block content %}
-
     <div class="container mt-5 results-container">
         {% if query %} 
          {% if not association_results and not publication_results and not event_results %}
-            <br>
             <h3>No results found for "{{ query }}".</h3>
-            <br>
          {% else %}
-            <h2>Results for "{{ query }}":</h2>
-            {% if association_results %}
-                <h3>Associations</h3>
-                <ul>
-                    {% for association in association_results %}
-                        <li>Pour contacter l'association : <a href="{% url 'contact_association' association.id %}">{{ association.user.username }}</a></li>
+            <h2>Results for "{{ query }}"</h2>
+            <div class="card-row">
+                <div class="card">
+                    <h3>Associations</h3>
+                    <ul>
+                        {% for association in association_results %}
+                            <li><p>Contact d'association:</p>
+                                <img src="{{ association.image.url }}" alt="{{ association.id }}">
+                                <a href="{% url 'contact_association' association.id %}">{{ association.user.username }}</a>
+                            </li>
                         {% empty %}
-                        <li>No associations found.</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-
-            {% if publication_results %}
-                <h3>Publications</h3>
-                <ul>
-                    {% for publication in publication_results %}
-                        <li><a href="{% url 'detail' publication.id %}">{{ publication.titre }}</a></li>
+                            <li>No associations found.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Publications</h3>
+                    <ul>
+                        {% for publication in publication_results %}
+                        
+                            <li>
+                                <img src="{{ publication.image.url }}" alt="{{ publication.titre }}">
+                                 <a href="{% url 'detail' publication.id %}">{{ publication.titre }}</a>
+                            </li>
                         {% empty %}
-                        <li>No publications found.</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-
-            {% if event_results %}
-                <h3>Events</h3>
-                <ul>
-                    {% for event in event_results %}
-                        <li><a href="{% url 'detail_events' event.id %}">{{ event.title }}</a></li>
+                            <li>No publications found.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Events</h3>
+                    <ul>
+                        {% for event in event_results %}
+                            <li>
+                                <img src="{{ event.image.url }}" alt="{{ event.title }}">
+                                <a href="{% url 'detail_events' event.id %}">{{ event.title }}</a>
+                            </li>
                         {% empty %}
-                        <li>No events found.</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
+                            <li>No events found.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
           {% endif %}
-        {%else%}
-            <br>
-            <h3>Please enter a search term.</h3>  
-            <br>
+        {% else %}
+            <h3>Please enter a search term.</h3>
         {% endif %}
     </div>
-
-  {% endblock%}
+  {% endblock %}
 </body>
 </html>

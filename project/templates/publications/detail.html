@@ -1,199 +1,150 @@
-{%load static %}
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %} 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Details de publication</title>
-        <!-- Vendor CSS Files -->
-        <link href="{% static  'assets/vendor/aos/aos.css'%}" rel="stylesheet">
-        <link href="{% static  'assets/vendor/bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
-        <link href="{% static  'assets/vendor/bootstrap-icons/bootstrap-icons.css'%}" rel="stylesheet">
-        <link href="{% static  'assets/vendor/boxicons/css/boxicons.min.css'%}" rel="stylesheet">
-        <link href="{% static  'assets/vendor/glightbox/css/glightbox.min.css'%}" rel="stylesheet">
-        <link href="{% static  'assets/vendor/swiper/swiper-bundle.min.css'%}" rel="stylesheet">
-            
-            <!-- Template Main CSS File -->
-        <link rel="stylesheet" type="text/css" href="{% static  'assets/css/style.css' %}" >
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-            color: black;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
-            border-radius: 5px;
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .publication-details {
-            display: flex;
-            flex-direction: row-reverse;
-        }
-
-        .details {
-            flex: 1;
-            margin-left: 20px;
-        }
-
-        .image {
-            max-width: 100%;
-            max-height: 200px;
-            
-        }
-
-        
-        h3{
-            color: #007bff; /* Couleur du titre décoré */
-            text-decoration: underline; /* Souligner le titre */
-            margin-bottom: 5px; /* Espacement entre le titre et le texte */
-            display: inline; /* Afficher en ligne */
-            margin-right: 5px; /* Espacement entre le titre et la valeur */
-        
-        }
-        h5 {
-            color:black; /* Couleur du titre décoré */
-            text-decoration: underline; /* Souligner le titre */
-            margin-bottom: 5px; /* Espacement entre le titre et le texte */
-            display: inline; /* Afficher en ligne */
-            margin-right: 5px; /* Espacement entre le titre et la valeur */
-        }
-
-        img {
-            max-width: 100%;
-            max-height: 180px;
-            width: auto;
-            height: auto;
-            display: block;
-            margin: 20px auto;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        li {
-            border-bottom: 1px solid #ccc;
-            padding: 10px 0;
-        }
-
-        p {
-            margin: 4px 0;
-        }
-        h4 {
-            color: #007bff; /* Couleur du titre décoré */
-            text-decoration: underline; /* Souligner le titre */
-            margin-bottom: 5px; /* Espacement entre le titre et le texte */
-            display: inline; /* Afficher en ligne */
-            margin-right: 5px; /* Espacement entre le titre et la valeur */
-        }
-        
-
-
-        .no-don {
-            font-style: italic;
-            color: #888;
-        }
-    </style>
+    {% block extra_styles %}
+   <style></style>
+    {% endblock %}
 </head>
+
 <body>
-    <div class="container">
-        <h2>Details de publication</h2>
-        <div class="publication-details">
-            <div class="details">
-                <br>
-                <p><h4>Titre:</h4> {{ publication.titre }}</p>
-                <p><h4>Montant objectif :</h4>  {{ publication.montant }}$</p>
-                <p><h4>Category :</h4>{{ publication.category }}</p>
-                <p><h4>Nom de l'association :</h4>{{ publication.association.user.first_name }}</p>
-                <p><h4>Date de création :</h4>{{ publication.date }}</p>
-                <p><h4>Description  :</h4>{{ publication.contenu }}</p>
-                
+    {% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-7 mb-4">
+                <div class="container details-container">
+                    <div class="card article-card">
+                        <div class="widget-title ">
+                            <h3>{{ publication.titre }}</h3>
+                        </div>
+                        <div class="article-img">
+                            <img src="{{ publication.image.url }}" title="" alt="{{ publication.titre }}" class="img-fluid">
+                        </div>
+                        <div class="article-content" id="publication-content">
+                            <p>{{ publication.contenu|add_initial_space|first_letter_bold_upper|first_line_bold_italic|last_line_bold_italic|safe|linebreaksbr }}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="image">
-                <img src="{{ publication.image.url }}" alt="{{ publication.titre }}">
-                <a href="{% url 'faire_don' publication.id %}" class="btn btn-primary">faire un Don</a>                
-            </div>  
-
+            <div class="col-md-5">
+                <div class="association mb-4">
+                    <div class="widget widget-author">
+                        <div class="widget-title">
+                            <h3>Author</h3>
+                        </div>
+                        <div class="widget-body">
+                            <div class="media align-items-center">
+                                <div class="avatar">
+                                    <img src="{{ association.image.url }}" title="{{ publication.association.user.first_name }}" alt="">
+                                    <span style="color: black; font-size: 16px; font-weight: bold;">Hello, I'm {{ publication.association.user.first_name }}</span>
+                                </div>
+                                <br>
+                            </div>
+                            <p>Email: <a href="{% url 'contact_association' association.id %}">{{ publication.association.user.email }}</a></p>
+                            <p>Location:<a href="https://www.google.com/maps/search/{{ association.adresse }}" target="_blank"> {{ association.adresse }}</a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="details mb-4">
+                    <div class="widget widget-author">
+                        <div class="widget-title">
+                            <h3>Details</h3>
+                        </div>
+                        <div class="widget-body">
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item"><strong>Date:</strong> {{ publication.date|date:"j F Y" }}</li>
+                                <li class="list-group-item"><strong>Time:</strong> {{ publication.date.time }}</li>
+                                <li class="list-group-item"><strong>Category:</strong> {{ publication.category }}</li>
+                                <li class="list-group-item"><strong>Objectif:</strong> {{ publication.montant }}$</li>
+                                <li class="list-group-item">
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar"
+                                            style="width: {{ publication.progress_percent }}%; background-color: #5d7990;"
+                                            aria-valuenow="{{ publication.progress_percent }}" aria-valuemin="0"
+                                            aria-valuemax="100"></div>
+                                    </div>
+                                    {% if publication.Montant_rest > 0 %}
+                                    <div style="font-style: italic; text-decoration: underline;"><strong>Montant restant {{ publication.Montant_rest|floatformat:2 }}$</strong></div>
+                                    {% else %}
+                                    <div style="font-style: italic; text-decoration: underline;"><strong>Objectif atteint</strong></div>
+                                    {% endif %}
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="widget-button">
+                                        <a href="{% url 'faire_don' publication.id %}" class="btn btn-primary custom-btn">Faire un Don</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="dons mb-4">
+                    <div class="widget widget-author">
+                        <div class="widget-title">
+                            <h3>listes des dons</h3>
+                        </div>
+                        <div class="widget-body">
+                            <ul class="list-group list-group-flush mb-3">
+                                {% for don in dons %}
+                                <li class="don-item">
+                                    <span class="don-details">
+                                        <span class="don-label">User:</span>
+                                        <span class="don-value">{{ don.user.first_name|default_if_none:"Anonyme" }}</span>
+                                        <span class="don-label">Montant:</span>
+                                        <span class="don-value">{{ don.montantDons }}$</span>
+                                    </span>
+                                </li>
+                                {% empty %}
+                                <li class="no-don">Aucun don associé à cette publication pour le moment.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <br>
-        <div class="progress">
-            <div class="progress-bar" role="progressbar" style="width: {{ publication.progress_percent }}%;" aria-valuenow="{{ publication.progress_percent }}%" aria-valuemin="0" aria-valuemax="100"></div>
-        </div>
-        {% if publication.Montant_rest > 0 %}
-              <div style="font-style: italic; text-decoration: underline;" ><strong>Montant restant {{ publication.Montant_rest|floatformat:2 }}$</strong></div>
-        {% else %}
-                <div style="font-style: italic; text-decoration: underline;" ><strong>Objectif atteint</strong></div>
-        {% endif %}
-        <br>
+        <div class="row">
+            <div class="col-md-12 mb-4">
+                <div class="article-comment">
+                    <h4>Commentaires</h4>
+                    {% for comment in comments %}
+                    <div>
+                        <p><strong>{{ comment.auteur.username }}:</strong> {{ comment.content }}</p>
+                        <p><em>{{ comment.date_posted }}</em></p>
 
-        
-        <h4>Liste des dons associés à cette publication </h4>
-        <ul>
-            {% for don in dons %}
-                <li>
-                    <span style=""><h5>Donateur:</h5></span><span>{{ don.user.first_name }} </span>
-                    <span style=""><h5>Montant du don:</h5></span><span>{{ don.montantDons }}$</span>
-                    <!--<span style=""><h5>Date du don:</h5></span><span>{{ don.date }}  </span> -->
-                </li>
-            {% empty %}
-                <li class="no-don">Aucun don associé à cette publication pour le moment.</li>
-            {% endfor %}
-        </ul>
-        <h4>Commentaires</h4>
-        {% for comment in comments %}
-            <div>
-                <p><strong>{{ comment.auteur.username }}:</strong> {{ comment.content }}</p>
-                <p><em>{{ comment.date_posted }}</em></p>
-  
-                <!-- Lien de mise à jour -->
-                {% if comment.auteur == request.user %}
-                  <a href="{% url 'update_comment' comment.id %}">Modifier</a>
-                {% endif %}
-                
-                <!-- Lien de suppression -->
-                {% if comment.auteur == request.user %}
-                    <form method="post" action="{% url 'delete_comment' comment.id %}">
+                        <!-- Lien de mise à jour -->
+                        {% if comment.auteur == request.user %}
+                        <a href="{% url 'update_comment' comment.id %}">Modifier</a>
+                        {% endif %}
+
+                        <!-- Lien de suppression -->
+                        {% if comment.auteur == request.user %}
+                        <form method="post" action="{% url 'delete_comment' comment.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Supprimer</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <br>
+                    <h6>Ajouter un commentaire</h6>
+                    <form method="post" action="{% url 'create_comment' model_name='publication' object_id=publication.id %}">
                         {% csrf_token %}
-                        <button type="submit">Supprimer</button>
+                        <textarea name="content" rows="3" class="form-control"></textarea>
+                        <button type="submit" class="px-btn px-btn-theme">Envoyer</button>
                     </form>
-                {% endif %}
+                </div>
             </div>
-        {% endfor %}
-    
-        <h3>Ajouter un commentaire</h3>
-        <form method="post" action="{% url 'create_comment' model_name='publication' object_id=publication.id %}">
-            {% csrf_token %}
-            <textarea name="content" required></textarea><br>
-            <button type="submit">Envoyer</button>
-        </form>
-
-        <!-- Template Main JS File -->
-        <script src="{% static 'assets/js/main.js'%}"></script>  
-        <!-- Vendor JS Files -->
-        <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js'%}"></script>
-        <script src="{% static 'assets/vendor/aos/aos.js'%}"></script>
-        <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
-        <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js'%}"></script>
-        <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js'%}"></script>
-        <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js'%}"></script>
-        <script src="{% static 'assets/vendor/waypoints/noframework.waypoints.js'%}"></script>
-        <script src="{% static 'assets/vendor/php-email-form/validate.js'%}"></script>
-    
-        
-       
+        </div>
     </div>
+    {% endblock %}
 </body>
+
+
 </html>

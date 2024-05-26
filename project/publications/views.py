@@ -78,7 +78,7 @@ def PubDetail(request, pk):
     dons = publication.dons.filter(est_paye=True) # Récupérer tous les dons associés à cette publication
     content_type = ContentType.objects.get_for_model(publication)
     comments = Comment.objects.filter(content_type=content_type, object_id=publication.id)
-
+    association = publication.association
     montant_obj = publication.montant
     totalDons=publication.calculate_total_dons()  
     Montant_rest= (montant_obj - totalDons )
@@ -97,7 +97,8 @@ def PubDetail(request, pk):
         'totalDons':totalDons,
         'Montant_rest':Montant_rest,
         'progress_percent':progress_percent,
-        'comments': comments
+        'comments': comments,
+        'association':association,
     }
 
     return render(request, 'publications/detail.html', context)
