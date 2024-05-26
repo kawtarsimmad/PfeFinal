@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from .views import generate_pdf
+
 
 urlpatterns = [
     path('don/',views.don,name='don'),
@@ -10,6 +12,7 @@ urlpatterns = [
     path('checkout/<int:don_id>/', views.CheckOut, name='checkout'),
     path('payment-success/<int:don_id>/', views.PaymentSuccessful, name='payment-success'),
     path('payment-failed/<int:don_id>/', views.paymentFailed, name='payment-failed'),
+    path('dons/generate_pdf/<int:don_id>/', generate_pdf, name='generate_pdf'),
 
     
 ]

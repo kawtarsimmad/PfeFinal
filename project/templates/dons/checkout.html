@@ -1,51 +1,77 @@
-{%extends 'base.html' %}
+{% extends 'base.html' %}
 {% load static  %}
+{% block content %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout page</title>
-
-    
-</head>
-<body>
-    {% block content %}
-    <h1>Checkout for don: {{don.id}}</h1>
-    <div class="don-container">
-        <div class="dons">
-            <p>don:{{don.id}}</p>
-            <p>Montant: {{don.montantDons}} $</p>
-            <!-- <button>Purchase</button> -->
-            {{paypal.render}}
-        </div>
-    </div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <style>
-        body {
-            padding: 10px;
-            box-sizing: border-box;
+        .card {
+            box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
         }
-
-        .don-container {
+        
+        .card {
+            position: relative;
             display: flex;
-            flex-direction: row;
-            width: 100%;
-            height: 100vh;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 0 solid rgba(0,0,0,.125);
+            border-radius: 1rem;
         }
-        .img {
-            width: 60%;
-            border-radius: 50px;
-        }
-        button {
-            padding: 10px;
-            border-radius: 5px;
-            background-color: dodgerblue;
-            color: white;
-            border: none;
+        
+        .card-body {
+            -webkit-box-flex: 1;
+            -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+            padding: 1.5rem 1.5rem;
         }
     </style>
-
     
-    {% endblock content %}
+</head>
+<body><br><br><br><br><br>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-3">
+                <div class="card position-sticky top-0">
+                    <div class="p-3 bg-light bg-opacity-10">
+                        <h6 class="card-title mb-3">Payment Summary</h6>
+                        <div class="d-flex justify-content-between mb-1 small">
+                            <span>Post</span> <span>{{ don.publication.titre }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1 small">
+                            <span>Association:</span> <span>{{ don.publication.association.user.first_name }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1 small">
+                            <span>Objectif:</span> <span>{{ don.publication.montant }}$</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1 small">
+                            <span>Montant Rest:</span> <span>{{ don.publication.Montant_rest }}$</span>
+                        </div>                        
+                        <hr>
+        
+                        <!-- Added the don-container inside the card -->
+                        <div class="don-container">
+                            <div class="dons">
+                                <p class="don-id">Donation ID: {{don.id}}</p>
+                                <p class="don-amount">Montant: {{don.montantDons}} $</p>
+                                <div class="payment-button">
+                                    {{paypal.render}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><br><br><br>
+
+{% endblock content %}
 </body>
 </html>
