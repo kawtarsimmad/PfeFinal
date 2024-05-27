@@ -3,7 +3,7 @@ from django.utils import timezone
 from users.models import Donor,User
 from publications.models import Publication
 class Don(models.Model): 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     id=models.AutoField(primary_key=True)
     date=models.DateTimeField(default=timezone.now)
     montantDons=models.DecimalField(max_digits=10,decimal_places=4)

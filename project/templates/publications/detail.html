@@ -300,7 +300,13 @@
                                     <li class="don-item">
                                         <span class="don-details">
                                             <span class="don-label">User:</span>
-                                            <span class="don-value">{{ don.user.first_name|default_if_none:"Anonyme" }}</span>
+                                            <span class="don-value">
+                                                {% if don.user %}
+                                                    {{ don.user.first_name}}
+                                                {% else %}
+                                                    Anonyme
+                                                {% endif %}
+                                            </span>
                                             <span class="don-label">Montant</span>
                                             <span class="don-value">{{ don.montantDons }}$</span>
                                         </span>

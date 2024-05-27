@@ -33,7 +33,10 @@ def faire_don(request, publication_id):
         form = PaiementForm(request.POST)
         if form.is_valid():
             montantDons = form.cleaned_data['montantDons']
-            don = Don.objects.create(user=request.user, montantDons = montantDons, publication=publication)
+            if request.user.is_authenticated:      
+                don = Don.objects.create(user=request.user, montantDons = montantDons, publication=publication)
+            else:
+                don = Don.objects.create(montantDons=montantDons, publication=publication)
             return CheckOut(request, don.id)
     else:
         form = PaiementForm()
