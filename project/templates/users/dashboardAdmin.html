@@ -11,9 +11,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/purecounter/1.0.3/purecounter.min.js"></script>
 
-    <style>   
+    <style>  
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+
+        }
+        .main-content {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
         .cnt {
-            background-color: #fff; /* Background color */
             padding: 20px 0; /* Padding around the counts section */
         }
     
@@ -85,10 +96,10 @@
 <body>
     <div class="main-content">
      
-        <h1 class="mt-4">Espace Admin</h1>
+        <h1 >Espace Admin</h1>
 
        
-        <main class="col-md-10 bg-light p-4 content">
+        <main class="col-md-10  p-4 content">
             <a href="{% url 'reclamations' %}" class="nav-link">
                 <i class="fas fa-bell" style="margin-left:4%">
                     <span class="badge badge-danger badge-custom-color " id="reclamationsCount">{{ pending_reclamations_count }}</span>
@@ -148,7 +159,7 @@
                     </div>
                 </section>
 
-                <div class="container mt-5">
+                <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-md-6">
                             <div class="card">

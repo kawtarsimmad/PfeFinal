@@ -118,7 +118,6 @@
                 {% if user.is_donor %}
                     <li><a href="{% url 'update_donor' donor.id %}" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-bars"></i> Settings</a></li>
                 {% endif %}  
-                <li><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-bell"></i> Notifications</a></li>
                 <li class="nav-item">
                     <a class="text-decoration-none px-3 py-2 d-block" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Se déconnecter</a>
                 </li>

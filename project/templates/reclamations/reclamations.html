@@ -3,6 +3,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+    {% block extra_styles %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+
+        }
+        .main-content {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+    </style>
+    {% endblock %}
 </head>
 <body>
 {% block content %}
