@@ -346,7 +346,7 @@
       box-shadow: none !important;
     }
     .contact-form .form-control:focus {
-      border-bottom: 1px solid #ce4a86;
+      border-bottom: 1px solid #5d7990;
     }
     .contact-form .form-control.invalid {
       border-bottom: 1px solid #ff0000;
@@ -476,6 +476,29 @@
       border-radius: 50%;
       margin-left: 0px;
     }
+
+    .btn-small {
+      padding: 5px 10px;
+      font-size: 0.85em; 
+    }
+    .button-group {
+      display: flex;
+      align-items: center;
+      margin-top: 10px; /* Espace entre le commentaire et les boutons */
+    }
+    .button-group a,
+    .button-group form {
+            margin-right: 10px;
+            box-shadow: 0 0 10px #5d7990;
+    }
+    .btn-small {
+            padding: 5px 10px;
+            font-size: 0.85em; 
+    }
+    .button-group form {
+            display: inline;
+    } 
+    
   
 </style>
 {% endblock %}
@@ -512,16 +535,16 @@
                       <div class="mt-4">
                         {% if user.is_authenticated %}
                             {% if user in events.attendees.all %}
-                                <div class="alert alert-info" role="alert">
+                                <div class="alert alert-secondary" role="alert">
                                     You are already attending this event.
                                 </div>
                             {% elif events.attendees.count < events.max_attendees %}
                                 <form method="post" action="{% url 'participate_event' events.pk %}">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-secondary">Attend Event</button>
+                                    <button type="submit" class="btn btn-secondary custom-btn" style="background-color:#5d7990">Attend Event</button>
                                 </form>
                             {% else %}
-                                <div class="alert alert-warning" role="alert">
+                                <div class="alert alert-secondary" role="alert">
                                     This event is fully booked.
                                 </div>
                             {% endif %}
@@ -533,25 +556,30 @@
                     </div>
                   </div>
               </article>
+              <div class="contact-form article-comment">
               <div>
                 <div class="comment-form">
+                  <h4 style="color: #5d7990"><i class="fas fa-comment" ></i> Commentaires </h4>
                   <h6>Ajouter un commentaire</h6>
-              <form method="post" action="{% url 'create_comment' model_name='events' object_id=events.id %}"class="comment-form">                                
-                  {% csrf_token %}
-                  <div class="form-group">
-                      <textarea name="content" rows="1" class="form-control"></textarea><br>
-                      <button type="submit" class="btn btn-primary custom-btn">Envoyer</button>
-                  </div>
-              </form>
+                  <form method="post" action="{% url 'create_comment' model_name='events' object_id=events.id %}"class="comment-form">                                
+                      {% csrf_token %}
+                      <div class="form-group">
+                          <textarea name="content" rows="1" class="form-control"></textarea><br>
+                          <button type="submit" class="btn btn-secondary custom-btn" style="background-color:#5d7990">Envoyer</button>
+                      </div>
+                  </form>
                 </div>
               </div>
               <div class="comment-container">
                 {% for comment in comments %}
                 <div class="single-comment">
-                    <div class="comment-header">
-                        <p class="small-bold"><em>{{ comment.date_posted|date:"j F Y" }} </em></p>
-                    </div>
-                    <p> <i class="fas fa-calendar-alt" style="color:#5d7990;"></i> <strong>{{ comment.auteur.username }}:</strong> {{ comment.content }}</p>
+                    
+                    <p> 
+                      <i class="bi bi-person-circle"></i> <strong>{{ comment.auteur.username }}:</strong> {{ comment.content }} 
+                      
+                        <em>{{ comment.date_posted|date:"j/m/Y" }} </em>
+                      
+                    </p>
                     <!-- Boutons de modification et de suppression -->
                     {% if comment.auteur == request.user %}
                     <div class="button-group">
@@ -567,6 +595,7 @@
                 {% endfor %}           
             </div>
           </div>
+        </div>
           <div class="col-lg-4 m-15px-tb blog-aside">
               <!-- Author -->
               <div class="widget widget-author">
@@ -610,16 +639,16 @@
                       <div class="mt-4">
                           {% if user.is_authenticated %}
                               {% if user in events.attendees.all %}
-                                  <div class="alert alert-info" role="alert">
+                                  <div class="alert alert-secondary" role="alert">
                                       You are already attending this event.
                                   </div>
                               {% elif events.attendees.count < events.max_attendees %}
                                   <form method="post" action="{% url 'participate_event' events.pk %}">
                                       {% csrf_token %}
-                                      <button type="submit" class="btn btn-secondary">Attend Event</button>
+                                      <button type="submit" class="btn btn-secondarycustom-btn" style="background-color:#5d7990">Attend Event</button>
                                   </form>
                               {% else %}
-                                  <div class="alert alert-warning" role="alert">
+                                  <div class="alert alert-secondary" role="alert">
                                       This event is fully booked.
                                   </div>
                               {% endif %}

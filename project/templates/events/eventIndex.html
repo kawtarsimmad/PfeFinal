@@ -1,4 +1,6 @@
+{% extends 'base.html' %}
 {% load static %}
+{% load custom_filters %} 
 <!DOCTYPE html>
  <html>
     <head>
@@ -26,7 +28,7 @@
             
             <!-- Template Main CSS File -->
         <link rel="stylesheet" type="text/css" href="{% static  'assets/css/style.css' %}" >
-
+        {% block extra_styles %}
         <style>
           /* Increase the size of the navbar icon */
           #navbar .nav-link i {
@@ -63,67 +65,12 @@
          }    
         
         </style>
+        {% endblock %}
     </head>
     <body>
-           
 
-        <header id="header" class="d-flex align-items-center">
-            <div class="container d-flex align-items-center justify-content-between">
-        
-              <h1 class="logo">
-                <a href="/">
-                  <img src="{% static 'assets/img/bloom.png' %}" alt="">
-                    HopeBloom
-                </a>
-              </h1>
-              <!-- Fixed navbar-->
-            <nav id="navbar" class="navbar">
-                <ul>
-                   
-                    <li><a class="nav-link scrollto active" href="/">Home</a></li>
-                    <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
-                      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#featured-services">Healthcare</a></li>
-                        <li><a class="dropdown-item" href="#featured-services">Education</a></li>
-                        <li><a class="dropdown-item" href="#featured-services">children</a></li>
-                        <li><a class="dropdown-item" href="#featured-services">Environment</a></li>
-                      </ul>   
-                    </li>
-                    {% if user.is_authenticated %}
-                        {%if user.is_donor%}
-                          <li><a class="nav-link" href="{% url 'dashboard_donor'%}"><i class="bi bi-person-circle"></i></a></li>
-                          {%elif user.is_association%}
-                            <li><a class="nav-link" href="{% url 'dashboard_association'%}"><i class="bi bi-person-circle"></i></a></li>
-                          {%else%}
-                            <li><a class="nav-link" href="{% url 'dashboardAdmin'%}"><i class="bi bi-person-circle"></i></a></li>
-                        {% endif %}
-                    {% else %}
-                      <li>
-                        <a class="nav-link" role="button" href="{%url 'DonorSignIn' %}">Log In</a>
-                      </li>
-
-                      <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          Sign up
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                          <li><a class="dropdown-item" href="{% url 'DonorSignup' %}">As Donor</a></li>
-                          <li><a class="dropdown-item" href="{% url 'AssociationSignup' %}">As Association</a></li>
-                          <li><a class="dropdown-item" href="{% url 'signupadmin' %}">As Admin</a></li>
-                        </ul>
-                      </li>
-                    {% endif%}
-                </ul>
-                
-                <i class="bi mobile-nav-toggle bi-list">
-                  
-                </i>
-            </nav>
-            </div>
-        </header>
         {% block content %}
-        {% endblock %}
+        
  
         <br><br><br><br>
         <div class="container">
@@ -138,13 +85,13 @@
                                   <h5 class="card-title">{{ event.title }}</h5>
                                   <p class="card-text">{{ event.description | truncatechars:150 }}</p>
                                   <div class="progress">
-                                      <div class="progress-bar" role="progressbar" style="width: {{ event.progress_percent }}%;" aria-valuenow="{{ event.progress_percent }}" aria-valuemin="0" aria-valuemax="100">
+                                      <div class="progress-bar" role="progressbar" style="width: {{ event.progress_percent }}%; Background-color: #5d7990;" aria-valuenow="{{ event.progress_percent }}" aria-valuemin="0" aria-valuemax="100">
                                           {{ event.progress_percent }}%
                                       </div>
                                   </div>
                                   <br>
-                                  <a href="{% url 'participate_event' event.pk %}" class="btn btn-primary">Participer</a>
-                                  <a href="{% url 'detail_events' event.id %}" class="btn btn-primary">Read More</a>
+                                  <a href="{% url 'participate_event' event.pk %}" class="btn btn-customs" style="Background-color: #5d7990;color: #ffffff">Participer</a>
+                                  <a href="{% url 'detail_events' event.id %}" class="btn btn-customs" style="Background-color: #5d7990;color: #ffffff">Read More</a>
                               </div>
                           </div>
                       </li>
@@ -154,87 +101,9 @@
               <p>No events found.</p>
           {% endif %}
         </div>
+        {% endblock %}
 
-           <!-- ======= Footer ======= -->
-           <footer id="footer">
-
-            <div class="footer-top">
-              <div class="container">
-                <div class="row">
-        
-                  <div class="col-lg-3 col-md-6 footer-contact">
-                    <h3>  HopeBloom <span>.</span></h3>
-                    <p>
-                      <strong>Phone:</strong> +212 611111111<br>
-                      <strong>Email:</strong> hopeBloom@gmail.com<br>
-                    </p>
-                  </div>
-        
-                  <div class="col-lg-3 col-md-6 footer-links">
-                    <h4>Useful Links</h4>
-                    <ul>
-                      <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-                      <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-                      <li><i class="bx bx-chevron-right"></i> <a href="#">Categories</a></li>
-                      <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
-                    </ul>
-                  </div>
-        
-                  <div class="col-lg-3 col-md-6 footer-links">
-                    <h4>Our Services</h4>
-                    <ul>
-                      <!--<li><i class="bx bx-chevron-right"></i> <a href="#">  </a></li>-->
-                      <li><i class="bx bx-chevron-right"></i> <a href="#"> !!coming soon!!  </a></li>
-                    </ul>
-                  </div>
-        
-                  <div class="col-lg-3 col-md-6 footer-links">
-                    <h4>Our Social Networks</h4>
-                    <p>to keep up with us more </p>
-                    <div class="social-links mt-3">
-                      <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-                      <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-                      <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-                    </div>
-                  </div>
-        
-                </div>
-              </div>
-            </div>
-        
-            <div class="container py-4">
-              <div class="copyright">
-                &copy; Copyright <strong><span>HopeBloom</span></strong>. All Rights Reserved
-              </div>
-             
-            </div>
-          </footer><!-- End Footer -->
-                 
-          <div id="preloader"></div>
-          <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-        
-        
-            <!-- Vendor JS Files -->
-            <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js'%}"></script>
-            <script src="{% static 'assets/vendor/aos/aos.js'%}"></script>
-            <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js'%}"></script>
-            <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js'%}"></script>
-            <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js'%}"></script>
-            <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js'%}"></script>
-            <script src="{% static 'assets/vendor/waypoints/noframework.waypoints.js'%}"></script>
-            <script src="{% static 'assets/vendor/php-email-form/validate.js'%}"></script>
-        
-            <script>
-              const searchButton = document.getElementById('search-button');
-              const searchInput = document.getElementById('search-input');
-              searchButton.addEventListener('click', () => {
-                const inputValue = searchInput.value;
-                alert(inputValue);
-              });
-           </script>
-        
-             <!-- Template Main JS File -->
-             <script src="{% static 'assets/js/main.js'%}"></script>    
+          
     </body>
 </html>
         

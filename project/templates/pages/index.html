@@ -40,7 +40,7 @@
                           <h5 class="card-title">{{ publication.titre }}</h5>
                           <p class="card-text">{{ publication.contenu | truncatechars:150 }}</p>
                           <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: {{ publication.progress_percent }}%;" aria-valuenow="{{ publication.progress_percent }}%" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar" role="progressbar" style="width: {{ publication.progress_percent }}%; Background-color: #5d7990;" aria-valuenow="{{ publication.progress_percent }}%" aria-valuemin="0" aria-valuemax="100">{{ publication.progress_percent }}%</div>
                           </div>
                           {% if publication.Montant_rest > 0 %}
                               <div style="font-style: italic; text-decoration: underline;" ><strong>Montant restant {{ publication.Montant_rest|floatformat:2 }}$</strong></div>
@@ -48,8 +48,10 @@
                                 <div style="font-style: italic; text-decoration: underline;" ><strong>Objectif atteint</strong></div>
                           {% endif %}
                           <br>
-                          <a href="{% url 'faire_don' publication.id %}" class="btn btn-primary">faire un Don</a>                
-                          <a href="{% url 'detail' publication.id %}" class="btn btn-primary">Read More</a>
+                          {% if publication.Montant_rest > 0 %}
+                          <a href="{% url 'faire_don' publication.id %}" class="btn btn-customs" style="Background-color: #5d7990; color: #ffffff">faire un Don</a> 
+                          {% endif %}               
+                          <a href="{% url 'detail' publication.id %}" class="btn btn-customs" style="Background-color: #5d7990; color: #ffffff">Read More</a>
                         </div>
                       </div>
                     </div>
@@ -66,7 +68,7 @@
         </div>
 
           <div class="text-center mt-4">
-            <a href="{% url 'Urgent' %}" class="btn btn-primary">View All Cases</a>
+            <a href="{% url 'Urgent' %}" class="btn btn-customs" style="Background-color: #5d7990; color: #ffffff">View All Cases</a>
           </div>
       </div>
     </section>
@@ -91,7 +93,7 @@
                     <h5 class="card-title">{{ publication.titre }}</h5>
                     <p class="card-text">{{ publication.contenu | truncatechars:150 }}</p>
                     <div class="progress">
-                      <div class="progress-bar" role="progressbar" style="width: {{ publication.progress_percent }}%;" aria-valuenow="{{ publication.progress_percent }}%" aria-valuemin="0" aria-valuemax="100"></div>
+                      <div class="progress-bar" role="progressbar" style="width: {{ publication.progress_percent }}%; Background-color: #5d7990;" aria-valuenow="{{ publication.progress_percent }}%" aria-valuemin="0" aria-valuemax="100">{{ publication.progress_percent }}%</div>
                     </div>
                     {% if publication.Montant_rest > 0 %}
                         <div style="font-style: italic; text-decoration: underline;" ><strong>Montant restant {{ publication.Montant_rest|floatformat:2 }}$</strong></div>
@@ -99,8 +101,12 @@
                           <div style="font-style: italic; text-decoration: underline;" ><strong>Objectif atteint</strong></div>
                     {% endif %}
                     <br>
-                    <a href="{% url 'faire_don' publication.id %}" class="btn btn-primary">faire un Don</a>                
-                    <a href="{% url 'detail' publication.id %}" class="btn btn-primary">Read More</a>
+                    {% if publication.Montant_rest > 0 %}                                      
+                    <a href="{% url 'faire_don' publication.id %}" class="btn btncustoms" style="Background-color: #5d7990; color: #ffffff">Faire un Don</a>
+                    {% else %}
+                                  
+                    {% endif %}                    
+                    <a href="{% url 'detail' publication.id %}" class="btn btn-customs" style="Background-color: #5d7990; color: #ffffff">Read More</a>
                   </div>
                 </div>
               </div>
@@ -114,7 +120,7 @@
         </div>
 
           <div class="text-center mt-4">
-            <a href="{% url 'publicationIndex' %}" class="btn btn-primary">View All Publications</a>
+            <a href="{% url 'publicationIndex' %}" class="btn btn-customs" style="Background-color: #5d7990; color: #ffffff">View All Publications</a>
           </div>
       </div>
     </section>
@@ -137,12 +143,12 @@
                 <img src="{{ event_data.event.image.url }}" class="card-img-top" alt="{{ event_data.event.title }}">
                 <p class="card-text">{{ event_data.event.description | truncatechars:150 }}</p>
                 <div class="progress">
-                  <div class="progress-bar" role="progressbar" style="width: {{ event_data.progress_percent }}%;" aria-valuenow="{{ event_data.progress_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div class="progress-bar" role="progressbar" style="width: {{ event_data.progress_percent }}%; Background-color: #5d7990;" aria-valuenow="{{ event_data.progress_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
                   <div><p>{{ event_data.progress_percent }}% Complete</p></div>
                 </div>
                 <br>
-                <a href="{% url 'participate_event' event_data.event.pk %}" class="btn btn-primary">Participer</a>
-                <a href="{% url 'detail_events' pk=event_data.event.id %}" class="btn btn-primary">Learn More</a>
+                <a href="{% url 'participate_event' event_data.event.pk %}" class="btn btn-customs" style="Background-color: #5d7990; color: #ffffff">Participer</a>
+                <a href="{% url 'detail_events' pk=event_data.event.id %}" class="btn btn-customs" style="Background-color: #5d7990; color: #ffffff">Learn More</a>
               </div>
             </div>
           </div>
@@ -160,7 +166,7 @@
         </div>
 
         <div class="text-center mt-4">
-          <a href="{% url 'eventIndex' %}" class="btn btn-primary">View All Events</a>
+          <a href="{% url 'eventIndex' %}" class="btn btn-customs" style="Background-color: #5d7990; color: #ffffff">View All Events</a>
         </div>
       </div>
     </section>
@@ -175,7 +181,7 @@
               <p>If you want to explore the list of associations available on our platform or contact them for assistance with your own case, please use the button below:</p>
               <div class="text-center mt-4">
                 <a href="{% url 'association_list' %}">
-                    <i class="fas fa-arrow-alt-circle-right fa-3x" style="color: #007bff;"></i>
+                    <i class="fas fa-arrow-alt-circle-right fa-3x" style="color: #5d7990;"></i>
                 </a>
             </div>
           </div>
