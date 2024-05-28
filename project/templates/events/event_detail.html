@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
-
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% block extra_styles %}
 <style>
       .widget-author .media {
         display: flex;
@@ -456,8 +458,31 @@
     .comment-content {
         margin-bottom: 10px;
     }
+    .single-comment {
+      display: flex;
+      margin-bottom: 10px; /* Espace entre chaque commentaire */
+    }
+    .widget-latest-post .latest-post-aside {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .widget-latest-post .latest-post-aside .lpa-left {
+      flex-grow: 1;
+    }
+    
+    .widget-latest-post .latest-post-aside .lpa-right img {
+      border-radius: 50%;
+      margin-left: 0px;
+    }
   
 </style>
+{% endblock %}
+</head>
+<body>
+  {% block content %}
+
 <br><br><br>
 <div class="blog-single gray-bg">
   <div class="container">
@@ -510,36 +535,59 @@
               </article>
               <div>
                 <div class="comment-form">
-                  <h3 class="comment-title">Ajouter un commentaire</h3>
-                  <form class="comment-form" method="post" action="{% url 'create_comment' 'event' events.id %}">
-                      {% csrf_token %}
-                      <div class="form-group">
-                          <textarea class="form-control" name="content" placeholder="Votre commentaire" required></textarea>
-                      </div><br>
-                      <button type="submit" class="btn btn-secondary">Envoyer</button>
-                  </form>
+                  <h6>Ajouter un commentaire</h6>
+              <form method="post" action="{% url 'create_comment' model_name='events' object_id=events.id %}"class="comment-form">                                
+                  {% csrf_token %}
+                  <div class="form-group">
+                      <textarea name="content" rows="1" class="form-control"></textarea><br>
+                      <button type="submit" class="btn btn-primary custom-btn">Envoyer</button>
+                  </div>
+              </form>
                 </div>
               </div>
-              <br><h4>Comments</h4>
-              <div class="list-group mb-3">              
-                  {% for comment in comments %}
-                      <div class="list-group-item">
-                          <p><strong>{{ comment.auteur.username }}:</strong> {{ comment.content }}</p>
-                          <small class="text-muted">{{ comment.date_posted }}</small>
-                          {% if comment.auteur == request.user %}
-                              <div class="mt-2">
-                                  <a href="{% url 'update_comment' comment.id %}" class="btn btn-secondary btn-sm">Edit</a>
-                                  <form method="post" action="{% url 'delete_comment' comment.id %}" class="d-inline-block">
-                                      {% csrf_token %}
-                                      <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                  </form>
-                              </div>
-                          {% endif %}
-                      </div>
-                  {% endfor %}     
-              </div>
+              <div class="comment-container">
+                {% for comment in comments %}
+                <div class="single-comment">
+                    <div class="comment-header">
+                        <p class="small-bold"><em>{{ comment.date_posted|date:"j F Y" }} </em></p>
+                    </div>
+                    <p> <i class="fas fa-calendar-alt" style="color:#5d7990;"></i> <strong>{{ comment.auteur.username }}:</strong> {{ comment.content }}</p>
+                    <!-- Boutons de modification et de suppression -->
+                    {% if comment.auteur == request.user %}
+                    <div class="button-group">
+                        <a href="{% url 'update_comment' comment.id %}" class="btn btn-small">Modifier</a>
+                        <form method="post" action="{% url 'delete_comment' comment.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-small">Supprimer</button>
+                        </form>
+                    </div>
+                    {% endif %}
+                    
+                </div>
+                {% endfor %}           
+            </div>
           </div>
           <div class="col-lg-4 m-15px-tb blog-aside">
+              <!-- Author -->
+              <div class="widget widget-author">
+                <div class="widget-title">
+                    <h3>Author</h3>
+                </div>
+                <div class="widget-body">
+                    <div class="media align-items-center">
+                        <div class="avatar">
+                            <img src="{{ association.image.url }}" title="{{ events.user.username }}" alt="">
+                        </div>
+                        <div class="media-body">
+                            <h6>Hello, I'm {{ events.user.first_name }} </h6>
+                        </div>
+                    </div>
+                    <p><i class="fas fa-envelope"></i> Email: <a href="{% url 'contact_association' association.id%}">{{ events.user.username }}</a></p>
+                    <p><i class="fas fa-map-marker-alt"></i> Location:<a href="https://www.google.com/maps/search/{{ association.adresse }}" target="_blank"> {{ association.adresse }}</a></p>
+                </div>
+              </div>
+              <!-- End Author -->
+              <!-- Details -->
               <div class="widget widget-author">
                   <div class="widget-title">
                       <h3>Details</h3>
@@ -555,6 +603,10 @@
                           <li class="list-group-item"><strong>Max Attendees:</strong> {{ events.max_attendees }}</li>
                           <li class="list-group-item"><strong>Current Attendees:</strong> {{ events.attendees.count }}</li>
                       </ul>
+                      <div class="progress mb-3">
+                        <div class="progress-bar custom-progress-ba" role="progressbar" style="width: {{ progress_percent }}%; background-color: #c54c81;" aria-valuenow="{{ progress_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p>{{ progress_percent }}% Complete</p>
                       <div class="mt-4">
                           {% if user.is_authenticated %}
                               {% if user in events.attendees.all %}
@@ -579,27 +631,45 @@
                       </div>
                   </div>
               </div>
-               <!-- Author -->
-              <div class="widget widget-author">
-                  <div class="widget-title">
-                      <h3>Author</h3>
-                  </div>
-                  <div class="widget-body">
-                      <div class="media align-items-center">
-                          <div class="avatar">
-                              <img src="{{ association.image.url }}" title="{{ events.user.username }}" alt="">
-                          </div>
-                          <div class="media-body">
-                              <h6>Hello, I'm {{ events.user.first_name }} </h6>
-                          </div>
-                      </div>
-                      <p>Email: <a href="{% url 'contact_association' association.id%}">{{ events.user.username }}</a></p>
-                      <p>Location:<a href="https://www.google.com/maps/search/{{ association.adresse }}" target="_blank"> {{ association.adresse }}</a></p>
-                  </div>
+              <!-- End Details -->
+              <!-- Recent Posts by Author -->
+              <div class="widget widget-latest-post">
+                <div class="widget-title">
+                    <h3>Recent Posts</h3>
+                </div>
+                <div class="widget-body">
+                    {% for pub in publications %}
+                        <div class="latest-post-aside media">
+                            <div class="lpa-left media-body">
+                                <div class="lpa-title">
+                                    <h5><a href="{% url 'detail' pub.id %}">{{ pub.titre }}</a></h5>
+                                </div>
+                                <div class="lpa-meta">
+                                    <a class="name" href="#">
+                                        {{ pub.association.user.first_name }}
+                                    </a>
+                                    <a class="date">
+                                        {{ pub.date|date:"d M Y" }}
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="lpa-right">
+                                <a href="{% url 'detail' pub.id %}">
+                                    <img src="{{ pub.image.url }}" title="" alt="" style="border-radius: 3px;">
+                                </a>
+                            </div>
+                        </div>
+                        {% if not forloop.last %}
+                            <hr>
+                        {% endif %}
+                    {% endfor %}
+                </div>
               </div>
-            <!-- End Author -->
+              <!-- End Recent Posts by Author -->              
           </div>
       </div>
   </div>
 </div>
 {% endblock %}
+</body>
+</html>

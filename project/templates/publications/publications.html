@@ -3,51 +3,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
+    {% block extra_styles %}
     <style>
-        .alert {
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .main-content {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+        .table-container h2 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .btn-secondary, .btn-danger {
+            border-radius: 20px;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border: none;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        .table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .table th, .table td {
+            text-align: center;
+            padding: 12px;
+            border: 1px solid #dee2e6;
+        }
+        .table th {
+            background-color: #343a40;
+            color: #fff;
+        }
+        .table tbody tr:nth-child(odd) {
+            background-color: #f2f2f2;
+        }
+        .table tbody tr:hover {
+            background-color: #e9ecef;
+        }
+        .alert-message {
             padding: 15px;
             margin-bottom: 20px;
             border: 1px solid transparent;
             border-radius: 4px;
         }
-
         .alert-success {
             color: #3c763d;
             background-color: #dff0d8;
             border-color: #d6e9c6;
         }
-
         .alert-error {
             color: #a94442;
             background-color: #f2dede;
             border-color: #ebccd1;
         }
-
         .alert-warning {
             color: #8a6d3b;
             background-color: #fcf8e3;
             border-color: #faebcc;
         }
-
         .alert-info {
             color: #31708f;
             background-color: #d9edf7;
             border-color: #bce8f1;
         }
-
-        /* Animation pour la fermeture automatique */
         @keyframes fadeOut {
             from { opacity: 1; }
             to { opacity: 0; }
         }
-
         .alert-auto-close {
             animation: fadeOut 1s ease forwards;
             animation-delay: 15s;
         }
-
     </style>
+    {% endblock %}
 </head>
 <body>
 {% block content %}
@@ -55,59 +101,55 @@
         {% if messages %}
             <div class="messages">
                 {% for message in messages %}
-                    <div class="alert {% if message.tags %} {{ message.tags }}{% endif %} alert-auto-close">{{ message }}</div>
+                    <div class="alert-message {% if message.tags %} {{ message.tags }}{% endif %} alert-auto-close">{{ message }}</div>
                 {% endfor %}
             </div>
         {% endif %}
         <h1 class="m-4">Liste des publications</h1>
-        <p class="m-4"><a href="{% url 'create' %}" class="btn btn-secondary">create your publications here  <i class="fas fa-pencil-alt"></i></a></p>
+        <p class="m-4"><a href="{% url 'create' %}" class="btn btn-secondary">Create your publications here  <i class="fas fa-pencil-alt"></i></a></p>
         <p class="m-4">Nombre de publications ayant atteint leur objectif : {{ nombre_publications_total_dons }}</p>
         <div class="container mt-5">
-            
             <div class="row">
                 <div class="col-md-12">  
                     {% if publications %}
                         <table class="table table-bordered">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th style="text-align: center">Id</th>
-                                    <th style="text-align: center">Créateur</th>
-                                    <th style="text-align: center">Category</th>
-                                    <th style="text-align: center">Date_Creation</th>
-                                    <th style="text-align: center">Objectif </th>
-                                    <th style="text-align: center">Nbre Dons  </th>
-                                    <th style="text-align: center">Montant_Dons </th>
-                                    <th style="text-align: center">Actions</th>
+                                    <th>Id</th>
+                                    <th>Créateur</th>
+                                    <th>Category</th>
+                                    <th>Date_Creation</th>
+                                    <th>Objectif</th>
+                                    <th>Nbre Dons</th>
+                                    <th>Montant_Dons</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for p in publications %}
                                     {% if p.calculate_total_dons >= p.montant %}
-                                        <tr class="table-secondary" style="background-color: #C0C0C0;">
-                                        {% else %}
-                                            <tr class="warning" style="background-color: #C0C0C0;">
+                                        <tr class="table-secondary">
+                                    {% else %}
+                                        <tr class="warning">
                                     {% endif %}
-                                    <td style="text-align: center">
+                                    <td>
                                         <a href="{% url 'detail' p.id %}">{{ p.id }}</a>
                                     </td>
-                                    <td style="text-align: center"> {{ p.association.user.first_name }}</td>
-                                    <td style="text-align: center"> {{ p.category.name}}</td>
-                                    <td style="text-align: center"> {{ p.date }}</td>
-                                    <td style="text-align: center"> {{ p.montant }}$</td>
-                                    <td style="text-align: center"> 
-                                    {{ p.dons.all.count }}
-                                    </td>
-                                    <td style="text-align: center"> 
-                                        {{ p.calculate_total_dons  }}$
-                                    </td>
-                                    <td style="text-align: center;">
-                                        <!--<a href="{% url 'update' p.id %}" class="btn btn-info"><i class="fas fa-pencil-alt"></i></a>-->
+                                    <td>{{ p.association.user.first_name }}</td>
+                                    <td>{{ p.category.name }}</td>
+                                    <td>{{ p.date }}</td>
+                                    <td>{{ p.montant }}$</td>
+                                    <td>{{ p.dons.all.count }}</td>
+                                    <td>{{ p.calculate_total_dons }}$</td>
+                                    <td>
                                         <button class="btn btn-danger" onclick="confirmDelete({{ p.id }})"><i class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
+                    {% else %}
+                        <p class="text-center">Aucune publication trouvée.</p>
                     {% endif %}
                 </div>
             </div>
@@ -123,18 +165,16 @@
         }
     </script>
     <script>
-        // Fonction pour fermer automatiquement les alertes après un certain délai
         document.addEventListener("DOMContentLoaded", function() {
             var alerts = document.querySelectorAll('.alert-auto-close');
             alerts.forEach(function(alert) {
-                var alertTimeout = 15000; // Délai en millisecondes avant que l'alerte se ferme
+                var alertTimeout = 15000;
                 setTimeout(function() {
                     alert.style.display = 'none';
                 }, alertTimeout);
             });
         });
     </script>
-    {% endblock content %}
-
+{% endblock content %}
 </body>
 </html>

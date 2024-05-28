@@ -32,8 +32,9 @@
                                 <td style="text-align: center">{{ reclamation.created_at }}</td>
                                 <td style="text-align: center">{{ reclamation.status }}</td>
                                 <td style="text-align: center">
+                                    {% if reclamation.status == 'Pending' %}
                                     <a href="{% url 'update_reclamation' reclamation.id %}" class="btn btn-info"><i class="fas fa-pencil-alt"></i></a>
-                                    <button class="btn btn-danger" onclick="confirmDelete('{{ reclamation.id }}')"><i class="fas fa-trash-alt"></i></button>
+                                    {% endif %}                                     <button class="btn btn-danger" onclick="confirmDelete('{{ reclamation.id }}')"><i class="fas fa-trash-alt"></i></button>
                                 </td>
                             </tr>
                             {% endfor %}
