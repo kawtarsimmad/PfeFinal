@@ -30,6 +30,7 @@ urlpatterns = [
     path('paypal', include('paypal.standard.ipn.urls')),
     path('events/', include('events.urls')),
     path('commentaires/', include('commentaires.urls')),
+    path('conversation/', include('conversation.urls')),
 
 
 

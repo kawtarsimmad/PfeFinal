@@ -1,0 +1,122 @@
+{% extends 'sidebar.html' %}
+
+{% block content %}
+<h1>Chat</h1>
+
+{% if request.user.is_admin %}
+    <p><a href="{% url 'send_message' %}">Create New Message</a></p>
+{% endif %}
+<!-- Formulaire pour créer un nouveau message -->
+<div id="create-message-form" style="display: none;">
+    <form id="send-message-form">
+        {% csrf_token %}
+        <label for="recipient_username">Nom d'utilisateur du destinataire:</label><br>
+        <select name="recipient_username" id="recipient_username">
+            <option value="">Choisir un destinataire</option>
+            {% for user in users %}
+                <option value="{{ user.username }}">{{ user.username }}</option>
+            {% endfor %}
+            <option value="all">Envoyer à tous</option>
+        </select><br>
+        <label for="subject">Sujet:</label><br>
+        <input type="text" id="subject" name="subject"><br>
+        <label for="body">Corps du message:</label><br>
+        <textarea id="body" name="body"></textarea><br>
+        <button type="submit">Envoyer</button>
+    </form>
+</div>
+
+{% for conversation in conversations %}
+    <h3>Conversation between {{ conversation.participants.all|join:", " }}</h3>
+    <a href="{% url 'delete_conversation' conversation.id %}">Delete Conversation</a>
+
+    {% for message in conversation.messages.all %}
+        <div>  
+            
+            <p>From: {{ message.sender.username }}</p>
+            <p>To: {{ message.recipient.username }}</p>
+            <p>Subject: {{ message.subject }}</p>
+            <p>{{ message.body }}</p>      
+            <!-- Lien pour afficher le formulaire de réponse -->
+            <a href="#" class="show-reply-form" data-message-id="{{ message.id }}">Répondre</a>
+            <a href="{% url 'delete_message' message.id %}" class="delete-message" data-message-id="{{ message.id }}">Delete Message</a>
+            <!-- Formulaire de Réponse -->
+            {% if message.sender != request.user %}
+                <form id="replyForm" action="{% url 'reply_message'  message.id%}" method="post" >
+                        {% csrf_token %}
+                        <input type="hidden" name="message_id" id="replyMessageId">
+                        <textarea name="body" id="replyBody"></textarea>
+                        <button type="submit" class="btn btn-primary">répondre</button>
+                </form>
+            {% endif %}   
+        </div>
+    {% empty %}
+        <p>No messages in this conversation.</p>
+    {% endfor %}
+{% empty %}
+    <p>No conversations available.</p>
+{% endfor %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Afficher/masquer le formulaire de création de message
+        $('#create-message-button').click(function() {
+            $('#create-message-form').toggle();
+        });
+
+        // Envoyer un message
+        $('#send-message-form').submit(function(e) {
+            e.preventDefault();
+
+            var form = $(this);
+            var url = form.attr('action');
+            var formData = form.serialize();
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: formData,
+                success: function(data) {
+                    // Traiter la réponse ici, par exemple, actualiser la liste des conversations/messages
+                    // Vous pouvez également réinitialiser le formulaire ou masquer le formulaire de création
+                },
+                error: function(xhr, status, error) {
+                    // Gérer les erreurs ici
+                }
+            });
+        });
+         // Afficher le formulaire de réponse lors du clic sur le lien "Répondre"
+        $('.show-reply-form').click(function(e) {
+                e.preventDefault();
+                console.log('Clic détecté'); // Vérifiez si ce message s'affiche dans la console du navigateur
+                var messageId = $(this).data('message-id');
+                $('.reply-form').hide();  // Masquer tous les autres formulaires de réponse
+                $('#replyForm-' + messageId).toggle();  // Afficher le formulaire de réponse correspondant
+        });
+        // Envoyer une réponse via AJAX (si nécessaire)
+        $('.reply-form').submit(function(e) {
+            e.preventDefault();
+            var form = $(this);
+            var url = form.attr('action');
+            var formData = form.serialize();
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: formData,
+                success: function(data) {
+                    // Traiter la réponse si nécessaire
+                },
+                error: function(xhr, status, error) {
+                    // Gérer les erreurs si nécessaire
+                }
+            });
+        });
+
+    });
+</script>
+
+{% endblock %}
+
+
+

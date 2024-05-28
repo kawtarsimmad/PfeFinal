@@ -1,0 +1,6 @@
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="subject" placeholder="Subject" value="Re: {{ original_message.subject }}" required>
+    <textarea name="body" placeholder="Your message" required></textarea>
+    <button type="submit">Send</button>
+</form>
