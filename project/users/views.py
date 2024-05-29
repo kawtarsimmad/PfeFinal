@@ -32,7 +32,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth import authenticate, login, logout
 from . tokens import generate_token
 from django.contrib import messages
-from .models import User,Admin, Donor, Association, Alert ###########
+from .models import User,Admin, Donor, Association, Alert , PendingEmail###########
 from publications.models import Publication
 from categories.models import Category
 from reclamations.models import Reclamation
@@ -40,12 +40,20 @@ from dons.models import Don
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseBadRequest
 from django.contrib.auth import update_session_auth_hash
-
+from functools import wraps
 
 #
 class HomeView(TemplateView):
     template_name = 'users/home.html'
 
+def admin_required(view_func):
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        if request.user.is_authenticated and getattr(request.user, 'is_admin', False):
+            return view_func(request, *args, **kwargs)
+        else:
+            return HttpResponseForbidden("You do not have permission to access this page.")
+    return _wrapped_view
 
 def activate(request,uidb64,token):
     try:
@@ -347,7 +355,7 @@ def signupadmin(request):
 
     return render(request, 'users/adminregister.html', {'error': False, 'message': ''})
 
-
+@admin_required
 @login_required(login_url="")
 def dashboardAdmin(request):
     user = request.user
@@ -393,6 +401,7 @@ def custom_logout(request):
 
 ####################### Ajouter et modifier users #####################
 ###### Donor ############
+@admin_required
 def add_donor(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -474,7 +483,7 @@ def update_donor(request, donor_id):
             return HttpResponseBadRequest(e)
 
     return render(request, 'users/update_donor.html', {'donor': donor})
-
+@admin_required
 def delete_donor(request, donor_id):
     donor = get_object_or_404(Donor, pk=donor_id)    
     donor.user.delete()
@@ -484,7 +493,7 @@ def delete_donor(request, donor_id):
 
 ##### Association ########################
 
-
+@admin_required
 def add_association(request):
     if request.method == 'POST':
         name = request.POST.get('name', None)
@@ -576,7 +585,7 @@ def update_association(request, association_id):
                 return HttpResponseBadRequest(e)
 
     return render(request, 'users/update_association.html', {'association': association})
-
+@admin_required
 def delete_association(request, association_id):
     association = Association.objects.get(pk=association_id)
     association.user.delete()
@@ -609,21 +618,14 @@ def contact_association(request, association_id):
 
         # Get the association based on association_id
         association = Association.objects.get(id=association_id)
-
-        # Compose the email message including sender's details
-        message = f"Hello {association.user.first_name},\n\n"
-        message += f"This is to inform you that {sender_name} ({sender_email}) wants to contact you.\n\n"
-        message += f"Message Content:\n{message_content}\n\n"
-        message += "Please respond to this email to follow up.\n\n"
-        message += "Best regards,\nHopeBloom"
-
-        # Send email using sender's email as 'from_email'
-        send_mail(
+        
+        # Store the email details in the PendingEmail model for validation
+        PendingEmail.objects.create(
+            association=association,
             subject=subject,
-            message=message,
-            from_email=sender_email,  # Use sender's email as 'from_email'
-            recipient_list=[association.user.email],
-            fail_silently=False,  # Set to True to ignore errors during email sending
+            sender_name=sender_name,
+            sender_email=sender_email,
+            message_content=message_content
         )
 
         return render(request, 'users/contact_association.html', {
@@ -636,13 +638,51 @@ def contact_association(request, association_id):
         association = Association.objects.get(id=association_id)
 
         return render(request, 'users/contact_association.html', {'association': association})
-    
- 
+@admin_required   
+def manage_pending_emails(request):
+    pending_emails = PendingEmail.objects.filter(processed=False)
+    emails=PendingEmail.objects.filter(processed=True)
+
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        email_id = request.POST.get('email_id')
+        pending_email = get_object_or_404(PendingEmail, id=email_id)
+
+        if action == 'approve':
+            # Compose and send the email
+            association = pending_email.association
+            message = f"Hello {association.user.first_name},\n\n"
+            message += f"This is to inform you that {pending_email.sender_name} ({pending_email.sender_email}) wants to contact you.\n\n"
+            message += f"Message Content:\n{pending_email.message_content}\n\n"
+            message += "Please respond to this email to follow up.\n\n"
+            message += "Best regards,\nHopeBloom"
+
+            send_mail(
+                subject=pending_email.subject,
+                message=message,
+                from_email=pending_email.sender_email,
+                recipient_list=[association.user.email],
+                fail_silently=False,
+            )
+            pending_email.approved = True
+        elif action == 'deny':
+            pending_email.approved = False
+
+        pending_email.processed = True
+        pending_email.save()
+    context={
+            'pending_emails': pending_emails, 
+            'emails': emails,
+    }
+
+    return render(request, 'users/manage_pending_emails.html', context)
 
 def contact_success(request):
     return render(request, 'users/contact_success.html')
 
 ####################################### Activate/desactivat Alert ###################################################
+@admin_required
 def activate_alert(request):
     if request.method == "POST":
         alert = Alert.objects.first()
@@ -670,7 +710,7 @@ def activate_alert(request):
         
         return redirect('dashboardAdmin')
     return render(request, 'activate_alert')
-
+@admin_required
 def desactivate_alert(request):
     if request.method == "POST":
         alert = Alert.objects.first()
@@ -679,5 +719,3 @@ def desactivate_alert(request):
             alert.save()
         return redirect('dashboardAdmin')
     return render(request, 'deactivate_alert.html')
-
-

@@ -80,9 +80,10 @@
             <nav id="navbar" class="navbar">
                 <ul>
                    
-                    <li><a class="nav-link scrollto active" href="/">Home</a></li>
-                    <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
+                  <li><a class="nav-link" href="/">Home</a></li>
+                  <li><a class="nav-link " href="{% url 'association_list' %}">Associations</a></li>
+                  <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle scrollto active" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="{%url 'Health' %}" >Healthcare</a></li>
                         <li><a class="dropdown-item" href="{%url 'Education' %}">Education</a></li>

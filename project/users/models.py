@@ -55,3 +55,13 @@ class Alert(models.Model):
 
     def __str__(self):
         return "Active" if self.is_active else "Inactive"
+
+class PendingEmail(models.Model):
+    association = models.ForeignKey('Association', on_delete=models.CASCADE)
+    subject = models.CharField(max_length=255)
+    sender_name = models.CharField(max_length=255)
+    sender_email = models.EmailField()
+    message_content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    approved = models.BooleanField(default=False)
+    processed = models.BooleanField(default=False)

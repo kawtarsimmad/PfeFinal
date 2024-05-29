@@ -57,6 +57,8 @@ urlpatterns = [
     path('contact/success/', views.contact_success, name='contact_success'),
     path('dashboardAdmin/activate_alert/', views.activate_alert, name='activate_alert'),
     path('dashboardAdmin/desactivate_alert/', views.desactivate_alert, name='desactivate_alert'),
+    
+    path('dashboardAdmin/manage-pending-emails/', views.manage_pending_emails, name='manage_pending_emails'),
 
 ]
 if settings.DEBUG:

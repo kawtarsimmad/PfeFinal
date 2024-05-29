@@ -1,0 +1,164 @@
+{% extends 'sidebar.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Pending Emails</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    {% block extra_styles %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+        }
+        .main-content {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+        .table-responsive {
+            margin-top: 20px;
+        }
+        table {
+            background-color: white;
+        }
+        thead {
+            background-color: #343a40;
+            color: white;
+        }
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        .table thead th, .table tbody td {
+            text-align: center;
+            vertical-align: middle;
+        }
+        .message-content {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .message-content-full {
+            white-space: normal;
+        }
+        .btn-toggle-message {
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: underline;
+        }
+    </style>
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+    <div class="main-content">
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Manage Pending Emails</h1>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Sender Name</th>
+                                    <th>Sender Email</th>
+                                    <th>To</th>
+                                    <th>Subject</th>
+                                    <th>Message</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for email in pending_emails %}
+                                <tr>
+                                    <td>{{ email.sender_name }}</td>
+                                    <td>{{ email.sender_email }}</td>
+                                    <td>{{ email.association }}</td>
+                                    <td>{{ email.subject }}</td>
+                                    <td>
+                                        <div class="message-content" id="message-content-{{ email.id }}">{{ email.message_content }}</div>
+                                        <div class="btn-toggle-message" onclick="toggleMessage({{ email.id }})">Show more</div>
+                                    </td>
+                                    <td>{{ email.created_at }}</td>
+                                    <td>
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="email_id" value="{{ email.id }}">
+                                            <button type="submit" name="action" value="approve" class="btn btn-success"><i class="bi bi-check-circle">Approve</button>
+                                            <button type="submit" name="action" value="deny" class="btn btn-danger"><i class="fas fa-trash">Deny</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Emails Sent</h1>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Sender Name</th>
+                                    <th>Sender Email</th>
+                                    <th>To</th>
+                                    <th>Subject</th>
+                                    <th>Message</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for email in emails %}
+                                <tr>
+                                    <td>{{ email.sender_name }}</td>
+                                    <td>{{ email.sender_email }}</td>
+                                    <td>{{ email.association.user.first_name }}</td>
+                                    <td>{{ email.subject }}</td>
+                                    <td>
+                                        <div class="message-content" id="message-content-{{ email.id }}">{{ email.message_content }}</div>
+                                        <div class="btn-toggle-message" onclick="toggleMessage({{ email.id }})">Show more</div>
+                                    </td>
+                                    <td>{{ email.created_at }}</td>
+                                    <td>
+                                        {% if email.approved %}
+                                            <span class="badge bg-success">Approved</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Denied</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleMessage(id) {
+            var messageDiv = document.getElementById('message-content-' + id);
+            if (messageDiv.classList.contains('message-content')) {
+                messageDiv.classList.remove('message-content');
+                messageDiv.classList.add('message-content-full');
+                messageDiv.nextElementSibling.textContent = 'Show less';
+            } else {
+                messageDiv.classList.remove('message-content-full');
+                messageDiv.classList.add('message-content');
+                messageDiv.nextElementSibling.textContent = 'Show more';
+            }
+        }
+    </script>
+    {% endblock content %}
+</body>
+</html>
