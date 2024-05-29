@@ -498,6 +498,45 @@
     .button-group form {
             display: inline;
     } 
+    .share-button {
+      color: white;
+      padding: 10px;
+      border-radius: 50%;
+      margin: 5px;
+      text-align: center;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+  }
+    .share-facebook { background-color: #3b5998; }
+    .share-twitter { background-color: black; }
+    .share-instagram-story { background-color: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%) }
+    .share-instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }        .share-whatsapp {background-color: #25d366;}
+    .share-messenger {background-color: #2196F3;}
+    .share-telegram {background-color: #2AABEE}
+    .share-thread {background-color:black}
+    .share-email {background-color: #ea4335;}
+    .share-copy { background-color: #6c757d; }
+    .btn-share {
+      background-color: #5d7990;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      height: 38px;
+    }
+    .modal-body .share-item {
+        display: flex;
+        align-items: center;
+        margin: 10px;
+    }
+    .share-item i {
+        margin-right: 10px;
+    }
     
   
 </style>
@@ -532,28 +571,39 @@
                           <div class="progress-bar custom-progress-ba" role="progressbar" style="width: {{ progress_percent }}%; background-color: #c54c81;" aria-valuenow="{{ progress_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
                       </div>
                       <p>{{ progress_percent }}% Complete</p>
-                      <div class="mt-4">
-                        {% if user.is_authenticated %}
-                            {% if user in events.attendees.all %}
-                                <div class="alert alert-secondary" role="alert">
-                                    You are already attending this event.
+                      <div class="row">
+                        <!-- Left half for attending event -->
+                        <div class="col-md-6">
+                            <div class="mt-4">
+                                {% if user.is_authenticated %}
+                                    {% if user in events.attendees.all %}
+                                        <div class="alert alert-secondary custom-btn d-flex align-items-center justify-content-center" role="alert" style="height: 39px;">
+                                            You are already attending this event.
+                                        </div>
+                                    {% elif events.attendees.count < events.max_attendees %}
+                                        <form method="post" action="{% url 'participate_event' events.pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-secondary custom-btn" style="background-color:#5d7990; width: 100%;">Attend Event</button>
+                                        </form>
+                                    {% else %}
+                                        <div class="alert alert-secondary custom-btn d-flex align-items-center justify-content-center" role="alert" style="height: 39px;">
+                                            This event is fully booked.
+                                        </div>
+                                    {% endif %}
+                                {% else %}
+                                <div class="alert alert-secondary custom-btn d-flex align-items-center justify-content-center" role="alert" style="height: 39px;">
+                                  <a href="{% url 'DonorSignIn' %}">Log in</a> to attend this event.
                                 </div>
-                            {% elif events.attendees.count < events.max_attendees %}
-                                <form method="post" action="{% url 'participate_event' events.pk %}">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-secondary custom-btn" style="background-color:#5d7990">Attend Event</button>
-                                </form>
-                            {% else %}
-                                <div class="alert alert-secondary" role="alert">
-                                    This event is fully booked.
-                                </div>
-                            {% endif %}
-                        {% else %}
-                            <div class="alert alert-secondary" role="alert">
-                                <a href="{% url 'DonorSignIn' %}">Log in</a> to attend this event.
+                                {% endif %}
                             </div>
-                        {% endif %}
-                    </div>
+                        </div>
+                        <!-- Right half for share button -->
+                        <div class="col-md-6">
+                            <div class="mt-4">
+                                <button class="btn-share" data-bs-toggle="modal" data-bs-target="#shareModal">Share Event</button>
+                            </div>
+                        </div>
+                    </div>                    
                   </div>
               </article>
               <div class="contact-form article-comment">
@@ -639,24 +689,27 @@
                       <div class="mt-4">
                           {% if user.is_authenticated %}
                               {% if user in events.attendees.all %}
-                                  <div class="alert alert-secondary" role="alert">
+                                  <div class="alert alert-secondary custom-btn d-flex align-items-center justify-content-center" role="alert" style="height: 39px;">
                                       You are already attending this event.
                                   </div>
                               {% elif events.attendees.count < events.max_attendees %}
                                   <form method="post" action="{% url 'participate_event' events.pk %}">
                                       {% csrf_token %}
-                                      <button type="submit" class="btn btn-secondarycustom-btn" style="background-color:#5d7990">Attend Event</button>
+                                      <button type="submit" class="btn btn-secondarycustom-btn" style="background-color:#5d7990 width: 100%;">Attend Event</button>
                                   </form>
                               {% else %}
-                                  <div class="alert alert-secondary" role="alert">
+                                  <div class="alert alert-secondary custom-btn d-flex align-items-center justify-content-center" role="alert" style="height: 39px;">
                                       This event is fully booked.
                                   </div>
                               {% endif %}
                           {% else %}
-                              <div class="alert alert-secondary" role="alert">
+                              <div class="alert alert-secondary custom-btn d-flex align-items-center justify-content-center" role="alert" style="height: 39px;">
                                   <a href="{% url 'DonorSignIn' %}">Log in</a> to attend this event.
                               </div>
                           {% endif %}
+                          <div class="mt-4">
+                            <button class="btn-share" data-bs-toggle="modal" data-bs-target="#shareModal">Share Event</button>
+                        </div>
                       </div>
                   </div>
               </div>
@@ -699,6 +752,68 @@
       </div>
   </div>
 </div>
+<!-- Share Modal -->
+<div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="shareModalLabel">Share this post</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+              <p>Fundraisers shared on social networks raise up to 5x more. Share using your unique links below.</p>
+              <div class="modal-body d-flex flex-column align-items-center">
+                  <div class="d-flex justify-content-between">
+                      <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="share-button share-facebook">
+                          <i class="fab fa-facebook-f"></i> 
+                      </a>
+                      <a href="https://x.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ publication.titre }}" target="_blank" class="share-button share-twitter">
+                          <i class="bi bi-twitter-x"></i> 
+                      </a>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                      <a href="whatsapp://send?text={{ publication.titre }} {{ request.build_absolute_uri }}" data-action="share/whatsapp/share" class="share-button share-whatsapp">
+                          <i class="fab fa-whatsapp"></i> 
+                      </a>
+                      <a href="https://www.messenger.com/share.php?u={{ request.build_absolute_uri }}" target="_blank" class="share-button share-messenger">
+                          <i class="fab fa-facebook-messenger"></i> 
+                      </a>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                      <a href="https://t.me/share/url?url={{ request.build_absolute_uri }}&text={{ publication.titre }}" target="_blank" class="share-button share-telegram">
+                          <i class="fab fa-telegram"></i> 
+                      </a>
+                      <a href="https://www.instagram.com/?url={{ request.build_absolute_uri }}" target="_blank" class="share-button share-instagram">
+                          <i class="fab fa-instagram"></i>
+                      </a>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                      <a href="mailto:?subject={{ publication.titre }}&body=Check out this link: {{ request.build_absolute_uri }}" class="share-button share-email">
+                          <i class="fas fa-envelope"></i> 
+                      </a>
+                      <button class="share-button share-copy" onclick="copyToClipboard()">
+                          <i class="fas fa-link"></i>
+                      </button>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function copyToClipboard() {
+            var dummy = document.createElement('input'),
+                text = window.location.href;
+
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+            alert('Link copied to clipboard!');
+        }
+    </script>
 {% endblock %}
 </body>
 </html>
