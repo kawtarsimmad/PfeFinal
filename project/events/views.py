@@ -97,3 +97,28 @@ def EventDelete(request, event_id):
             return redirect('events')
     elif user.is_association:
             return redirect('event_list')
+
+@login_required
+def update_event(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    association = None
+    donor = None
+
+    if hasattr(request.user, 'dashboard_association'):
+        association = request.user.dashboard_association
+    elif hasattr(request.user, 'dashboard_donor'):
+        donor = request.user.dashboard_donor
+
+    if request.method == 'POST':
+        form = EventForm(request.POST, request.FILES, instance=event)
+        if form.is_valid():
+            form.save()
+            user = request.user
+            if user.is_admin:
+                return redirect('events')
+            elif user.is_association:
+                return redirect('event_list')
+    else:
+        form = EventForm(instance=event)
+    
+    return render(request, 'events/update_event.html', {'form': form, 'association': association, 'donor': donor, 'event': event})

@@ -39,7 +39,8 @@
                                 <td style="text-align: center"> {{ event.date }}</td>
                                 <td style="text-align: center"> {{ event.location }}</td>
                                 <td style="text-align: center">
-                                    <button class="btn btn-danger" onclick="confirmDelete({{ event.id }})"><i class="fas fa-trash"></i> Delete</button>
+                                    <a href="{% url 'update_event' event.id %}" class="btn btn-info"><i class="fas fa-pencil-alt"></i></a>
+                                    <button class="btn btn-danger" onclick="confirmDelete({{ event.id }})"><i class="fas fa-trash"></i></button>
                                 </td>
                             </tr>
                             {% endfor %}
