@@ -127,34 +127,55 @@
         </header>
         <main>
             {%  block content %}
-            <br>
-            <br>
-            <br>
-            {% if publications %}
-            <ul class="publication-list">
-                {% for category in categories %}
-                    {% if category.name == 'Environment' %}
-                        {% for publication in publications %}
-                            {% if publication.category == category %}
-                                <li class="publication-item" data-aos="zoom-in" data-aos-delay="200">
-                                    <div class="card">
-                                        <img src="{{ publication.image.url }}" class="publication-img" alt="{{ publication.titre }}">
-                                        <div class="publication-content">
-                                            <h5 class="card-title">{{ publication.titre }}</h5>
-                                            <p class="card-text">{{ publication.contenu | truncatechars:150 }}</p>
-                                            <a href="{% url 'faire_don' publication.id %}" class="btn btn-primary">faire un Don</a>
-                                            <a href="{% url 'detail' publication.id %}" class="btn btn-primary">Read More</a>
+                <br>
+                <br>
+                <br>
+                <div class="container">
+                  {% if publications %}
+                  <div class="row mt-5">
+                    {% for category in categories %}
+                        {% if category.name == 'Environment' %}
+                            {% for publication in publications %}
+                                  {% if publication.category == category %}
+                                  <div class="col-md-6 col-lg-4">
+                                    <div class="blog-grid wow fadeInUp" data-wow-delay=".2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+                                        <div class="blog-grid-img position-relative">
+                                            <img src="{{ publication.image.url }}" class="publication-img" alt="{{ publication.titre }}">
+                                        </div>
+                                        <div class="blog-grid-text p-4">
+                                            <h3 class="h5 mb-3">{{ publication.titre }}</h3>
+                                            <p class="display-30">{{ publication.contenu | truncatechars:150 }}</p>
+                                            <div class="meta meta-style2">
+                                                <div class="progress">
+                                                    <div class="progress-bar" role="progressbar" style="width: {{ publication.progress_percent }}%; Background-color: #5d7990;" aria-valuenow="{{ publication.progress_percent }}" aria-valuemin="0" aria-valuemax="100">{{ publication.progress_percent }}%</div>
+                                                </div>
+                                                <ul>
+                                                    <li><i class="fas fa-calendar-alt"></i> {{ publication.date|date:"d M, Y" }}</li>
+                                                </ul>
+                                            </div>
+                                            <br>
+                                            {% if publication.Montant_rest > 0 %}
+                                                <div style="font-style: italic; text-decoration: underline;"><strong>Montant restant {{ publication.Montant_rest|floatformat:2 }}$</strong></div>
+                                            {% else %}
+                                                <div style="font-style: italic; text-decoration: underline;"><strong>Objectif atteint</strong></div>
+                                            {% endif %}
+                                            <br>
+                                            {% if publication.Montant_rest > 0 %}                                      
+                                                <a href="{% url 'faire_don' publication.id %}" class="btn btn-customs" style="Background-color: #5d7990; color: #ffffff">Faire un Don</a>
+                                            {% endif %}
+                                            <a href="{% url 'detail' publication.id %}" class="btn btn-customs" style="Background-color: #5d7990; color: #ffffff">Read More</a>
                                         </div>
                                     </div>
-                                </li>
+                                </div>
+                                  {% endif %}
+                                {% endfor %}
                             {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                {% endfor %}
-            </ul>
-            {% else %}
-                <p>No publications found.</p>  
-            {% endif %}   
+                      {% endfor %}
+                              </div>
+                  {% else %}
+                      <p>No publications found.</p>
+                 {% endif %}  
+                </div>   
             {%  endblock content %}
         </main>
         <footer id="footer">
