@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -537,6 +538,26 @@
     .share-item i {
         margin-right: 10px;
     }
+    .first-letter {
+      text-transform: uppercase;
+    }
+    .article-content p {
+        margin-bottom: 0.2em; 
+        text-indent: 1em; 
+    }
+    .first-line {
+        font-weight: bold;
+        font-style: italic;
+        text-align: justify;
+    }
+    .first-paragraph {
+        font-weight: bold;
+        font-style: italic;
+    }
+    .last-line {
+        font-weight: bold;
+        font-style: italic;
+    }
     
   
 </style>
@@ -565,13 +586,18 @@
                       </div>
                   </div>
                   <div class="article-content">
-                      <p>{{ events.description }}</p>
+                      <p>{{ events.description|add_initial_space|first_letter_bold_upper|first_line_bold_italic|last_line_bold_italic|safe|linebreaksbr}}</p>
                       
                       <div class="progress mb-3">
                           <div class="progress-bar custom-progress-ba" role="progressbar" style="width: {{ progress_percent }}%; background-color: #c54c81;" aria-valuenow="{{ progress_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
                       </div>
                       <p>{{ progress_percent }}% Complete</p>
                       <div class="row">
+                      {% if current_datetime > event.date_and_time %}
+                        <div class="alert alert-danger custom-btn d-flex align-items-center justify-content-center" role="alert" style="height: 39px;">
+                            This event has closed.
+                        </div>
+                      {% else %}
                         <!-- Left half for attending event -->
                         <div class="col-md-6">
                             <div class="mt-4">
@@ -603,7 +629,8 @@
                                 <button class="btn-share" data-bs-toggle="modal" data-bs-target="#shareModal">Share Event</button>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
+                  {% endif %}                    
                   </div>
               </article>
               <div class="contact-form article-comment">
@@ -687,6 +714,11 @@
                     </div>
                     <p>{{ progress_percent }}% Complete</p>
                       <div class="mt-4">
+                        {% if current_datetime > event.date_and_time %}
+                          <div class="alert alert-danger custom-btn d-flex align-items-center justify-content-center" role="alert" style="height: 39px;">
+                              This event has closed.
+                          </div>
+                        {% else %}
                           {% if user.is_authenticated %}
                               {% if user in events.attendees.all %}
                                   <div class="alert alert-secondary custom-btn d-flex align-items-center justify-content-center" role="alert" style="height: 39px;">
@@ -710,6 +742,7 @@
                           <div class="mt-4">
                             <button class="btn-share" data-bs-toggle="modal" data-bs-target="#shareModal">Share Event</button>
                         </div>
+                        {% endif %}
                       </div>
                   </div>
               </div>

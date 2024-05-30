@@ -6,6 +6,8 @@ from django.contrib.contenttypes.models import ContentType
 from .models import Event
 from .forms import EventForm
 from publications.models import Publication
+from django.utils import timezone
+
 
 
 @login_required
@@ -78,6 +80,7 @@ def EventDetail(request, pk):
     comments = Comment.objects.filter(content_type=content_type, object_id=events.id)
     publications = Publication.objects.order_by('-date')[:3]  # Filter by 'association' field
     association = Association.objects.get(user=events.user)  # Get the association related to the event
+    current_datetime = timezone.now()
 
     
     if events.max_attendees > 0:
@@ -85,7 +88,7 @@ def EventDetail(request, pk):
     else:
         progress_percent = 0
 
-    return render(request, 'events/event_detail.html', {'events': events, 'progress_percent': progress_percent,'comments': comments, 'publications': publications, 'association': association})
+    return render(request, 'events/event_detail.html', {'events': events, 'progress_percent': progress_percent,'comments': comments, 'publications': publications, 'association': association,  'current_datetime': current_datetime})
  
 
 @login_required
