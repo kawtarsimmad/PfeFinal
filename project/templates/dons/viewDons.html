@@ -30,11 +30,18 @@
                                         {% for don in dons %}
                                             <tr>
                                                 <td style="text-align: center">{{ don.id }}</td>
-                                                <td style="text-align: center">{{ don.publication.association.user.first_name }}</td>
-                                                <td style="text-align: center">{{ don.publication.association.user.username }}</td>
-                                                <td style="text-align: center">
-                                                    <a href="{% url 'detail' don.publication.id %}">{{ don.publication.id }}</a>
-                                                </td>
+                                                {% if don.publication %}
+                                                    <td style="text-align: center">{{ don.publication.association.user.first_name }}</td>
+                                                    <td style="text-align: center">{{ don.publication.association.user.username }}</td>
+                                                    <td style="text-align: center">
+                                                        <a href="{% url 'detail' don.publication.id %}">{{ don.publication.id }}</a>
+                                                    </td>
+                                                {% endif %}
+                                                {% if don.association %}
+                                                    <td style="text-align: center">{{ don.association.user.first_name }}</td>
+                                                    <td style="text-align: center">{{ don.association.user.username }}</td>
+                                                    <td style="text-align: center"> ____ </td>
+                                                {% endif %}
                                                 <td style="text-align: center">{{ don.date }}</td>
                                                 <td style="text-align: center">{{ don.montantDons }}</td>
                                                 <td style="text-align: center">{{ don.est_paye }}</td>

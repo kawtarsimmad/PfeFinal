@@ -299,6 +299,17 @@
                                 <div class="items">
                                     <div class="row item">
                                         <strong>Thank You Note</strong>
+                                        {% if don.association %}
+                                        <p>
+                                          Dear <strong>{{ don.user.first_name }}</strong>,<br>
+                                          Thank you for your generous support! Your contribution is vital in helping us achieve our mission.<br> 
+                                          Your donation of <strong>${{ don.montantDons|floatformat:2 }}</strong> is greatly appreciated and will make a significant impact.<br>
+                                          As a valued supporter, you are now part of our community working towards a common goal. The <strong>{{ association.user.first_name }}</strong> Organization is deeply grateful for your involvement.<br>
+                                          Together, we can make a difference. Thank you once again for your kindness and support.<br>
+                                          <strong>HopeBloom</strong>
+                                        </p>
+                                        {% endif %}
+                                        {% if don.publication %}
                                         <p>
                                             Dear <strong>{{ don.user.first_name }}</strong>,<br>
                                             Thank you for your generous support! Your contribution is vital in helping us achieve our mission for the cause <strong>"{{ don.publication.titre }}"</strong>.<br> 
@@ -307,6 +318,7 @@
                                             Together, we can make a difference. Thank you once again for your kindness and support.<br>
                                             <strong>HopeBloom</strong>
                                         </p>
+                                        {% endif %}
                                     </div>
                                                                            
                                 </div>

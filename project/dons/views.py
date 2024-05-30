@@ -15,38 +15,75 @@ from xhtml2pdf import pisa
 import os
 from io import BytesIO
 from django.views import View
+from django.utils import timezone
+from django.db.models import F
 
 
 
 def don(request):
     return render(request, 'dons/don.html')
 def dons(request):
-    return render(request, 'dons/dons.html',{'dn':Don.objects.all()})
+    dn=Don.objects.all().order_by(F('date').desc())
+    return render(request, 'dons/dons.html',{'dn':dn})
 
-def faire_don(request, publication_id):
-    publication = get_object_or_404(Publication, pk=publication_id)
-    montant_obj = publication.montant
-    totalDons=publication.calculate_total_dons()  
-    Montant_rest= (montant_obj - totalDons )
-    publication.Montant_rest = Montant_rest
+def faire_don(request,  publication_id=None, association_id=None):
+    publication = None
+    association = None
+    if publication_id:
+        publication = get_object_or_404(Publication, pk=publication_id)
+        montant_obj = publication.montant
+        totalDons=publication.calculate_total_dons()  
+        Montant_rest= (montant_obj - totalDons )
+        publication.Montant_rest = Montant_rest
+    elif association_id:
+        association = get_object_or_404(Association, pk=association_id)
+        
     if request.method == 'POST':
         form = PaiementForm(request.POST)
         if form.is_valid():
             montantDons = form.cleaned_data['montantDons']
-            if request.user.is_authenticated:      
-                don = Don.objects.create(user=request.user, montantDons = montantDons, publication=publication)
+            is_anonymous = form.cleaned_data['is_anonymous']
+            
+            if request.user.is_authenticated:  
+                donateur = request.user    
             else:
-                don = Don.objects.create(montantDons=montantDons, publication=publication)
+                donateur = None
+
+            if publication:
+                don = Don.objects.create(
+                    user=donateur,
+                    date=timezone.now(),
+                    montantDons=montantDons,
+                    est_paye=False,
+                    publication=publication,
+                    is_anonymous=is_anonymous
+                )
+            elif association:
+                don = Don.objects.create(
+                    user=donateur,
+                    date=timezone.now(),
+                    montantDons=montantDons,
+                    est_paye=False,
+                    association=association,
+                    is_anonymous=is_anonymous
+                )
             return CheckOut(request, don.id)
     else:
         form = PaiementForm()
-    return render(request, 'dons/faire_don.html', {'form': form,'publication':publication, 'totalDons':totalDons, 'Montant_rest':Montant_rest,})
 
+    context = {'form': form}
+    if publication:
+            context['publication'] = publication
+            context['Montant_rest'] = Montant_rest
+            context['totalDons'] = totalDons
+    elif association:
+            context['association'] = association
+    return render(request, 'dons/faire_don.html',context)
 
 
 
 def viewDons(request):
-    dons = Don.objects.filter(user=request.user)
+    dons = Don.objects.filter(user=request.user).order_by(F('date').desc())
     if hasattr(request.user, 'dashboard_donor'):
         donor = request.user.dashboard_donor
     return render(request, 'dons/viewDons.html', {'dons': dons,'donor':donor})
@@ -57,17 +94,20 @@ def delete_don(request, don_id):
     return redirect('viewDons')
 
 
+
 def CheckOut(request, don_id):
 
-    don = Don.objects.get(id=don_id)
-     # Récupérer l'association associée à la publication du don
-    association = don.publication.association
-    publication = don.publication
-    
-    montant_obj = publication.montant
-    totalDons=publication.calculate_total_dons()  
-    Montant_rest= (montant_obj - totalDons )
-    publication.Montant_rest = Montant_rest
+    don = get_object_or_404(Don, id=don_id)
+    if don.publication:
+        association = don.publication.association
+        publication = don.publication
+        montant_obj = publication.montant
+        totalDons=publication.calculate_total_dons()  
+        Montant_rest= (montant_obj - totalDons )
+        publication.Montant_rest = Montant_rest
+
+    if don.association:
+        association=don.association
 
     paypal_email = association.paypal_email
     host = request.get_host()
@@ -88,11 +128,14 @@ def CheckOut(request, don_id):
     context = {
         'don': don,
         'paypal': paypal_payment,
-        'publication': publication,
         'association': association,
-        'totalDons':totalDons,
-        'Montant_rest':Montant_rest,
     }
+    if don.publication:
+            context['publication'] = publication
+            context['Montant_rest'] = Montant_rest
+            context['totalDons'] = totalDons
+    elif don.association:
+            context['association'] = association
 
     return render(request, 'dons/checkout.html', context)
 
@@ -100,15 +143,17 @@ def PaymentSuccessful(request, don_id):
 
     don = Don.objects.get(id=don_id)
     donor = request.user
-    association = don.publication.association
-    
-     # Mettre à jour l'attribut est_paye à True
+    if don.publication:
+        association = don.publication.association
+    if don.association:
+        association = don.association
+
     don.est_paye = True
     don.save()
 
  # Enregistrement des détails de paiement dans un fichier
     with open('donsTrue.txt', 'a') as file:
-        file.write(f"Id_Don: {don.id} , Donor:{donor.username}, Titre: {don.date}, Montant: {don.montantDons}\n")
+        file.write(f"Id_Don: {don.id} , Donor:{donor.username}, Date: {don.date}, Montant: {don.montantDons}\n")
         
     return render(request, 'dons/payment-success.html', {'don': don,'user': donor, 'association':association})
 
@@ -132,8 +177,11 @@ def generate_pdf(request, don_id):
         # Retrieve the donation object
         don = Don.objects.get(id=don_id)
         donor = request.user
-        association = don.publication.association
-        
+        association=None
+        if don.publication:
+            association = don.publication.association
+        if don.association:
+            association = don.association
         # Pass the donation object to the template context
         context = {'don': don, 'user': donor, 'association': association}
 

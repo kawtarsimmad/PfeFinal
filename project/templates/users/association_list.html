@@ -47,7 +47,12 @@
                                     <p class="text-muted">Location:<a href="https://www.google.com/maps/search/{{ association.adresse }}" target="_blank"> {{ association.adresse }}</a></p>
                                 </div>
                                 <div class="col-md-3 col-sm-3">
-                                    <a href="{% url 'contact_association' association.id%}" class="btn btn-secondary custom-btn" style="background-color:#5d7990">contact</a>
+                                    <div class="mb-3">
+                                        <a href="{% url 'faire_don_association' association_id=association.id %}" class="btn btn-secondary custom-btn" style="background-color:#5d7990">Donate</a>
+                                    </div>
+                                    <div class="mb-3">
+                                        <a href="{% url 'contact_association' association.id%}" class="btn btn-secondary custom-btn" style="background-color:#5d7990">Contact</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -56,8 +56,18 @@
                                         Anonyme
                                     {% endif %}
                                 </td>
-                                <td style="text-align: center">{{ donation.publication.association.user.first_name }}</td>
-                                <td style="text-align: center">{{ donation.publication.id }}</td>
+                                <td style="text-align: center">
+                                        {% if donation.publication %}
+                                            {{ donation.publication.association.user.first_name }}
+                                        {% endif %}
+                                        {% if donation.association %}
+                                            {{ donation.association.user.first_name }}  
+                                        {% endif %}
+                                </td>
+                                <td style="text-align: center">
+                                    {% if donation.publication %} <a href="{% url 'detail' donation.publication.id %}">{{ donation.publication.id }}</a>{% endif %}
+                                    {% if donation.association %}  ______{% endif %}
+                                </td>                              
                                 <td style="text-align: center">{{ donation.date }}</td>
                                 <td style="text-align: center">{{ donation.montantDons }}</td>
                                 <td style="text-align: center">{{ donation.est_paye }}</td>
