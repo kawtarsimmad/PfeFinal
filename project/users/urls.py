@@ -16,7 +16,7 @@ urlpatterns = [
 
     path('DonorSignup/', views.DonorSignup, name='DonorSignup'),
     path('dashboard_donor/', views.dashboard_donor, name='dashboard_donor'),
-    path('DonorSignIn/', views.DonorSignIn, name='DonorSignIn'),
+    path('SignIn/', views.DonorSignIn, name='DonorSignIn'),
 
 
     path('AssociationSignup/', views.AssociationSignup, name='AssociationSignup'),

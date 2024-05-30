@@ -73,6 +73,18 @@ def participate_event(request, event_id):
 
     return redirect('detail_events', pk=event.pk)
 
+@login_required
+def cancel_participation(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    
+    if request.user.is_authenticated and request.user.is_donor:
+        if request.user in event.attendees.all():
+            # Remove the current user (donor) from the event's attendees
+            event.attendees.remove(request.user)
+            event.save()
+    
+    return redirect('donor_event_list')
+
 def EventDetail(request, pk):
     events = get_object_or_404(Event, pk=pk)
     num_attendees = events.attendees.count()

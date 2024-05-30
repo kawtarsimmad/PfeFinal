@@ -58,19 +58,27 @@
         <div class="card">
             <div class="card-body">
                 <h6 class="card-title">Payment Summary</h6>
-                <div class="d-flex justify-content-between mb-1 small">
-                    <span>Post</span> <span>{{ don.publication.titre }}</span>
-                </div>
-                <div class="d-flex justify-content-between mb-1 small">
-                    <span>Association:</span> <span>{{ don.publication.association.user.first_name }}</span>
-                </div>
-                <div class="d-flex justify-content-between mb-1 small">
-                    <span>Objectif:</span> <span>{{ don.publication.montant }}$</span>
-                </div>
-                <div class="d-flex justify-content-between mb-1 small">
-                    <span>Montant Rest:</span> <span>{{ don.publication.Montant_rest }}$</span>
-                </div>                        
-                <hr>
+                {% if publication %}
+                    <div class="d-flex justify-content-between mb-1 small">
+                        <span>Post</span> <span>{{ don.publication.titre }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1 small">
+                        <span>Association:</span> <span>{{ don.publication.association.user.first_name }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1 small">
+                        <span>Objectif:</span> <span>{{ don.publication.montant }}$</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1 small">
+                        <span>Montant Rest:</span> <span>{{ don.publication.Montant_rest }}$</span>
+                    </div>                        
+                    <hr>
+                {%endif%}
+                {% if association %}
+                    <div class="d-flex justify-content-between mb-1 small">
+                        <span>Association:</span> <span>{{ don.association.user.first_name }}</span>
+                    </div>
+                    <hr>
+                {%endif%}
 
                 <!-- Added the don-container inside the card -->
                 <div class="don-container">

@@ -546,6 +546,7 @@ def update_association(request, association_id):
         email = request.POST.get('email')
         phone_number = request.POST.get('phone_number')
         adresse = request.POST.get('adresse')
+        stat_juridique=request.FILES.get('stat_juridique')
         image = request.FILES.get('image')
         paypal_email = request.POST.get('paypal_email')
         old_password = request.POST.get('old_password')
@@ -561,6 +562,8 @@ def update_association(request, association_id):
                     association.phone_number=phone_number
                 if adresse:
                     association.adresse=adresse
+                if stat_juridique:
+                    association.stat_juridique=stat_juridique
                 if image:
                     association.image=image
                 if paypal_email:

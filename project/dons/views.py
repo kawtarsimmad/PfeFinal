@@ -88,6 +88,24 @@ def viewDons(request):
         donor = request.user.dashboard_donor
     return render(request, 'dons/viewDons.html', {'dons': dons,'donor':donor})
 
+def DonsAssociation(request):
+    association=None
+    if hasattr(request.user, 'dashboard_association'):
+        association = request.user.dashboard_association
+    direct_donations = Don.objects.filter(publication__isnull=True).order_by(F('date').desc())
+    publication_donations = Don.objects.filter(publication__isnull=False).order_by(F('date').desc())
+    
+    don_tab = list(direct_donations) + list(publication_donations)
+    don_tab.sort(key=lambda x: x.date, reverse=True)
+
+    context = {
+        'association':association,
+        'direct_donations': direct_donations,
+        'publication_donations': publication_donations,
+        'don_tab':don_tab
+    }
+    return render(request, 'dons/DonsAssociation.html', context)
+
 def delete_don(request, don_id):
     reclamation = get_object_or_404(Don, id=don_id)
     reclamation.delete()

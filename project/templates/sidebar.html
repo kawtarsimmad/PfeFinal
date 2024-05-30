@@ -30,10 +30,16 @@
             min-width: 250px;
             max-width: 250px;
             transition: all 0.3s;
+            position: fixed; /* Ajoutez cette ligne pour rendre la barre latérale fixe */
+            top: 0; /* Ajoutez cette ligne pour la fixer en haut de la page */
+            left: 0; /* Ajoutez cette ligne pour la fixer sur le côté gauche */
+            height: 100%; /* Assurez-vous qu'elle occupe toute la hauteur de la fenêtre */
+            z-index: 1000;
         }
         .content {
             min-height: 100vh;
             width: 100%;
+            margin-left: 250px;
         }
         .h-color {
             border: 0;
@@ -104,6 +110,7 @@
                     {% elif user.is_association %}
                         <li><a href="{% url 'PubList' %}" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-list"></i> Mes Publications</a></li>
                         <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'event_list' %}"><i class="bi bi-calendar3 me-2"></i>Mes Events</a></li>
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'DonsAssociation' %}"><i class="fas fa-donate me-2"></i> Dons</a></li>
                         <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'view_reclamations' %}"><i class="bi bi-chat-right-dots"></i> Reclamations</a></li>
                         <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'chat_view' %}"><i class="bi bi-chat-right-dots me-2"></i> chat</a></li>
                     {% elif user.is_donor %}

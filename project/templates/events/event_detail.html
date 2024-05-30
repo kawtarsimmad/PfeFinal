@@ -727,7 +727,7 @@
                               {% elif events.attendees.count < events.max_attendees %}
                                   <form method="post" action="{% url 'participate_event' events.pk %}">
                                       {% csrf_token %}
-                                      <button type="submit" class="btn btn-secondarycustom-btn" style="background-color:#5d7990 width: 100%;">Attend Event</button>
+                                      <button type="submit" class="btn btn-secondary custom-btn" style="background-color:#5d7990; width: 100%;">Attend Event</button>
                                   </form>
                               {% else %}
                                   <div class="alert alert-secondary custom-btn d-flex align-items-center justify-content-center" role="alert" style="height: 39px;">
