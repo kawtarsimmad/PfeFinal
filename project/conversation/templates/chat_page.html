@@ -1,122 +1,151 @@
-{% extends 'sidebar.html' %}
+{% extends "sidebar.html" %}
+<html>
+    <head>
+        {% block extra_styles %}
+            <style>
+                
+                .message-container {
+                    position: relative;
+                    overflow-y: auto;
+                    max-height: 600px;
+                    padding-right: 20px;
+                }
 
-{% block content %}
-<h1>Chat</h1>
+                .message {
+                    margin-bottom: 20px;
+                    padding: 10px;
+                    border-radius: 10px;
+                    max-width: 70%;
+                    position: relative;
+                    display: inline-block;
+                }
 
-{% if request.user.is_admin %}
-    <p><a href="{% url 'send_message' %}">Create New Message</a></p>
-{% endif %}
-<!-- Formulaire pour créer un nouveau message -->
-<div id="create-message-form" style="display: none;">
-    <form id="send-message-form">
-        {% csrf_token %}
-        <label for="recipient_username">Nom d'utilisateur du destinataire:</label><br>
-        <select name="recipient_username" id="recipient_username">
-            <option value="">Choisir un destinataire</option>
-            {% for user in users %}
-                <option value="{{ user.username }}">{{ user.username }}</option>
-            {% endfor %}
-            <option value="all">Envoyer à tous</option>
-        </select><br>
-        <label for="subject">Sujet:</label><br>
-        <input type="text" id="subject" name="subject"><br>
-        <label for="body">Corps du message:</label><br>
-        <textarea id="body" name="body"></textarea><br>
-        <button type="submit">Envoyer</button>
-    </form>
-</div>
+                .sent .message {
+                    background-color: #5d7990;
+                    color: #fff;
+                    align-self: flex-start;
+                }
 
-{% for conversation in conversations %}
-    <h3>Conversation between {{ conversation.participants.all|join:", " }}</h3>
-    <a href="{% url 'delete_conversation' conversation.id %}">Delete Conversation</a>
+                .received .message {
+                    background-color: #f1f1f1;
+                    color: #000;
+                    align-self: flex-end; 
+                }
 
-    {% for message in conversation.messages.all %}
-        <div>  
+                .message .avatar {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    margin-right: 10px;
+                    position: absolute;
+                    bottom: -20px;
+                }
+
+                .message .content {
+                    margin-bottom: 5px;
+                }
+
+                .message .timestamp {
+                    font-size: 0.8em;
+                    color: #888;
+                    position: absolute;
+                    bottom: -40px;
+                    right: 0;
+                }
+
+                .input-message {
+                    margin-top: 20px;
+                    padding: 10px;
+                    border-top: 1px solid #ccc;
+                }
+
+                .input-message input[type="text"] {
+                    flex: 1;
+                    padding: 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    margin-right: 10px;
+                }
+
+                .input-message button {
+                    padding: 10px 20px;
+                    background-color: #5d7990;
+                    color: #fff;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                }
+
+                .input-message button:hover {
+                    background-color: #4a5e70;
+                }
+                .admin-message-info {
+                    margin-left: 10px;
+                    font-size: 1rem;
+                    color: #5d7990;
+                    font-weight: bold;
+                    padding: 10px;
+                    border: 2px solid #5d7990;
+                    border-radius: 5px;
+                }
+            </style>
+        {% endblock %}
+    </head>
+    <body style=" background-color: #ffffff;">
+        {% block content %}
             
-            <p>From: {{ message.sender.username }}</p>
-            <p>To: {{ message.recipient.username }}</p>
-            <p>Subject: {{ message.subject }}</p>
-            <p>{{ message.body }}</p>      
-            <!-- Lien pour afficher le formulaire de réponse -->
-            <a href="#" class="show-reply-form" data-message-id="{{ message.id }}">Répondre</a>
-            <a href="{% url 'delete_message' message.id %}" class="delete-message" data-message-id="{{ message.id }}">Delete Message</a>
-            <!-- Formulaire de Réponse -->
-            {% if message.sender != request.user %}
-                <form id="replyForm" action="{% url 'reply_message'  message.id%}" method="post" >
-                        {% csrf_token %}
-                        <input type="hidden" name="message_id" id="replyMessageId">
-                        <textarea name="body" id="replyBody"></textarea>
-                        <button type="submit" class="btn btn-primary">répondre</button>
-                </form>
-            {% endif %}   
-        </div>
-    {% empty %}
-        <p>No messages in this conversation.</p>
-    {% endfor %}
-{% empty %}
-    <p>No conversations available.</p>
-{% endfor %}
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Afficher/masquer le formulaire de création de message
-        $('#create-message-button').click(function() {
-            $('#create-message-form').toggle();
-        });
-
-        // Envoyer un message
-        $('#send-message-form').submit(function(e) {
-            e.preventDefault();
-
-            var form = $(this);
-            var url = form.attr('action');
-            var formData = form.serialize();
-
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: formData,
-                success: function(data) {
-                    // Traiter la réponse ici, par exemple, actualiser la liste des conversations/messages
-                    // Vous pouvez également réinitialiser le formulaire ou masquer le formulaire de création
-                },
-                error: function(xhr, status, error) {
-                    // Gérer les erreurs ici
-                }
-            });
-        });
-         // Afficher le formulaire de réponse lors du clic sur le lien "Répondre"
-        $('.show-reply-form').click(function(e) {
-                e.preventDefault();
-                console.log('Clic détecté'); // Vérifiez si ce message s'affiche dans la console du navigateur
-                var messageId = $(this).data('message-id');
-                $('.reply-form').hide();  // Masquer tous les autres formulaires de réponse
-                $('#replyForm-' + messageId).toggle();  // Afficher le formulaire de réponse correspondant
-        });
-        // Envoyer une réponse via AJAX (si nécessaire)
-        $('.reply-form').submit(function(e) {
-            e.preventDefault();
-            var form = $(this);
-            var url = form.attr('action');
-            var formData = form.serialize();
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: formData,
-                success: function(data) {
-                    // Traiter la réponse si nécessaire
-                },
-                error: function(xhr, status, error) {
-                    // Gérer les erreurs si nécessaire
-                }
-            });
-        });
-
-    });
-</script>
-
-{% endblock %}
-
-
-
+                <div class="container message-container">
+                            <div class="card" id="chat" style="border-radius: 15px;margin-left: 100px;margin-right: 100px;margin-top:10px;">
+                                <div class="card-body  d-flex flex-column">                                        
+                                    <div class="col-md-10 col-lg-11 col-xl-12 pe-md-3">
+                                        <div class="pt-3 pe-3" data-mdb-perfect-scrollbar-init style="position: relative; height: 400px">
+                                        {% for message in messages %}
+                                            <div class="d-flex flex-row justify-content-{% if message.sender == request.user %}end{% else %}start{% endif %}">
+                                                {% if message.sender.dashboard_donor %}
+                                                    <img src="{{ message.sender.dashboard_donor.image.url }}" alt="avatar" class=" rounded-circle" style="width: 45px; height: 100%;">
+                                                {% elif message.sender.dashboard_association %}
+                                                    <img src="{{ message.sender.dashboard_association.image.url }}" alt="avatar" class="rounded-circle" style="width: 45px; height: 100%;">
+                                                {% elif message.sender.dashboard_admin %}
+                                                    <img src="{{ message.sender.dashboard_admin.image.url }}" alt="avatar" class="rounded-circle"  style="width: 45px; height: 100%;">
+                                                {% else %}
+                                                    <img src="{{user.png}}" alt="avatar par défaut" class="d-flex align-self-center me-3 rounded-circle"  style="width: 45px; height: 100%;">
+                                                {% endif %}
+                                                <div>
+                                                    <p class="small p-2 ms-3 mb-1 rounded-3">{{ message.content }}</p>
+                                                    <p class="small ms-3 mb-3 rounded-3 text-muted float-end">{{ message.timestamp }}</p>
+                                                </div>
+                                                
+                                            </div>
+                                        {% endfor %}
+                                        </div>
+                                        <div class="text-muted d-flex justify-content-start align-items-center pe-3 pt-3 mt-2">
+                                            {% if user.dashboard_donor %}
+                                                <img src="{{ user.dashboard_donor.image.url }}" alt="Donor Image" class="d-flex align-self-center me-3 rounded-circle" width="60">
+                                            {% elif user.dashboard_association %}
+                                                <img src="{{ user.dashboard_association.image.url }}" alt="Association Image" class="d-flex align-self-center me-3 rounded-circle" width="60">
+                                            {% elif user.dashboard_admin %}
+                                                <img src="{{ user.dashboard_admin.image.url }}" alt="Admin Image" class="d-flex align-self-center me-3 rounded-circle" width="60">
+                                            {% else %}
+                                                <img src="{{user.png}}" alt="Default Image" class="d-flex align-self-center me-3 rounded-circle" width="60">
+                                            {% endif %}
+                                            <p class="admin-message-info">Seuls les admins peuvent envoyer des messages.</p>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                       
+                </div>
+                <script>
+                    const messageContainer = document.querySelector('.message-container');
+                    messageContainer.scrollTop = messageContainer.scrollHeight;
+    
+                    const inputMessage = document.querySelector('.input-message input[type="text"]');
+                    inputMessage.addEventListener('focus', () => {
+                        messageContainer.scrollTop = messageContainer.scrollHeight;
+                    });
+                </script>
+            
+        {% endblock %}
+    </body>
+</html>

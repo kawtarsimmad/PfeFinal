@@ -1,0 +1,247 @@
+{% extends "sidebar.html" %}
+<html>
+    <head>
+        {% block extra_styles %}
+            <style>
+                /* Style du formulaire de recherche */
+                #search-form {
+                    margin-bottom: 0px;
+                    padding: 0px;
+                }
+
+                #search-input {
+                    padding: 10px;
+                    width: 300px;
+                    border: 1px solid #ccc;
+                    font-size: 16px;
+                    border-radius: 5px;
+                    margin-right: 10px;
+                }
+                #search-input:focus {
+                    border-color: #5d7990; 
+                    outline: 0;
+                    box-shadow: 0 0 0 0.25rem #ffffff;
+                }
+                #search-button {
+                    padding: 10px 20px;
+                    background-color: #5d7990;
+                    color: #fff;
+                    border: none;
+                    border-radius: 5px; 
+                    cursor: pointer;
+                    font-size: 16px;
+                }
+
+                #search-button:hover {
+                    background-color: #5d7990;
+                    outline: 0;
+                }
+
+                #search-results {
+                    list-style: none;
+                    padding: 0;
+                }
+
+                #search-results li {
+                    margin-bottom: 5px;
+                }
+                #search-results ul {
+                    padding: 5px;
+                }
+                #search-results li a {
+                    text-decoration: none;
+                    color: #000;
+                }
+
+                #search-results li a:hover {
+                    color: #5d7990;
+                    text-decoration: underline;
+                }
+                
+                input.form-control.form-control-lg {
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    padding: 10px;
+                    margin-right: 10px;
+                }
+                input.form-control-lg[name="content"]:focus {
+                    border-color: #5d7990; 
+                    outline: 0;
+                    box-shadow: 0 0 0 0.25rem #ffffff;
+                }
+            
+                button.btn.btn-primary {
+                    background-color: #5d7990;
+                    border-color: #5d7990;
+                    border-radius: 5px; 
+                    padding: 10px 20px; 
+                    cursor: pointer; 
+
+                }
+                button[type="submit"].btn.btn-primary:hover {
+                    background-color: #5d7990; 
+                    border: none;
+                    outline: 0;
+                }
+                .border-start {
+                    border-left: 1px solid #ccc;
+                    padding-left: 20px; 
+                }
+            </style>
+        {% endblock %}
+    </head>
+    <body style="background-color: #ffffff;padding-top: 10px;">
+        {% block content %}
+            
+                <div class="container py-0 " style="padding-top: 0;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card" id="chat" style="border-radius: 15px;margin: 0;padding: 0;">
+                                <div class="card-body  d-flex flex-column">
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0 pe-md-3">
+                                            <div class="pe-4">
+                                                <div class="input-group rounded mb-3">
+                                                    <form id="search-form" method="get" class="d-flex align-items-center col-auto">
+                                                        <input id="search-input" type="search" name="query" placeholder="search users">
+                                                        <button id="search-button" type="submit"><i class="fas fa-search"></i></button>
+                                                    </form>
+                                                </div>
+                                                <ul id="search-results">
+                                                {% for user in search_results %}
+                                                    <li class="p-1 ">
+                                                        <a href="{% url 'conversation' user.id %}" class="d-flex justify-content-between">
+                                                        <div class="d-flex flex-row">
+                                                            <div>
+                                                                {% if user.dashboard_donor %}
+                                                                <img src="{{ user.dashboard_donor.image.url }}" alt="Donor Image" class="d-flex align-self-center me-3 rounded-circle" width="60">
+                                                                {% elif user.dashboard_association %}
+                                                                <img src="{{ user.dashboard_association.image.url }}" alt="Association Image" class="d-flex align-self-center me-3 rounded-circle" width="60">
+                                                                {% elif user.dashboard_admin %}
+                                                                <img src="{{ user.dashboard_admin.image.url }}" alt="Admin Image" class="d-flex align-self-center me-3 rounded-circle" width="60">
+                                                                {% else %}
+                                                                <img src="{{user.png}}" alt="Default Image" class="d-flex align-self-center me-3" width="60">
+                                                                {% endif %}
+                                                                <span class="badge bg-success badge-dot"></span>
+                                                            </div>
+                                                            <div class="pt-1">
+                                                                <p class="fw-bold mb-0">{{  user.first_name}}</p>
+                                                            </div>
+                                                        </div>
+                                                        </a>
+                                                    </li>
+                                                {% endfor %}
+                                                </ul>
+                                                <div data-mdb-perfect-scrollbar-init style="position: relative; height: 400px">
+                                                    <ul id="search-results" class="list-unstyled mb-0 ">
+                                                    {% for user in users %}
+                                                    <li class="p-2">
+                                                        <a href="{% url 'conversation' user.id %}" class="d-flex justify-content-between">
+                                                        <div class="d-flex flex-row">
+                                                            <div>
+                                                                {% if user.dashboard_donor %}
+                                                                <img src="{{ user.dashboard_donor.image.url }}" alt="Donor Image" class="d-flex align-self-center me-3 rounded-circle" width="60">
+                                                                {% elif user.dashboard_association %}
+                                                                <img src="{{ user.dashboard_association.image.url }}" alt="Association Image" class="d-flex align-self-center me-3 rounded-circle" width="60">
+                                                                {% elif user.dashboard_admin %}
+                                                                <img src="{{ user.dashboard_admin.image.url }}" alt="Admin Image" class="d-flex align-self-center me-3 rounded-circle" width="60">
+                                                                {% else %}
+                                                                <img src="{{user.png}}" alt="Default Image" class="d-flex align-self-center me-3" width="60">
+                                                                {% endif %}
+                                                                <span class="badge bg-success badge-dot"></span>
+                                                            </div>
+                                                            <div class="pt-1">
+                                                            <p class="fw-bold mb-0">{{ user.first_name}}</p>
+                                                            </div>
+                                                        </div>
+                                                        </a>
+                                                    </li>
+                                                    {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6 col-lg-7 col-xl-8 pe-md-3 border-start">
+                                            <div class="pt-3 pe-3" data-mdb-perfect-scrollbar-init style="position: relative; height: 400px">
+                                            {% for message in messages %}
+                                                <div class="d-flex flex-row justify-content-{% if message.sender == request.user %}start{% else %}end{% endif %}">
+                                                    {% if message.sender.dashboard_donor %}
+                                                        <img src="{{ message.sender.dashboard_donor.image.url }}" alt="avatar" class=" rounded-circle" style="width: 45px; height: 100%;">
+                                                    {% elif message.sender.dashboard_association %}
+                                                        <img src="{{ message.sender.dashboard_association.image.url }}" alt="avatar" class="rounded-circle" style="width: 45px; height: 100%;">
+                                                    {% elif message.sender.dashboard_admin %}
+                                                        <img src="{{ message.sender.dashboard_admin.image.url }}" alt="avatar" class="rounded-circle"  style="width: 45px; height: 100%;">
+                                                    {% else %}
+                                                        <img src="{{user.png}}" alt="avatar par défaut" class="d-flex align-self-center me-3 rounded-circle"  style="width: 45px; height: 100%;">
+                                                    {% endif %}
+                                                    <div>
+                                                        <p class="small p-2 ms-3 mb-1 rounded-3">{{ message.content }}</p>
+                                                        <a class="ms-3" href="{% url 'delete_message' message.id %}"><i class="fas fa-trash-alt"style="color: #5d7990;"></i></a>
+                                                        <p class="small ms-3 mb-3 rounded-3 text-muted float-end">{{ message.timestamp }}</p>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                            </div>
+                                            <div class="text-muted d-flex justify-content-start align-items-center pe-3 pt-3 mt-2">
+                                                {% if user.dashboard_donor %}
+                                                    <img src="{{ user.dashboard_donor.image.url }}" alt="Donor Image" class="d-flex align-self-center me-3 rounded-circle" width="60">
+                                                {% elif user.dashboard_association %}
+                                                    <img src="{{ user.dashboard_association.image.url }}" alt="Association Image" class="d-flex align-self-center me-3 rounded-circle" width="60">
+                                                {% elif user.dashboard_admin %}
+                                                    <img src="{{ user.dashboard_admin.image.url }}" alt="Admin Image" class="d-flex align-self-center me-3 rounded-circle" width="60">
+                                                {% else %}
+                                                    <img src="{{user.png}}" alt="Default Image" class="d-flex align-self-center me-3 rounded-circle" width="60">
+                                                {% endif %}
+
+                                                <form method="post" class="d-flex">
+                                                    {% csrf_token %}
+                                                    <input type="text" class="form-control form-control-lg " name="content" placeholder="Type message">
+                                                    <button type="submit"  class="btn  btn-primary" style="box-shadow: none;  "><i class="fas fa-paper-plane"></i></button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+
+            <script>
+                document.getElementById("search-form").addEventListener("submit", function(event) {
+                    event.preventDefault();
+                    searchUsers();
+                });
+
+                function searchUsers() {
+                    var query = document.getElementById("search-input").value;
+                    var url = "{% url 'search_users' %}?query=" + encodeURIComponent(query);
+
+                    fetch(url, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById("search-results").innerHTML = data;
+                    })
+                    .catch(error => {
+                        console.error('Une erreur s\'est produite:', error);
+                    });
+                }
+            </script>
+            <script>
+                const messageContainer = document.querySelector('.message-container');
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+
+                const inputMessage = document.querySelector('.input-message input[type="text"]');
+                inputMessage.addEventListener('focus', () => {
+                    messageContainer.scrollTop = messageContainer.scrollHeight;
+                });
+            </script>
+        {% endblock %}
+    </body>
+</html>

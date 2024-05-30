@@ -1,129 +1,125 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Message,Conversation
-from .models import User
-
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from .models import Conversation, Message
-from django.http import HttpResponseForbidden
+from .models import Message
+from .forms import MessageForm
+from django.db.models import Q
+from users.models import User,Association,Donor
 
 @login_required
-def inbox(request):
-    messages = Message.objects.filter(recipient=request.user)
-    return render(request, 'inbox.html', {'messages': messages})
+def message_list(request):
+    association = None
+    donor = None
+    if hasattr(request.user, 'dashboard_association'):
+        association = request.user.dashboard_association
+    if hasattr(request.user, 'dashboard_donor'):
+        donor = request.user.dashboard_donor
+    
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = request.user
+            if request.POST.get('send_to_all') == 'true':
+                for user in User.objects.exclude(id=request.user.id):
+                        new_message = Message(sender=message.sender, recipient=user, content=message.content)
+                        new_message.save()
+                return redirect('message_list')
+            elif request.POST.getlist('selected_users') and request.user.is_admin:
+                selected_user_ids = request.POST.getlist('selected_users')
+                for user_id in selected_user_ids:
+                    recipient = get_object_or_404(User, id=user_id)
+                    new_message = Message(sender=message.sender, recipient=recipient, content=message.content)
+                    new_message.save()
+                return redirect('message_list')
+    else:
+        form = MessageForm()
+    users = User.objects.exclude(id=request.user.id)
+    
+    return render(request, 'message_list.html', {'users': users, 'association': association, 'donor': donor, 'form': form})
 
 @login_required
-def send_message(request):
-    if not request.user.is_admin:
-        return HttpResponseForbidden("Vous n'êtes pas autorisé à créer des messages.")
+def conversation(request, user_id):
+    association=None
+    donor=None
+    recipient = get_object_or_404(User, id=user_id)  
+    if hasattr(request.user, 'dashboard_association'):
+        association = request.user.dashboard_association
+        #voir  seulement les conversations avec les admins
+        messages = Message.objects.filter(
+            (Q(sender=request.user) & Q(recipient__dashboard_admin=True)) |
+            (Q(recipient=request.user) & Q(sender__dashboard_admin=True))
+        ).order_by('timestamp')
+        users = User.objects.filter(dashboard_admin=True)
 
-    users = User.objects.exclude(is_admin=True).exclude(is_superuser=True)
+    if hasattr(request.user, 'dashboard_donor'):
+        donor = request.user.dashboard_donor
+        #voir  seulement les conversations avec les admins
+        messages = Message.objects.filter(
+            (Q(sender=request.user) & Q(recipient__dashboard_admin=True)) |
+            (Q(recipient=request.user) & Q(sender__dashboard_admin=True))
+        ).order_by('timestamp')
+        users = User.objects.filter(dashboard_admin=True)
+
+
+    if hasattr(request.user, 'dashboard_admin'):
+        messages = Message.objects.all()  
+        messages = Message.objects.filter(
+            (Q(sender=request.user) & Q(recipient=recipient)) | 
+            (Q(sender=recipient) & Q(recipient=request.user))
+        ).order_by('timestamp')
+        users = users = User.objects.exclude(id=request.user.id)
+
 
     if request.method == 'POST':
-        sender = request.user
-        subject = request.POST.get('subject')
-        body = request.POST.get('body')
-        recipient_username = request.POST.get('recipient_username')
-        recipients = None
-
-        if recipient_username == 'all':
-            recipients = users
-        elif recipient_username:
-            recipient = User.objects.filter(username=recipient_username).first()
-            if recipient:
-                recipients = [recipient]
-
-        if recipients:
-            for recipient in recipients:
-                # Vérifier s'il existe une conversation entre l'expéditeur et le destinataire sans tenir compte de l'ordre
-                conversation = Conversation.objects.filter(
-                    participants=sender
-                ).filter(participants=recipient).first()
-
-                # Si aucune conversation n'existe, en créer une nouvelle
-                if not conversation:
-                    conversation = Conversation.objects.create(
-                        subject=f"Conversation entre {sender.username} et {recipient.username}"
-                    )
-                    conversation.participants.add(sender, recipient)
-
-                # Créer un message pour chaque destinataire
-                Message.objects.create(
-                    conversation=conversation,
-                    sender=sender,
-                    recipient=recipient,
-                    subject=subject,
-                    body=body
-                )
-            return redirect('chat_page')
-        else:
-            return render(request, {'message': 'Destinataire non trouvé.'})
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = request.user
+            message.recipient = recipient
+            message.save()
+            return redirect('conversation', user_id=recipient.id)
     else:
-        return render(request, 'send_message.html', {'users': users})
+        form = MessageForm()
 
-@login_required
-def reply_message(request, message_id):
-    original_message = get_object_or_404(Message, pk=message_id)
-    if request.method == 'POST':
-        sender = request.user
-        subject = request.POST.get('subject')
-        body = request.POST.get('body')
-        recipient = original_message.sender
-        conversation = original_message.conversation
-
-        # Create message
-        Message.objects.create(sender=sender, recipient=recipient, subject=subject, body=body, conversation=conversation, reply_to=original_message)
-        return redirect('chat_page')
-    else:
-        return render(request, 'reply_message.html', {'original_message': original_message})
-
-
-@login_required
-def messages(request):
-    received_messages = Message.objects.filter(recipient=request.user)
-    sent_messages = Message.objects.filter(sender=request.user)
-    return render(request, 'messages.html', {
-        'received_messages': received_messages,
-        'sent_messages': sent_messages,
+   
+    return render(request, 'conversation.html', {
+        'recipient': recipient,
+        'messages': messages,
+        'form': form,
+        'users': users,
+        'association':association,
+        'donor':donor,
+        
     })
 
-
-def chat_page(request):
+def chat_view(request):
+    association=None
+    donor=None
+    if hasattr(request.user, 'dashboard_association'):
+        association = request.user.dashboard_association
+    if hasattr(request.user, 'dashboard_donor'):
+        donor = request.user.dashboard_donor
     user = request.user
-    conversations = Conversation.objects.filter(messages__sender=user) | Conversation.objects.filter(messages__recipient=user)
-    users = User.objects.exclude(is_admin=True).exclude(is_superuser=True)
+    if user.is_donor or user.is_association:
+        admin_user = User.objects.filter(dashboard_admin__isnull=False).first()
+        messages = Message.objects.filter(
+            (Q(sender=user) & Q(recipient=admin_user)) | (Q(sender=admin_user) & Q(recipient=user))
+        ).order_by('timestamp')
+        users = [admin_user]
 
-    # Supprimer les doublons (si une conversation a des messages envoyés et reçus par le même utilisateur)
-    conversations = conversations.distinct()    
-    return render(request, 'chat_page.html', {'conversations': conversations,'users':users})
+    return render(request, 'chat_page.html', {'users': users, 'messages': messages,'association':association,'donor':donor})
 
+def search_users(request):
+    query = request.GET.get('query') 
+    user_results = []
+    if query:
+        user_results = User.objects.filter(username__icontains=query).exclude(id=request.user.id)
+    return render(request, 'search_results.html', {'user_results': user_results})
 
-
-@login_required
-def delete_conversation(request, conversation_id):
-    conversation = get_object_or_404(Conversation, id=conversation_id)
-
-    # Vérifier si l'utilisateur fait partie des participants de la conversation
-    if request.user not in conversation.participants.all():
-        return HttpResponseForbidden("You are not allowed to delete this conversation.")
-
-    # Supprimer tous les messages associés
-    conversation.messages.all().delete()
-    # Supprimer la conversation
-    conversation.delete()
-    return redirect('chat_page')
-
-
-@login_required
 def delete_message(request, message_id):
     message = get_object_or_404(Message, id=message_id)
-
-    # Vérifier si l'utilisateur est le sender ou le recipient du message
-    if request.user != message.sender and request.user != message.recipient:
-        return HttpResponseForbidden("You are not allowed to delete this message.")
-
-    # Supprimer le message
-    message.delete()
-    return redirect('chat_page')
+    if request.user == message.sender or request.user == message.recipient:
+        message.delete()
+    
+    return redirect('conversation', user_id=message.recipient.id)

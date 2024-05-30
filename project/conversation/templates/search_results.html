@@ -1,0 +1,29 @@
+
+{% block content %}
+<h2>Search Results</h2>
+<ul style="list-style-type:none;">
+    {% for user in user_results %}
+        <li>
+            <a href="{% url 'conversation' user.id %}" class="d-flex  ">
+                <div>
+                    {% if user.dashboard_donor %}
+                        <img src="{{ user.dashboard_donor.image.url }}" alt="Donor Image" class="d-flex align-self-center me-3 rounded-circle" width="60">
+                    {% elif user.dashboard_association %}
+                        <img src="{{ user.dashboard_association.image.url }}" alt="Association Image" class="d-flex align-self-center me-3 rounded-circle" width="60">
+                    {% elif user.dashboard_admin %}
+                        <img src="{{ user.dashboard_admin.image.url }}" alt="Admin Image" class="d-flex align-self-center me-3 rounded-circle" width="60">
+                    {% else %}<img src="{{user.png}}" alt="Default Image" class="d-flex align-self-center me-3" width="60">
+                    {% endif %}
+                    <span class="badge bg-success badge-dot"></span>
+                </div>
+                <div >
+                        <p class="fw-bold mb-0">{{ user.first_name }}</p>
+                </div>
+            </a>
+        </li>
+        {% empty %}
+        <li>No users found.</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
