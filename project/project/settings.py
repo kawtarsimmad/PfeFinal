@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'events.apps.EventsConfig',
     'commentaires.apps.CommentairesConfig',
     'conversation.apps.ConversationConfig',
-    'django_extensions',
      #'social_django',
     # Third-party
          'crispy_forms',
