@@ -27,7 +27,6 @@
     <div class="main-content">
         <!-- List de publication Header -->
         <h2 class="m-4">Liste des Evenements</h2>
-        <a href="{% url 'create_event' %}" class="btn btn-secondary m-4">Create new Event</a>
         <div class="container mt-5">
             <div class="row">
                 <div class="col-md-12">     
@@ -54,7 +53,7 @@
                                     <td style="text-align: center"> {{ event.date }}</td>
                                     <td style="text-align: center"> {{ event.location }}</td>
                                     <td style="text-align: center">
-                                        <button class="btn btn-danger" onclick="confirmDelete({{ event.id }})"><i class="fas fa-trash"></i></button>
+                                        <button class="btn btn-danger rounded-circle" onclick="confirmDelete({{ event.id }})"><i class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
                                 {% endfor %}

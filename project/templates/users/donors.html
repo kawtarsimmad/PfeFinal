@@ -50,7 +50,7 @@
                     <td style="text-align: center">
                         <!--<a href="{% url 'update_donor' donor_id=donor.id %}" class="btn btn-info"><i class="fas fa-pencil-alt"></i> Update</a>-->
                     
-                        <a class="btn btn-danger" onclick="confirmDelete({{ donor.id }})"><i class="fas fa-trash"></i> Delete</a>
+                        <a class="btn btn-danger  rounded-circle" onclick="confirmDelete({{ donor.id }})"><i class="fas fa-trash"></i></a>
                     </td>
                 </tr>
                 {% endfor %}

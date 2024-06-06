@@ -39,7 +39,7 @@ def publications(request):
                     request.session['notified_publications'] = []
                 
                 if publication.id not in request.session['notified_publications']:
-                    messages.info(request, f"Votre publication {publication.id}. \"{publication.titre}\" a atteint son objectif de financement.")
+                    messages.info(request, f"Publication {publication.id}. \"{publication.titre}\" a atteint son objectif de financement.")
                     # Ajouter l'ID de la publication à la liste des publications notifiées
                     request.session['notified_publications'].append(publication.id)
                     request.session.modified = True   
