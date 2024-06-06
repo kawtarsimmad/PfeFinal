@@ -483,13 +483,25 @@ def update_donor(request, donor_id):
             return HttpResponseBadRequest(e)
 
     return render(request, 'users/update_donor.html', {'donor': donor})
-@admin_required
+
+@login_required
 def delete_donor(request, donor_id):
-    donor = get_object_or_404(Donor, pk=donor_id)    
-    donor.user.delete()
-    donor.delete()
+    user= request.user
+    donor = get_object_or_404(Donor, pk=donor_id) 
+    donor_user = donor.user
+    if user == donor_user or user.is_admin:
+        donor_user.delete()
+        donor.delete()
+        if user == donor_user:
+            logout(request)
+            return redirect('/')  # Redirect to homepage or any other appropriate page
+        if user.is_admin:
+            return redirect('donors')
+    else:
+        return redirect('/')
     
-    return redirect('donors')
+    return redirect('/')
+
 
 ##### Association ########################
 
