@@ -49,7 +49,7 @@
                           {% endif %}
                           <br>
                           {% if publication.Montant_rest > 0 %}
-                          <a href="{% url 'faire_don' publication.id %}" class="btn btn-customs" style="Background-color: #5d7990; color: #ffffff">faire un Don</a> 
+                          <a  onclick="gtag('event', 'donation_click', {'event_category': 'Donations', 'event_label': 'Donation Button Clicked'});" href="{% url 'faire_don' publication.id %}" class="btn btn-customs" style="Background-color: #5d7990; color: #ffffff">faire un Don</a> 
                           {% endif %}               
                           <a href="{% url 'detail' publication.id %}" class="btn btn-customs" style="Background-color: #5d7990; color: #ffffff">Read More</a>
                         </div>
