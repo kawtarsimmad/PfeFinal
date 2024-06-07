@@ -18,3 +18,5 @@ Id_Don: 11 , Donor:kawtar250524@gmail.com, Date: 2024-05-30 15:30:40.481981+00:0
 Id_Don: 12 , Donor:kawtar250524@gmail.com, Date: 2024-05-30 15:32:01.374740+00:00, Montant: 10.0000
 Id_Don: 13 , Donor:kawtar250524@gmail.com, Date: 2024-05-30 15:32:38.357139+00:00, Montant: 100.0000
 Id_Don: 13 , Donor:kawtar250524@gmail.com, Date: 2024-05-30 15:32:38.357139+00:00, Montant: 100.0000
+Id_Don: 18 , Donor:kawtar250524@gmail.com, Date: 2024-06-07 12:23:17.116155+00:00, Montant: 100.0000
+Id_Don: 19 , Donor:kawtar250524@gmail.com, Date: 2024-06-07 12:59:18.635974+00:00, Montant: 10.0000
