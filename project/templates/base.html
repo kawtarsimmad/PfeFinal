@@ -242,23 +242,24 @@
             <h3>  HopeBloom <span>.</span></h3>
             <p>
               <strong>Phone:</strong> +212 611111111<br>
-              <strong>Email:</strong> hopeBloom@gmail.com<br>
+              <strong>Email:</strong> hopeBloom2024@gmail.com<br>
             </p>
           </div>
           <div class="col-lg-3 col-md-6 footer-links">
             <h4>Useful Links</h4>
             <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">About us</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Categories</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy policy</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#hero">Home</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#about">About us</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="#Categories-services">Categories</a></li>
             </ul>
           </div>
           <div class="col-lg-3 col-md-6 footer-links">
             <h4>Our Services</h4>
             <ul>
               <!--<li><i class="bx bx-chevron-right"></i> <a href="#">  </a></li>-->
-              <li><i class="bx bx-chevron-right"></i> <a href="#"> !!coming soon!!  </a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="{% url 'association_list' %}"> Associations </a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href= "{% url 'publicationIndex' %}"> Publications </a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="{% url 'eventIndex' %}"> Events </a></li>
             </ul>
           </div>
           <div class="col-lg-3 col-md-6 footer-links">
@@ -271,11 +272,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="container py-4">
-      <div class="copyright">
-        &copy; Copyright <strong><span>HopeBloom</span></strong>. All Rights Reserved
       </div>
     </div>
   </footer><!-- End Footer -->

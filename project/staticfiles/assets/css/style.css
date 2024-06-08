@@ -842,7 +842,7 @@ section {
 --------------------------------------------------------------*/
 #footer {
   background: #fff;
-  padding: 0 0 30px 0;
+  padding: 0 0 0px 0;
   color: #444444;
   font-size: 14px;
   background: #f1f6fe;
@@ -851,8 +851,8 @@ section {
 
 
 #footer .footer-top {
-  padding: 60px 0 30px 0;
-  background: #fff;
+  padding: 40px 0 0px 0;
+  
 }
 
 #footer .footer-top .footer-contact {
@@ -962,5 +962,5 @@ section {
   }
 }
 
-/* login  */
+
 

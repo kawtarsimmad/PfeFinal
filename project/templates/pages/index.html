@@ -96,9 +96,9 @@
                       <div class="progress-bar" role="progressbar" style="width: {{ publication.progress_percent }}%; Background-color: #5d7990;" aria-valuenow="{{ publication.progress_percent }}%" aria-valuemin="0" aria-valuemax="100">{{ publication.progress_percent }}%</div>
                     </div>
                     {% if publication.Montant_rest > 0 %}
-                        <div style="font-style: italic; text-decoration: underline;" ><strong>Montant restant {{ publication.Montant_rest|floatformat:2 }}$</strong></div>
+                        <div style="font-style: italic; text-decoration: underline;" ><strong>Remaining amount {{ publication.Montant_rest|floatformat:2 }}$</strong></div>
                     {% else %}
-                          <div style="font-style: italic; text-decoration: underline;" ><strong>Objectif atteint</strong></div>
+                          <div style="font-style: italic; text-decoration: underline;" ><strong>Goal achieved</strong></div>
                     {% endif %}
                     <br>
                     {% if publication.Montant_rest > 0 %}                                      
@@ -114,13 +114,13 @@
             {% endfor %}
           {% else %}
             <div class="col-12">
-              <p>No publications found.</p>
+              <p>No posts found.</p>
             </div>
           {% endif %}
         </div>
 
           <div class="text-center mt-4">
-            <a href="{% url 'publicationIndex' %}" class="btn btn-customs" style="Background-color: #5d7990; color: #ffffff">View All Publications</a>
+            <a href="{% url 'publicationIndex' %}" class="btn btn-customs" style="Background-color: #5d7990; color: #ffffff">View All Posts</a>
           </div>
       </div>
     </section>
@@ -147,7 +147,7 @@
                   <div><p>{{ event_data.progress_percent }}% Complete</p></div>
                 </div>
                 <br>
-                <a href="{% url 'participate_event' event_data.event.pk %}" class="btn btn-customs" style="Background-color: #5d7990; color: #ffffff">Participer</a>
+                <a href="{% url 'participate_event' event_data.event.pk %}" class="btn btn-customs" style="Background-color: #5d7990; color: #ffffff">Participate</a>
                 <a href="{% url 'detail_events' pk=event_data.event.id %}" class="btn btn-customs" style="Background-color: #5d7990; color: #ffffff">Learn More</a>
               </div>
             </div>
@@ -173,19 +173,28 @@
     <!-- End Events Section -->
     
          <!-- ======= Association List Section ======= -->
-         <section id="association-list" class="services">
+         <section id="association-list" class="services" style="background-color: #;">
           <div class="container" data-aos="fade-up">
-              <div class="section-title">
-                  <h2>Associations</h2>
+            <div class="section-title">
+              <h2>Associations</h2>
+            </div>
+            <div class="row">
+              <div class="col-lg-6 aos-init aos-animate" data-aos="fade-right" data-aos-delay="100">
+                <img src="static/assets/img/undraw_Instant_support_re_s7un.png" class="img-fluid" alt>
               </div>
-              <p>If you want to explore the list of associations available on our platform or contact them for assistance with your own case, please use the button below:</p>
-              <div class="text-center mt-4">
-                <a href="{% url 'association_list' %}">
+              <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center align-items-start aos-init aos-animate" data-aos="fade-up" data-aos-delay="100" style="height: 80vh;">
+                <p>Our platform is designed to connect you with numerous dedicated associations that are making a real difference in people's lives every day. Whether you are looking for support, wanting to give back to the community, or simply seeking to learn more about the causes and efforts that inspire you, we are here to help. By clicking the button below, you can easily browse through various associations, make direct donations to support their incredible work, and even find their exact locations on Google Maps. Your contribution, no matter how small, can bring hope and change to many. Together, we can make a significant impact. Please join us in this journey of compassion and support.</p>
+                <div class="mt-4 d-flex justify-content-center w-100">
+                  <a href="{% url 'association_list' %}">
                     <i class="fas fa-arrow-alt-circle-right fa-3x" style="color: #5d7990;"></i>
-                </a>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </section>
+        
+        
         <!-- ======= End Association List Section ======= -->
 
     <!-- ======= Categories Services Section ======= -->
@@ -265,14 +274,14 @@
                 <i class="bi bi-clipboard2-check-fill"></i>
                 <div>
                   <h5>Accountability</h5>
-                  <p>We carefully vet every charity and project to ensure transparency and ethical conduct.</p>
+                  <p>We carefully vet every charity and event to ensure transparency and ethical conduct.</p>
                 </div>
               </li>
               <li>
                 <i class="bi bi-balloon-heart"></i>
                 <div>
                   <h5>Impact</h5>
-                  <p>We track and report on the outcomes of every project, so you can see the difference your donation makes.</p>
+                  <p>We track and report on the outcomes of every case, so you can see the difference your donation makes.</p>
                 </div>
               </li>
               <li>
@@ -319,7 +328,7 @@
             <div class="count-box">
               <i class="bi bi-journal-richtext"></i>
               <span data-purecounter-start="0" data-purecounter-end="{{ pub.count }}" data-purecounter-duration="1" class="purecounter"></span>
-              <p>publications</p>
+              <p>posts</p>
             </div>
           </div>
 
@@ -346,38 +355,6 @@
     </section>
     <!-- End Counts Section -->
 
-    <!-- ======= Contact Section ======= -->
-    <section id="contact" class="contact">
-      <div class="container" data-aos="fade-up">
-          <div class="section-title">
-              <h2>Contact</h2>
-              <h3><span>Contact Us</span></h3>
-          </div>
-  
-          <div class="row" >
-              <div class="col-lg-3 col-md-6 " >
-                  <div class="info-box mb-4 d-flex align-items-center justify-content-center"> <!-- Added d-flex and align-items-center -->
-                      <i class="bx bx-envelope"></i>
-                      <div>
-                          <h3>Email Us</h3>
-                          <p>contact@example.com</p>
-                      </div>
-                  </div>
-              </div>
-  
-              <div class="col-lg-3 col-md-6 justify-content-end" >
-                  <div class="info-box mb-4 d-flex align-items-center justify-content-center"> <!-- Added d-flex and align-items-center -->
-                      <i class="bx bx-phone-call"></i>
-                      <div>
-                          <h3>Call Us</h3>
-                          <p>+212 611111111</p>
-                      </div>
-                  </div>
-              </div>
-          </div>
-  
-      </div>
-    </section><!-- End Contact Section -->
    
 
 
