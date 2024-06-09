@@ -3,47 +3,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <style>
-        .main-content .user-image-container img {
-            max-width: 80px; /* Adjust the max-width to your desired size */
-            margin: 0 auto; /* Centers the image horizontally */
-        }
-    </style>
+    {% block extra_styles %}
+        <style>  
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #fff;
+
+            }
+            .main-content {
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                margin: 20px;
+            }
+            .nav-link {
+                display: flex;
+                align-items: center;
+            }
+            .larger-font {
+                font-size: 24px; /* or any desired size */
+            }
+            .cnt {
+                padding: 10px 0; 
+            }
+            .don-box{
+                width: 90%;
+                padding: 10px;
+                background-color: rgba(232, 245, 253, 1); 
+                border-radius: 10px; 
+                text-align: center; 
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); 
+                transition: all 0.3s ease; 
+                margin: 10px; 
+            }
+
+            .count-box {
+                flex: 1;
+                min-width: 150px;
+                max-width: 200px; 
+                padding: 10px;
+                background-color: rgba(232, 245, 253, 1); 
+                border-radius: 10px; 
+                text-align: center; 
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); 
+                transition: all 0.3s ease; 
+                margin: 10px; 
+            }
+        
+            .count-box:hover {
+                background-color: rgba(232, 245, 253, 1); /* Background color on hover */
+                transform: translateY(-5px); /* Move the box up on hover */
+            }
+        
+            .count-box i {
+                font-size: 20px; /* Icon size */
+                color:rgba(54, 162, 235, 1);; /* Icon color */
+            }
+        
+            .count-box span {
+                display: block; /* Make the count number a block element */
+                font-size: 24px; /* Count number font size */
+                font-weight: 700; /* Count number font weight */
+                color: #343a40; /* Count number color */
+                margin-bottom: 5px; /* Bottom margin for the count number */
+            }
+        
+            .count-box p {
+                font-size: 12px; /* Text size */
+                color: #6c757d; /* Text color */
+            }
+            .chart-container {
+                display: flex;
+                justify-content: space-around;
+            }
+            .chart-wrapper {
+                width: 300px; /* Ajustez cette valeur selon vos besoins */
+                height: 300px; /* Ajustez cette valeur selon vos besoins */
+            }
+            #monthlyDonationsChart {
+                width: 400px; /* Ajustez cette valeur selon vos besoins */
+                height: 200px; /* Ajustez cette valeur selon vos besoins */
+            }
+            .fas.fa-bell {
+                position: relative;
+            }
+            .badge {
+                position: absolute;
+                top: -10px;
+                right: -10px;
+                background-color: red;
+                color: black; 
+                padding: 2px;
+                border-radius: 50%;
+            }
+            .fixed-hdr {
+                position: fixed;
+                top: 0;
+                width: 80%;
+                height:8%;
+                background-color: white;
+                z-index: 1000;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+        </style>
+    {% endblock %}
 </head>
 <body>
-{% block content %}
-<!-- Main Content -->
-<div class="main-content">
-    <!-- Donor Information Header -->
-    <h1 class="mt-4">Espace Donor</h1>
+{% block content %}   
 
-    <!-- Your main content goes here -->
-    <!-- For example: -->
-    <main class="col-md-10 bg-light p-4 content">
-        <div class="container mt-5">
-            <div class="row">
-                <div class="col-md-3">
-                    {% if donor.image %}
-                    <div class="user-image-container" style="max-width: 100px; margin: 0 auto;">
-                        <img src="{{ donor.image.url }}" alt="User Image" class="img-fluid rounded-circle">
+    
+        <div class="fixed-hdr">
+            <header class="d-flex align-items-center justify-content-between p-1">
+                <div class="d-flex align-items-center ms-auto " style=" margin-right: 20px;">
+                    <a href="{% url 'view_reclamations' %}" class="me-3">
+                        <i class="fas fa-bell">
+                            <span class="badge badge-danger position-absolute top-0 start-100 translate-middle badge-custom-color" id="reclamationsCount">{{  resolu_reclamations_count}}</span>
+                        </i>
+                    </a>
+                    <div class="user-info d-flex align-items-center">
+                        <span class="ms-2 me-2" style="font-family: Times New Roman, serif; color:black;">{{ donor.user.first_name }}</span>
+                        {% if donor.image %}
+                        <a class="user-image-container " href="{% url 'dashboard_donor' %}" style="max-width: 30px;">
+                            <img src="{{ donor.image.url }}" alt="User Image" class="img-fluid rounded-circle">
+                        </a>
+                        {% else %}
+                            <i class="fas fa-user-circle fa-2x text-secondary" ></i>
+                        {% endif %}
+                    </div>    
+                </div>
+            </header>
+        </div>
+        <div class="main-content">
+            <div class="container mt-5">
+                <section id="cnt" class="cnt">
+                    <div class="row flex-container">
+                        
+                        <div class="count-box">
+                            <i class="fas fa-donate" ></i>
+                            {% if don.est_paye %}
+                                <span>{{ dons.count }}</span>
+                            {% else %}
+                                <span data-purecounter-start="0" data-purecounter-end="{{ nombre_dons }}" data-purecounter-duration="1" class="purecounter">{{ nombre_dons }}</span>
+                            {% endif %}
+                            <p>Dons</p>
+                        </div>
+                        <div class="count-box">
+                            <i class="bi bi-cash-coin" ></i>
+                            <span data-purecounter-start="0" data-purecounter-end="{{ somme_dons_effectues }}" data-purecounter-duration="1" class="purecounter">{{ somme_dons_effectues }}</span>
+                            <p>Donations </p>
+                        </div>
+                        <div class="count-box">
+                            <i class="bi bi-calendar3" ></i>
+                            <span data-purecounter-start="0" data-purecounter-end="{{ nombre_evenements_participes }}" data-purecounter-duration="1" class="purecounter">{{ nombre_evenements_participes }}</span>
+                            <p>Events </p>
+                        </div>
+                        <div class="count-box">
+                            <i class="bi bi-chat-right-dots" ></i>
+                            <span data-purecounter-start="0" data-purecounter-end="{{ nombre_reclamations_creees }}" data-purecounter-duration="1" class="purecounter">{{ nombre_reclamations_creees }}</span>
+                            <p>Reclamations </p>
+                        </div>
                     </div>
-                    {% else %}
-                        <i class="fas fa-user-circle fa-5x text-secondary"></i>
-                    {% endif %}
+                </section>
+                <div class="container mt-5">
+                    <div class="row flex-container">
+                        <div class="chart-wrapper">
+                            <div class="chart-wrapper">
+                                <canvas id="monthlyDonationsChart"></canvas>
+                            </div>
+                        </div>
+                        <script>
+                            var ctx = document.getElementById('monthlyDonationsChart').getContext('2d');
+                            var myChart = new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: {{ months|safe }},
+                                    datasets: [{
+                                        label: 'Donations per Month',
+                                        data: {{ counts|safe }},
+                                        backgroundColor: 'rgba(54, 162, 235, 1)',
+                                        
+                                    }]
+                                },
+                                options: {
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }]
+                                    },
+                                    categoryPercentage: 0.2,
+                                    barSpacing: 0,
+                                }
+                            });
+                        </script>
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <div class="mb-3"><span class="fw-bold me-2"><i class="fas fa-user me-1"></i>Nom :</span>{{ donor.user.first_name }}</div>
-                    <div><span class="fw-bold me-2"><i class="fas fa-envelope me-1"></i>Email :</span>{{ donor.user.email }}</div>
-                </div>
+                
             </div>
         </div>
-        
-    </main>
-</div>
-
-<!-- Bootstrap JS Bundle (Popper.js included) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+     
+    <!-- Bootstrap JS Bundle (Popper.js included) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock content %}
 
-</body>
+  </body>
 </html>
+

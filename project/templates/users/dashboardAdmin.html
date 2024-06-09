@@ -15,38 +15,37 @@
             background-color: #f8f9fa; /* Légèrement gris pour différencier du blanc */
         }
         .main-content {
-            padding: 20px;
+            padding: 0px;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             margin: 20px;
         }
         .cnt {
-            padding: 20px 0; /* Padding around the counts section */
+            padding: 10px 0; 
         }
     
         .count-box {
-            flex: 1; /* Adjusts to take equal space in the container */
-            min-width: 150px; /* Minimum width for each box to ensure they don't get too small */
-            max-width: 200px; /* Maximum width for each box */
+            flex: 1;
+            min-width: 150px;
+            max-width: 200px; 
             padding: 10px;
-            background-color: #f8f9fa; /* Box background color */
-            border-radius: 10px; /* Box border radius */
-            padding: 10px; /* Padding inside the box */
-            text-align: center; /* Center align content */
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Box shadow */
-            transition: all 0.3s ease; /* Smooth transition */
-            margin: 10px; /* Add some margin between count boxes */
+            background-color: rgba(232, 245, 253, 1); 
+            border-radius: 10px; 
+            text-align: center; 
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); 
+            transition: all 0.3s ease; 
+            margin: 10px; 
         }
     
         .count-box:hover {
-            background-color: #f0f0f0; /* Background color on hover */
-            transform: translateY(-3px); /* Move the box up on hover */
+            background-color: rgba(232, 245, 253, 1); /* Background color on hover */
+            transform: translateY(-5px); /* Move the box up on hover */
         }
     
         .count-box i {
             font-size: 20px; /* Icon size */
-            color: #343a40; /* Icon color */
+            color:rgba(54, 162, 235, 1);; /* Icon color */
         }
     
         .count-box span {
@@ -65,6 +64,10 @@
             display: flex;
             align-items: center;
         }
+        
+        .fas.fa-envelope {
+            position: relative;
+        }
         .fas.fa-bell {
             position: relative;
         }
@@ -72,8 +75,8 @@
             position: absolute;
             top: -10px;
             right: -10px;
-            background-color: red; /* Couleur de fond du badge */
-            color: black; /* Couleur du texte du badge */
+            background-color: red;
+            color: black; 
             padding: 2px;
             border-radius: 50%;
         }
@@ -103,86 +106,91 @@
             height: 300px; /* Ajustez cette valeur selon vos besoins */
         }
         #monthlyDonationsChart {
-            width: 400px; /* Ajustez cette valeur selon vos besoins */
-            height: 200px; /* Ajustez cette valeur selon vos besoins */
+            width: 400px; 
+            height: 200px; 
         }
+        #pendingEmailsChart {
+            width: 400px; 
+            height: 200px;
+        }
+        .fixed-hdr {
+            position: fixed;
+            top: 0;
+            width: 80%;
+            height:8%;
+            background-color: white;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
         
     </style>
    {% endblock %}
 </head>
 <body>
-    <div class="main-content">
-        <header>
-            <a href="{% url 'reclamations' %}" class="nav-link">
-                <i class="fas fa-bell" style="margin-left:4%">
-                    <span class="badge badge-danger badge-custom-color " id="reclamationsCount">{{ pending_reclamations_count }}</span>
-                </i>
-            </a>
-            <div class="user-info">
-                <div class="row">
-                    <div class="col-md-3">
-                        {% if admin.image %}
-                        <div class="user-image-container" style="max-width: 100px; margin: 0 auto;">
-                            <img src="{{ admin.image.url }}" alt="User Image" class="img-fluid rounded-circle">
-                        </div>                        
-                        {% else %}
-                            <i class="fas fa-user-circle fa-5x text-secondary"></i>
-                        {% endif %}
+    <div class="fixed-hdr">
+        <header class="d-flex align-items-center justify-content-between p-1">
+            <div class="d-flex align-items-center p-1">
+                    <div class="form-check form-switch"style="margin-right:20px;">
+                        <form action="{% url 'activate_alert' %}" method="post">
+                            {% csrf_token %}
+                            <input class="form-check-input" type="checkbox" role="switch" id="alertSwitch" name="alertSwitch" onchange="this.form.submit()" {% if alert and alert.is_active %}checked{% endif %} />
+                            <label class="form-check-label" for="alertSwitch">Activer l'alerte</label>
+                        </form>
                     </div>
-                    <div class="col-md-9">
-                        <div class="mb-3"><span class="fw-bold me-2"><i class="fas fa-user me-1"></i>Nom :</span>{{ admin.user.first_name }}</div>
-                        <div><span class="fw-bold me-2"><i class="fas fa-envelope me-1"></i>Email :</span>{{ admin.user.email }}</div>
+                    <div class="form-check form-switch">
+                        <form action="{% url 'desactivate_alert' %}" method="post">
+                            {% csrf_token %}
+                            <input class="form-check-input" type="checkbox" role="switch" id="alertSwitchOff" name="alertSwitchOff" onchange="this.form.submit()" {% if alert and not alert.is_active %}checked{% endif %} />
+                            <label class="form-check-label" for="alertSwitchOff">Désactiver l'alerte</label>
+                        </form>
                     </div>
-                </div>
+            </div>
+            <div class="d-flex align-items-center ms-auto " style=" margin-right: 10px;">
+                    <a href="{% url 'reclamations' %}" class="me-3">
+                        <i class="fas fa-bell">
+                            <span class="badge badge-danger position-absolute top-0 start-100 translate-middle badge-custom-color" id="reclamationsCount">{{ pending_reclamations_count }}</span>
+                        </i>
+                    </a>
+                    <a href="{% url 'manage_pending_emails' %}" class="me-3">
+                        <i class="fas fa-envelope">
+                            <span class="badge badge-danger position-absolute top-0 start-100 translate-middle " id="PendingCount">{{ pending_count }}</span>
+                        </i>
+                    </a>
+                <div class="user-info d-flex align-items-center">
+                    <span class="ms-2 me-2" style="font-family: Times New Roman, serif; color:black;">{{ admin.user.first_name }}</span>
+                    {% if admin.image %}
+                    <a class="user-image-container " href="{% url 'dashboardAdmin' %}" style="max-width: 30px;">
+                        <img src="{{ admin.image.url }}" alt="User Image" class="img-fluid rounded-circle">
+                    </a>
+                    {% else %}
+                        <i class="fas fa-user-circle fa-2x text-secondary" ></i>
+                    {% endif %}
+                </div>    
             </div>
         </header>
-
-        <main>
+    </div>
+    <div class="main-content">
             <div class="container mt-5">
-                <div class="alert-control">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Alert Control</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-check form-switch">
-                                <form action="{% url 'activate_alert' %}" method="post">
-                                    {% csrf_token %}
-                                    <input class="form-check-input" type="checkbox" role="switch" id="alertSwitch" name="alertSwitch" onchange="this.form.submit()" {% if alert and alert.is_active %}checked{% endif %} />
-                                    <label class="form-check-label" for="alertSwitch">Activate Alert</label>
-                                </form>
-                            </div>
-                            <div class="form-check form-switch mt-3">
-                                <form action="{% url 'desactivate_alert' %}" method="post">
-                                    {% csrf_token %}
-                                    <input class="form-check-input" type="checkbox" role="switch" id="alertSwitchOff" name="alertSwitchOff" onchange="this.form.submit()" {% if alert and not alert.is_active %}checked{% endif %} />
-                                    <label class="form-check-label" for="alertSwitchOff">Deactivate Alert</label>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <section id="cnt" class="cnt">
                     <div class="row flex-container">
                         <div class="count-box">
-                            <i class="fas fa-user me-2"></i>
-                            <span data-purecounter-start="0" data-purecounter-end="{{ users.count }}" data-purecounter-duration="1" class="purecounter"></span>
-                            <p>Users</p>
+                            <i class="fas fa-user me-2 " ></i>
+                            <span data-purecounter-start="0" data-purecounter-end="{{ associations.count }}" data-purecounter-duration="1" class="purecounter"></span>
+                            <p>Associations</p>
                         </div>
                         <div class="count-box">
-                            <i class="bi bi-journal-richtext"></i>
+                            <i class="fas fa-user me-2 " ></i>
+                            <span data-purecounter-start="0" data-purecounter-end="{{ donors.count }}" data-purecounter-duration="1" class="purecounter"></span>
+                            <p>Donors</p>
+                        </div>
+                        <div class="count-box">
+                            <i class="bi bi-journal-richtext" ></i>
                             <span data-purecounter-start="0" data-purecounter-end="{{ pub.count }}" data-purecounter-duration="1" class="purecounter"></span>
                             <p>Publications</p>
                         </div>
                         <div class="count-box">
-                            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-                            <i class="fas fa-th-large"></i>
-                            <span data-purecounter-start="0" data-purecounter-end="{{ categories.count }}" data-purecounter-duration="1" class="purecounter"></span>
-                            <p>Categories</p>
-                        </div>
-                        <div class="count-box">
-                            <i class="bi bi-cash-coin"></i>
+                            <i class="bi bi-cash-coin" ></i>
                             {% if don.est_paye %}
                                 <span>{{ dons.count }}</span>
                             {% else %}
@@ -191,7 +199,7 @@
                             <p>Dons</p>
                         </div>
                         <div class="count-box">
-                            <i class="bi bi-cash-coin"></i>
+                            <i class="bi bi-cash-coin" ></i>
                             <span data-purecounter-start="0" data-purecounter-end="{{ total_dons_all }}" data-purecounter-duration="1" class="purecounter"></span>
                             <p>Donations raised</p>
                         </div>
@@ -200,30 +208,208 @@
                 <div class="statistics">
                     <h2>Statistics</h2>
                     <div class="chart-container">
-                        <div class="chart-wrapper">
-                            <canvas id="fundingGoalChart"></canvas>
+                        <div class="row">
+                            <div class="d-flex col-md-4">
+                                <div class="chart-wrapper">
+                                    <canvas id="fundingGoalChart"></canvas>
+                                </div>
+                                <div class="chart-wrapper">
+                                    <canvas id="fundingAmountChart"></canvas>
+                                </div>
+                                <div class="chart-wrapper">
+                                    <canvas id="reclamationsChart"></canvas>
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="row mt-4">   
+                            <div class=" d-flex col-md-6">
+                                <div class="chart-wrapper bar">
+                                    <canvas id="monthlyDonationsChart"></canvas>
+                                </div>
+                                <div class="chart-wrapper bar">
+                                    <canvas id="publicationsChart"></canvas>
+                                </div>
+                                <div class="chart-wrapper bar">
+                                    <canvas id="pendingEmailsChart"></canvas>
+                                </div>
+                            </div>
                         </div>
-                        <div class="chart-wrapper">
-                            <canvas id="fundingAmountChart"></canvas>
-                        </div>
-                        <div class="chart-wrapper">
-                            <canvas id="monthlyDonationsChart"></canvas>
-                        </div>
-                    </div> 
+                    </div>
+                    
                     <script>
-                            var ctx = document.getElementById('monthlyDonationsChart').getContext('2d');
-                            var myChart = new Chart(ctx, {
+                        var ctx = document.getElementById('monthlyDonationsChart').getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: {{ months|safe }},
+                                datasets: [{
+                                    label: 'Donations per Month',
+                                    data: {{ counts|safe }},
+                                    backgroundColor: 'rgba(54, 162, 235, 1)',
+                                }]
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                },
+                                categoryPercentage: 0.2,
+                                barSpacing: 0,
+                            }
+                        });
+                    </script>
+                    <script>
+                            document.addEventListener('DOMContentLoaded', (event) => {
+                                const ctx1 = document.getElementById('fundingGoalChart').getContext('2d');
+                                const ctx2 = document.getElementById('fundingAmountChart').getContext('2d');
+                                const ctx = document.getElementById('reclamationsChart').getContext('2d');
+
+                            
+                                const fundingGoalData = {
+                                    labels: ['Reached Goal', 'Not Reached Goal'],
+                                    datasets: [{
+                                        data: [{{ stats.number_of_funded_publications }}, {{ unfunded_publications }}],
+                                        backgroundColor: ['rgba(206, 74, 134, 1)', 'rgba(246, 242, 245, 1)']
+                                    }]
+                                };
+                                const fundingGoalChart = new Chart(ctx1, {
+                                    type: 'doughnut',
+                                    data: fundingGoalData,
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            legend: {
+                                                position: 'top',
+                                            },
+                                            title: {
+                                                display: true,
+                                                position: 'bottom',
+                                                text: 'Funding Goal Achievement'
+                                            },
+                                        },
+                                        maintainAspectRatio: false
+                                        
+                                    }
+                                });
+                            
+                            
+                                const fundingAmountData = {
+                                    labels: ['Total Needed', 'Total Collected'],
+                                    datasets: [{
+                                        data: [{{ stats.total_funding_needed }}, {{ stats.total_funding_collected }}],
+                                        backgroundColor: ['rgba(232, 245, 253, 1)', 'rgba(54, 162, 235, 1)']
+                                    }]
+                                };
+                            
+                                
+                                const fundingAmountChart = new Chart(ctx2, {
+                                    type: 'doughnut',
+                                    data: fundingAmountData,
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            legend: {
+                                                position: 'top',
+                                            },
+                                            title: {
+                                                display: true,
+                                                position: 'bottom',
+                                                text: 'Funding Amounts'
+                                            },
+                                        },
+                                        maintainAspectRatio: false
+                                        
+                                    }
+                                });
+                                const reclamationsChart = new Chart(ctx, {
+                                    type: 'doughnut',
+                                    data: {
+                                        labels: ['Responded', 'Pending'],
+                                        datasets: [{
+                                            data: [{{ responded_reclamations }}, {{ pending_reclamations }}],
+                                            backgroundColor: [
+                                                'rgba(229, 234, 238, 1)','rgba(104, 136, 158, 1)'
+                                                
+                                            ],
+                                            
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            legend: {
+                                                position: 'top',
+                                            },
+                                            title: {
+                                                display: true,
+                                                position: 'bottom',
+                                                text: 'Reclamation Response Statistics'
+                                            }
+                                        },
+                                        maintainAspectRatio: false 
+                                    }
+                                });
+                            
+                                
+                        
+                            });
+                    </script>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function() {
+                            var ctx = document.getElementById('pendingEmailsChart').getContext('2d');
+                           
+                            var chart = new Chart(ctx, {
                                 type: 'bar',
                                 data: {
                                     labels: {{ months|safe }},
                                     datasets: [{
-                                        label: 'Donations per Month',
+                                        label: 'Pending Emails',
                                         data: {{ counts|safe }},
-                                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                        borderColor: 'rgba(75, 192, 192, 1)',
-                                        borderWidth: 1
+                                        backgroundColor: 'rgba(54, 162, 235, 1)',
                                     }]
                                 },
+                                options: {
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true,
+                                                
+                                            }
+                                        }]
+                                    },
+                                    categoryPercentage: 0.2,
+                                    barSpacing: 0,
+                                }
+                            });
+                        });
+                    </script>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            var ctx = document.getElementById('publicationsChart').getContext('2d');
+                            var chartData = {
+                                labels: {{ months_pub|safe }},
+                                datasets: [
+                                    {
+                                        label: 'Publications Created',
+                                        data: {{ counts_pub|safe }},
+                                        backgroundColor: 'rgba(54, 162, 235, 1)'
+                                    },
+                                    {
+                                        label: 'Publications Achieved Goal',
+                                        data: {{ counts_pub_achieved|safe }},
+                                        backgroundColor: 'rgba(153, 102, 255, 1)'
+                                    }
+                                ]
+                            };
+                
+                            var chart = new Chart(ctx, {
+                                type: 'bar',
+                                data: chartData,
                                 options: {
                                     maintainAspectRatio: false,
                                     scales: {
@@ -234,96 +420,14 @@
                                         }]
                                     },
                                     categoryPercentage: 0.2,
-                                    barSpacing: 0,
+                                    barSpacing: 0
                                 }
                             });
-                        </script>
-                        <script>
-                            document.addEventListener('DOMContentLoaded', (event) => {
-                                const ctx1 = document.getElementById('fundingGoalChart').getContext('2d');
-                                const ctx2 = document.getElementById('fundingAmountChart').getContext('2d');
-                            
-                                const fundingGoalData = {
-                                    labels: ['Reached Goal', 'Not Reached Goal'],
-                                    datasets: [{
-                                        data: [{{ stats.number_of_funded_publications }}, {{ unfunded_publications }}],
-                                        backgroundColor: ['#ce4a86', '#e9e0e2']
-                                    }]
-                                };
-                            
-                                const fundingAmountData = {
-                                    labels: ['Total Needed', 'Total Collected'],
-                                    datasets: [{
-                                        data: [{{ stats.total_funding_needed }}, {{ stats.total_funding_collected }}],
-                                        backgroundColor: ['#e9e0e2', '#36A2EB']
-                                    }]
-                                };
-                            
-                                const fundingGoalChart = new Chart(ctx1, {
-                                    type: 'doughnut',
-                                    data: fundingGoalData,
-                                    options: {
-                                        maintainAspectRatio: false,
-                                        title: {
-                                            display: true,
-                                            text: 'Funding Goal Achievement'
-                                        },
-                                        layout: {
-                                            padding: {
-                                                left: 10,
-                                                right: 10,
-                                                top: 10,
-                                                bottom: 10
-                                            }
-                                        }
-                                    }
-                                });
-                            
-                                const fundingAmountChart = new Chart(ctx2, {
-                                    type: 'doughnut',
-                                    data: fundingAmountData,
-                                    options: {
-                                        maintainAspectRatio: false,
-                                        title: {
-                                            display: true,
-                                            text: 'Funding Amounts'
-                                        },
-                                        layout: {
-                                            padding: {
-                                                left: 10,
-                                                right: 10,
-                                                top: 10,
-                                                bottom: 10
-                                            }
-                                        }
-                                    }
-                                });
-                            
-                                // Ajouter des événements de souris pour détecter le focus et la sortie du focus
-                                ctx1.canvas.addEventListener('mouseenter', function() {
-                                    fundingGoalChart.data.datasets[0].backgroundColor = ['#ce4a86', '#e9e0e2'];
-                                    fundingGoalChart.update();
-                                });
-                            
-                                ctx1.canvas.addEventListener('mouseleave', function() {
-                                    fundingGoalChart.data.datasets[0].backgroundColor = ['#ce4a86', '#e9e0e2'];
-                                    fundingGoalChart.update();
-                                });
-                            
-                                ctx2.canvas.addEventListener('mouseenter', function() {
-                                    fundingAmountChart.data.datasets[0].backgroundColor = ['#e9e0e2', '#36A2EB'];
-                                    fundingAmountChart.update();
-                                });
-                            
-                                ctx2.canvas.addEventListener('mouseleave', function() {
-                                    fundingAmountChart.data.datasets[0].backgroundColor = ['#e9e0e2', '#36A2EB'];
-                                    fundingAmountChart.update();
-                                });
-                            });
-                        </script>
+                        });
+                    </script>
+                    
                 </div>
             </div>
-        </main>
     </div>
 
     <!-- Bootstrap JS Bundle (Popper.js included) -->

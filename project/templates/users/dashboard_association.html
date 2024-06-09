@@ -11,11 +11,11 @@
 
             }
             .main-content {
-                padding: 20px;
+                padding: 0px;
                 background-color: #fff;
                 border-radius: 8px;
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                margin: 20px;
+                margin: 0px;
             }
             .nav-link {
                 display: flex;
@@ -23,6 +23,52 @@
             }
             .larger-font {
                 font-size: 24px; /* or any desired size */
+            }
+
+            .cnt {
+                padding: 10px 0; 
+                margin-left:20px;
+            }
+        
+            .count-box {
+                flex: 1;
+                min-width: 150px;
+                max-width: 200px; 
+                padding: 10px;
+                background-color: rgba(232, 245, 253, 1); 
+                border-radius: 10px; 
+                text-align: center; 
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); 
+                transition: all 0.3s ease; 
+                margin: 10px; 
+            }
+        
+            .count-box:hover {
+                background-color: rgba(232, 245, 253, 1); /* Background color on hover */
+                transform: translateY(-5px); /* Move the box up on hover */
+            }
+        
+            .count-box i {
+                font-size: 20px; /* Icon size */
+                color:rgba(54, 162, 235, 1);; /* Icon color */
+            }
+        
+            .count-box span {
+                display: block; /* Make the count number a block element */
+                font-size: 24px; /* Count number font size */
+                font-weight: 700; /* Count number font weight */
+                color: #343a40; /* Count number color */
+                margin-bottom: 5px; /* Bottom margin for the count number */
+            }
+        
+            .count-box p {
+                font-size: 12px; /* Text size */
+                color: #6c757d; /* Text color */
+            }
+            .statistics{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
             .chart-container {
                 display: flex;
@@ -36,53 +82,106 @@
                 width: 400px; /* Ajustez cette valeur selon vos besoins */
                 height: 200px; /* Ajustez cette valeur selon vos besoins */
             }
+            .fas.fa-bell {
+                position: relative;
+            }
+            .badge {
+                position: absolute;
+                top: -10px;
+                right: -10px;
+                background-color: red;
+                color: black; 
+                padding: 2px;
+                border-radius: 50%;
+            }
+            .fixed-hdr {
+                position: fixed;
+                top: 0;
+                width: 80%;
+                height:8%;
+                background-color: white;
+                z-index: 1000;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
         </style>
     {% endblock %}
 </head>
 <body>
 {% block content %}   
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <main>
-            <a href="{% url 'PubList' %}" class="nav-link" style="font-size: larger;">
-                <i class="bi bi-journal-richtext" style="margin-left:4%;font-size: larger;">
-                    <span class="badge badge-danger badge-custom-color " style="font-size: larger;"></span>
-                </i>
-            </a>
-            <div class="container mt-5">
-                <div class="row">
-                    <div class="col-md-3">
+    
+        <div class="fixed-hdr">
+            <header class="d-flex align-items-center justify-content-between p-1">
+                <div class="d-flex align-items-center ms-auto " style=" margin-right: 20px;">
+                    <a href="{% url 'view_reclamations' %}" class="me-3">
+                        <i class="fas fa-bell">
+                            <span class="badge badge-danger position-absolute top-0 start-100 translate-middle badge-custom-color" id="reclamationsCount">{{  resolu_reclamations_count}}</span>
+                        </i>
+                    </a>
+                    <div class="user-info d-flex align-items-center">
+                        <span class="ms-2 me-2" style="font-family: Times New Roman, serif; color:black;">{{ association.user.first_name }}</span>
                         {% if association.image %}
-                        <div class="user-image-container" style="max-width: 100px; margin: 0 auto;">
+                        <a class="user-image-container " href="{% url 'dashboard_association' %}" style="max-width: 30px;">
                             <img src="{{ association.image.url }}" alt="User Image" class="img-fluid rounded-circle">
-                        </div>                        {% else %}
-                            <i class="fas fa-user-circle fa-5x text-secondary"></i>
+                        </a>
+                        {% else %}
+                            <i class="fas fa-user-circle fa-2x text-secondary" ></i>
                         {% endif %}
-                    </div>
-                    <div class="col-md-9">
-                        <div class="mb-3"><span class="fw-bold me-2"><i class="fas fa-user me-1"></i>Nom :</span>{{ association.user.first_name }}</div>
-                        <div><span class="fw-bold me-2"><i class="fas fa-envelope me-1"></i>Email :</span>{{ association.user.email }}</div>
-                    </div>
+                    </div>    
                 </div>
-            </div>
-            <div>
+            </header>
+        </div>
+        <div class="main-content">
+            <div class="container mt-5">
+                <section id="cnt" class="cnt">
+                    <div class="row flex-container">
+                        
+                        <div class="count-box">
+                            <i class="fas fa-donate "></i>
+                            {% if don.est_paye %}
+                                <span>{{ dons.count }}</span>
+                            {% else %}
+                                <span data-purecounter-start="0" data-purecounter-end="{{ nombre_dons_effectues }}" data-purecounter-duration="1" class="purecounter">{{ nombre_dons_effectues }}</span>
+                            {% endif %}
+                            <p>Dons</p>
+                        </div>
+                        <div class="count-box">
+                            <i class="bi bi-cash-coin" ></i>
+                            <span data-purecounter-start="0" data-purecounter-end="{{ total_dons_all }}" data-purecounter-duration="1" class="purecounter">{{ total_dons_all|floatformat:2 }}</span>
+                            <p>Donations </p>
+                        </div>
+                        <div class="count-box">
+                            <i class="bi bi-calendar3" ></i>
+                            <span data-purecounter-start="0" data-purecounter-end="{{ nombre_evenements }}" data-purecounter-duration="1" class="purecounter">{{ nombre_evenements }}</span>
+                            <p>Events </p>
+                        </div>
+                        <div class="count-box">
+                            <i class="bi bi-chat-right-dots" ></i>
+                            <span data-purecounter-start="0" data-purecounter-end="{{ nombre_reclamations_creees }}" data-purecounter-duration="1" class="purecounter">{{ nombre_reclamations_creees }}</span>
+                            <p>Reclamations </p>
+                        </div>
+                        <div class="count-box">
+                            <i class="fas fa-list" ></i>
+                            <span data-purecounter-start="0" data-purecounter-end="{{total_publications}}" data-purecounter-duration="1" class="purecounter">{{ total_publications }}</span>
+                            <p>Posts </p>
+                        </div>
+                    </div>
+                </section>
                 <div class="statistics">
                     <h2>Statistics</h2>
                     <div class="chart-container">
                         <div class="chart-wrapper">
+                            <canvas id="fundingAmountChart"></canvas>
+                        </div>
+                        <div class="chart-wrapper">
                             <canvas id="fundingGoalChart"></canvas>
                         </div>
                         <div class="chart-wrapper">
-                            <canvas id="fundingAmountChart"></canvas>
+                            <canvas id="monthlyDonationsChart"></canvas>
                         </div>
                     </div>
                 </div>
-                <div>
-                    <h2>Donations per Month</h2>
-                    <div class="chart-wrapper">
-                        <canvas id="monthlyDonationsChart"></canvas>
-                    </div>
+                    
                     <script>
                         var ctx = document.getElementById('monthlyDonationsChart').getContext('2d');
                         var myChart = new Chart(ctx, {
@@ -92,9 +191,8 @@
                                 datasets: [{
                                     label: 'Donations per Month',
                                     data: {{ counts|safe }},
-                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                    borderColor: 'rgba(75, 192, 192, 1)',
-                                    borderWidth: 1
+                                    backgroundColor: 'rgba(54, 162, 235, 1)',
+                                    
                                 }]
                             },
                             options: {
@@ -120,7 +218,7 @@
                                 labels: ['Reached Goal', 'Not Reached Goal'],
                                 datasets: [{
                                     data: [{{ stats.number_of_funded_publications }}, {{ unfunded_publications }}],
-                                    backgroundColor: ['#ce4a86', '#e9e0e2']
+                                    backgroundColor: ['rgba(206, 74, 134, 1)', 'rgba(246, 242, 245, 1)']
                                 }]
                             };
                         
@@ -128,7 +226,7 @@
                                 labels: ['Total Needed', 'Total Collected'],
                                 datasets: [{
                                     data: [{{ stats.total_funding_needed }}, {{ stats.total_funding_collected }}],
-                                    backgroundColor: ['#e9e0e2', '#36A2EB']
+                                    backgroundColor: ['rgba(232, 245, 253, 1)', 'rgba(54, 162, 235, 1)']
                                 }]
                             };
                         
@@ -136,19 +234,19 @@
                                 type: 'doughnut',
                                 data: fundingGoalData,
                                 options: {
-                                    maintainAspectRatio: false,
-                                    title: {
-                                        display: true,
-                                        text: 'Funding Goal Achievement'
+                                    responsive: true,
+                                    plugins: {
+                                        legend: {
+                                            position: 'top',
+                                        },
+                                        title: {
+                                            display: true,
+                                            position: 'bottom',
+                                            text: 'Funding Goal Achievement'
+                                        },
                                     },
-                                    layout: {
-                                        padding: {
-                                            left: 10,
-                                            right: 10,
-                                            top: 10,
-                                            bottom: 10
-                                        }
-                                    }
+                                    maintainAspectRatio: false
+                                    
                                 }
                             });
                         
@@ -156,48 +254,28 @@
                                 type: 'doughnut',
                                 data: fundingAmountData,
                                 options: {
-                                    maintainAspectRatio: false,
-                                    title: {
-                                        display: true,
-                                        text: 'Funding Amounts'
+                                    responsive: true,
+                                    plugins: {
+                                        legend: {
+                                            position: 'top',
+                                        },
+                                        title: {
+                                            display: true,
+                                            position: 'bottom',
+                                            text: 'Funding Amounts'
+                                        },
                                     },
-                                    layout: {
-                                        padding: {
-                                            left: 10,
-                                            right: 10,
-                                            top: 10,
-                                            bottom: 10
-                                        }
-                                    }
+                                    maintainAspectRatio: false
+                                    
                                 }
                             });
                         
-                            // Ajouter des événements de souris pour détecter le focus et la sortie du focus
-                            ctx1.canvas.addEventListener('mouseenter', function() {
-                                fundingGoalChart.data.datasets[0].backgroundColor = ['#ce4a86', '#e9e0e2'];
-                                fundingGoalChart.update();
-                            });
-                        
-                            ctx1.canvas.addEventListener('mouseleave', function() {
-                                fundingGoalChart.data.datasets[0].backgroundColor = ['#ce4a86', '#e9e0e2'];
-                                fundingGoalChart.update();
-                            });
-                        
-                            ctx2.canvas.addEventListener('mouseenter', function() {
-                                fundingAmountChart.data.datasets[0].backgroundColor = ['#e9e0e2', '#36A2EB'];
-                                fundingAmountChart.update();
-                            });
-                        
-                            ctx2.canvas.addEventListener('mouseleave', function() {
-                                fundingAmountChart.data.datasets[0].backgroundColor = ['#e9e0e2', '#36A2EB'];
-                                fundingAmountChart.update();
-                            });
+                           
+                            
                         });
                     </script>
-                </div>
             </div>
-        </main>
-    </div>
+        </div>
      
     <!-- Bootstrap JS Bundle (Popper.js included) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
