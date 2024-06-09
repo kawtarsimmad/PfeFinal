@@ -114,16 +114,16 @@ def DonorSignup(request):
         try:
             validate_email(email)
         except ValidationError:
-            return render(request, 'users/registerdonor.html', {'error': True, 'message': 'Entrez un email valide !'})
+            return render(request, 'users/registerdonor.html', {'error': True, 'message': 'Enter a valid email !'})
 
         if password != repassword:
-            return render(request, 'users/registerdonor.html', {'error': True, 'message': 'Les mots de passe ne correspondent pas ou sont trop courts !'})
+            return render(request, 'users/registerdonor.html', {'error': True, 'message': 'Passwords do not match or are too short !'})
 
         if not name or not email or not password or not repassword:
-            return render(request, 'users/registerdonor.html', {'error': True, 'message': 'Veuillez remplir tous les champs nécessaires !'})
+            return render(request, 'users/registerdonor.html', {'error': True, 'message': 'Please fill in all necessary fields !'})
         
         if User.objects.filter(email=email).exists():
-            return render(request, 'users/registerdonor.html', {'error': True, 'message': 'Un utilisateur avec cet email existe déjà !'})
+            return render(request, 'users/registerdonor.html', {'error': True, 'message': 'A user with this email already exists !'})
         
         # Hash the password and create a new user
         utilisateur = User.objects.create_user(username=email, email=email, password=password, first_name=name)
@@ -146,7 +146,9 @@ def DonorSignup(request):
         # Email Address Confirmation Email
         send_confirmation_email(utilisateur, request)
         
-        messages.success(request, "Votre compte a été créé avec succès. Veuillez vérifier votre email pour l'activation.")
+        messages.success(request, "Your account was successfully created. Please check your email for activation.")
+        
+        return render(request, 'users/registerdonor.html', {'error': False, 'success': True, 'message': 'Account created successfully. Please check your email for activation'})
         
 
     return render(request, 'users/registerdonor.html', {'error': False, 'message': ''})
@@ -510,7 +512,7 @@ def add_donor(request):
 
         return redirect('donors')
 
-    return render(request, 'users/add_donor.html')
+    return render(request, 'users/add_donor.html',{'error': False, 'message': ''})
 
 def update_donor(request, donor_id):
     donor = get_object_or_404(Donor, id=donor_id)
@@ -550,6 +552,8 @@ def update_donor(request, donor_id):
             # Save donor and associated user
             donor.user.save()
             donor.save()
+            messages.success(request, 'Your informations have been updated successfully.')
+
 
         except ValidationError as e:
             # Handle validation errors

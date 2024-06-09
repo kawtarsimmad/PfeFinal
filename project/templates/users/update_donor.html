@@ -3,16 +3,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% block extra_styles %}
+    <style>
+        .badge-soft-danger {
+            font-size: 1.0em; padding: 0.5em 1em;
+            color: #f56e6e !important;
+            backg
+            round-color: rgba(245,110,110,.1);
+        }
+        .badge-soft-primary {
+            font-size: 1.0em; padding: 0.5em 1em;
+            color: #3b76e1 !important;
+            background-color: rgba(59,118,225,.1);
+        }
+        .alert-custom {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: .25rem;
+        }
+        .alert-custom .close {
+            color: inherit;
+        }
+    </style>
+    {% endblock %}
 </head>
 <body>
 {% block content %}
+
     <div class="main-content">
         <div class="container-xl px-4 mt-4">
             <div class="row">
+                {% if success%}
+                    <div class="alert alert-custom alert-dismissible fade show" role="alert">
+                        <strong>Success!</strong> {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
                 <div class="col-xl-4">
                     <!-- Profile picture card-->
                     <div class="card mb-4 mb-xl-0">
-                        <div class="card-header">Profile Picture</div>
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <br><h6 class="mb-2 text-secondary">Profile Picture</h6>
+                        </div>
                         <div class="card-body text-center">
                             <!-- Profile picture image-->
                             {% if donor.image %}
@@ -25,7 +61,7 @@
                             <!-- Profile picture upload button-->
                             <form method="post" enctype="multipart/form-data" id="imageUploadForm">
                                 {% csrf_token %}
-                                <button class="btn btn-primary" type="button" onclick="document.getElementById('imageInput').click()">Upload new image</button>
+                                <button class="badge badge-soft-primary" style="border: none;" type="button" onclick="document.getElementById('imageInput').click()">Upload new image</button><br>
                                 <input type="file" id="imageInput" style="display: none;" name="image" accept="image/*" onchange="document.getElementById('imageUploadForm').submit()">
                             </form>
                         </div>
@@ -34,7 +70,9 @@
                 <div class="col-xl-8">
                     <!-- Account details card-->
                     <div class="card mb-4">
-                        <div class="card-header">Account Details</div>
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <br><h6 class="mb-2 text-secondary">Personal Details</h6>
+                        </div>
                         <div class="card-body">
                             <form method="post" action="{% url 'update_donor' donor_id=donor.id %}">
                                 {% csrf_token %}
@@ -69,8 +107,8 @@
                                     <input class="form-control" id="newPassword2" name="new_password2" type="password" placeholder="Confirm your new password">
                                 </div>
                                 <!-- Save changes button-->
-                                <button class="btn btn-primary" type="submit">Save changes</button>
-                                <button onclick="confirmDelete({{ donor.id }})" class="btn btn-danger" type="button">Delete Account</button>
+                                <button class="badge badge-soft-primary" style="border: none;" type="submit">Save changes</button>
+                                <button onclick="confirmDelete({{ donor.id }})" class="badge badge-soft-danger mb-0" style="border: none;" type="button">Delete Account</button>
                             </form>
                         </div>
                     </div>

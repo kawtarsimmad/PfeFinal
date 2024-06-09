@@ -102,15 +102,7 @@
     <h1 class="m-4" style="text-align: center;font-family: serif;;font-family: serif;font-weight: bold;"><i class="bi bi-journal-richtext"></i> My Posts</i></h1>
     <div class="row align-items-center">
         <div class="col-md-6">
-            <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
-                {% if messages %}
-                <div class="messages">
-                    {% for message in messages %}
-                        <div class="alert {% if message.tags %} {{ message.tags }}{% endif %} alert-auto-close">{{ message }}</div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-            </div>
+            
         </div>
     </div>
     <div class="row align-items-center">

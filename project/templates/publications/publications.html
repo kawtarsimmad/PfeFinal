@@ -12,7 +12,7 @@
     <style>
             body{
                 margin-top:20px;
-                background-color:#f2f2f2;
+                background-color:#f8f9fa;
             }
            
             .project-list-table {
@@ -108,15 +108,7 @@
     <span class="badge badge-soft-primary mb-0">{{ nombre_publications_total_dons }} posts achived their goal </span>
     <div class="row align-items-center">
         <div class="col-md-6">
-            <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
-                {% if messages %}
-                    <div class="messages">
-                        {% for message in messages %}
-                            <div class="alert-message {% if message.tags %} {{ message.tags }}{% endif %} alert-auto-close">{{ message }}</div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
+           
         </div>
     </div>
     <div class="row align-items-center">

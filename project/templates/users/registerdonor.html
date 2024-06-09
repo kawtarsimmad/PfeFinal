@@ -8,8 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Connexion</title>
     <style>
+        body{
+            background-color: #eee
+        
+        }
         .custom-card-body {
-            padding: 15px; 
+            padding: 2px; 
         }
         
         .custom-card-body form {
@@ -67,10 +71,121 @@
         border-top-left-radius: .3rem;
         border-bottom-left-radius: .3rem;
             }
+            .alert {
+                border-radius: 0;
+                -webkit-border-radius: 0;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.11);
+                display: table;
+                width: 100%;
+            }
+              
+            .alert-white {
+                background-image: linear-gradient(to bottom, #fff, #f9f9f9);
+                border-top-color: #d8d8d8;
+                border-bottom-color: #bdbdbd;
+                border-left-color: #cacaca;
+                border-right-color: #cacaca;
+                color: #404040;
+                padding-left: 61px;
+                position: flex;
+            }
+            .alert-white.rounded {
+                border-radius: 3px;
+                -webkit-border-radius: 3px;
+              }
+              
+              .alert-white.rounded .icon {
+                border-radius: 3px 0 0 3px;
+                -webkit-border-radius: 3px 0 0 3px;
+              }
+              
+              .alert-white .icon {
+                text-align: center;
+                width: 45px;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                border: 1px solid #bdbdbd;
+                padding-top: 15px;
+              }
+              
+              
+              .alert-white .icon:after {
+                -webkit-transform: rotate(45deg);
+                -moz-transform: rotate(45deg);
+                -ms-transform: rotate(45deg);
+                -o-transform: rotate(45deg);
+                transform: rotate(45deg);
+                display: block;
+                content: '';
+                width: 10px;
+                height: 10px;
+                border: 1px solid #bdbdbd;
+                position: absolute;
+                border-left: 0;
+                border-bottom: 0;
+                top: 50%;
+                right: -6px;
+                margin-top: -3px;
+                background: #eee;
+              }
+              
+              .alert-white .icon i {
+                font-size: 20px;
+                color: #fff;
+                left: 12px;
+                margin-top: -10px;
+                position: absolute;
+                top: 50%;
+              }
+            .alert-success {
+                color: #3c763d;
+                background-color: #dff0d8;
+                border-color: #d6e9c6;
+              }
+              
+            .alert-white.alert-success .icon, 
+            .alert-white.alert-success .icon:after {
+                border-color: #54a754;
+                background: #60c060;
+            }
+            .alert-danger {
+                background-color: #f2dede;
+                border-color: #e0b1b8;
+                color: #b94a48;
+              }
+              
+              .alert-white.alert-danger .icon, 
+              .alert-white.alert-danger .icon:after {
+                border-color: #ca452e;
+                background: #da4932;
+              }
     </style>
 </head>
 <body>
-    <section class="h-100 gradient-form" style="background-color: #eee;">
+    {% if success %}
+    <div class="container">
+        <div class="alert alert-success alert-white rounded">
+            <div class="icon">
+                <i class="fa fa-check"></i>
+            </div>
+            <strong>Success!</strong> 
+            {{ message }}
+        </div>
+    </div>
+    {% elif error %}
+    <div class="container bootstrap snippets bootdey">
+        <div class="alert alert-danger alert-white rounded">
+            <div class="icon">
+                <i class="fa fa-exclamation-triangle"></i>
+            </div>
+            <strong>Error!</strong> 
+            {{ message }}
+        </div>
+    </div>
+    {% endif %}
+    <section class="h-80 gradient-form" style="background-color: #eee;">
         <div class="container py-5 h-100">
           <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-xl-10">
@@ -91,12 +206,12 @@
                                                 <input type="hidden" name="_method" value="POST"/>
                             
                                                 <div class="form-group row">
-                                                    <label for="name">Nom<i>*</i></label>
+                                                    <label for="name">Name<i>*</i></label>
                                                     <input name="name" required="required" class="form-control" maxlength="100" type="text" id="DonorNom"/>
                                                 </div>
                                                 
                                                 <div class="form-group row">
-                                                    <label for="telephone">Téléphone<i>*</i></label>
+                                                    <label for="telephone">Phone Number<i>*</i></label>
                                                     <input name="telephone"  class="form-control" required="required" maxlength="255" type="text" id="DonorTelephone"/>
                                                 </div>
                                                 <div class="form-group row">
@@ -104,7 +219,7 @@
                                                     <input name="email" class="form-control" required="required" maxlength="255" type="email" id="DonorEmail"/>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <label for="image">Image<i>*</i></label>
+                                                    <label for="image">Picture<i>*</i></label>
                                                     <input name="image" class="form-control"  maxlength="50" type="file" id="Donorimage"/>
                                                 </div>
                                                 
@@ -118,7 +233,7 @@
                                                 </div>
                                                 <br>
                                                 <div class="form-group row">
-                                                    <button type="submit" class="btn btn-secondary" style="background-color: #5d7891;">inscrire</button>
+                                                    <button type="submit" class="btn btn-secondary" style="background-color: #5d7891;">Sign up</button>
                                                   </div>
                                             </form>
                             <p class="mt-4">you have account ? <a href="{% url 'DonorSignIn' %}"class="text-decoration-none" style="color: #5d7891;">Login</a></p>
@@ -127,7 +242,7 @@
                   </div>
                   <div class="col-lg-6 d-flex align-items-center gradient-custom-2" >
                     
-                        <img src= "{% static 'assets/img/donSign.jpeg' %}" class="img-fluid" alt="Sample image">
+                        <img src= "{% static 'assets/img/undraw_Access_account_re_8spm.png' %}" class="img-fluid" alt="Sample image">
                     
                   </div>
                 </div>

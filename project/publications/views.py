@@ -33,16 +33,7 @@ def publications(request):
     publications = Publication.objects.all()
     dons = Don.objects.all()
     for publication in publications:
-            total_dons = publication.calculate_total_dons()
-            if   total_dons >= publication.montant  :
-                if 'notified_publications' not in request.session:
-                    request.session['notified_publications'] = []
-                
-                if publication.id not in request.session['notified_publications']:
-                    messages.info(request, f"Publication {publication.id}. \"{publication.titre}\" a atteint son objectif de financement.")
-                    # Ajouter l'ID de la publication à la liste des publications notifiées
-                    request.session['notified_publications'].append(publication.id)
-                    request.session.modified = True   
+            total_dons = publication.calculate_total_dons()  
 
     return render(request, 'publications/publications.html', {'publications': publications,'dons':dons,'nombre_publications_total_dons':nombre_publications_total_dons})
 
@@ -197,15 +188,7 @@ def PubList(request):
         publications = Publication.objects.filter(association=association)
         for publication in publications:
             total_dons = publication.calculate_total_dons()
-            if   total_dons >= publication.montant  :
-                if 'notified_publications' not in request.session:
-                    request.session['notified_publications'] = []
-                
-                if publication.id not in request.session['notified_publications']:
-                    messages.info(request, f"Votre publication {publication.id}. \"{publication.titre}\" a atteint son objectif de financement.")
-                    # Ajouter l'ID de la publication à la liste des publications notifiées
-                    request.session['notified_publications'].append(publication.id)
-                    request.session.modified = True    
+               
         return render(request, 'publications/list.html', {'association':association,'publications': publications})
     else:
         messages.error(request, "Vous n'avez pas de droits d'accès à cette page.")
