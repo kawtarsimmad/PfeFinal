@@ -92,31 +92,31 @@
                 <li><a href="/" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-home"></i> Home</a></li>
                 {% if user.is_authenticated %}
                     {% if user.is_donor %}
-                        <li ><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'dashboard_donor' %}"><i class="bi bi-person-workspace"></i> Espace Personnel</a></li>
+                        <li ><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'dashboard_donor' %}"><i class="bi bi-person-workspace"></i> Personal Informations</a></li>
                     {% elif user.is_association %}
-                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'dashboard_association' %}"><i class="bi bi-person-workspace"></i> Espace Personnel</a></li>
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'dashboard_association' %}"><i class="bi bi-person-workspace"></i> Personal Informations</a></li>
                     {% else %}
-                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'dashboardAdmin' %}"><i class="bi bi-person-workspace"></i> Espace Personnel</a></li>
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'dashboardAdmin' %}"><i class="bi bi-person-workspace"></i> Personal Informations</a></li>
                     {% endif %}
                     {% if user.is_admin %}
                         <li><a href="{% url 'donors' %}" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-user me-2"></i> Donors</a></li>
                         <li><a href="{% url 'associations' %}" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-users"></i> Associations</a></li>
-                        <li><a href="{% url 'publications' %}" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-list"></i> Publications</a></li>
-                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'dons' %}"><i class="fas fa-donate me-2"></i> Dons</a></li>
+                        <li><a href="{% url 'publications' %}" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-list"></i> Posts</a></li>
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'dons' %}"><i class="fas fa-donate me-2"></i> Donations</a></li>
                         <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'events' %}"><i class="bi bi-calendar3 me-2"></i>Events</a></li>
                         <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'reclamations' %}"><i class="bi bi-chat-right-dots me-2"></i> Reclamations</a></li>
-                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'manage_pending_emails' %}"><i class="bi bi-check-circle"></i> Validation Contact</a></li>
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'manage_pending_emails' %}"><i class="bi bi-check-circle"></i> Validate Contact</a></li>
                         <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'message_list' %}"><i class="bi bi-chat-right-dots me-2"></i> Messages</a></li>
 
                     {% elif user.is_association %}
-                        <li><a href="{% url 'PubList' %}" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-list"></i> Mes Publications</a></li>
-                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'event_list' %}"><i class="bi bi-calendar3 me-2"></i>Mes Events</a></li>
-                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'DonsAssociation' %}"><i class="fas fa-donate me-2"></i> Dons</a></li>
+                        <li><a href="{% url 'PubList' %}" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-list"></i> My Posts</a></li>
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'event_list' %}"><i class="bi bi-calendar3 me-2"></i>My Events</a></li>
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'DonsAssociation' %}"><i class="fas fa-donate me-2"></i> Donations</a></li>
                         <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'view_reclamations' %}"><i class="bi bi-chat-right-dots"></i> Reclamations</a></li>
                         <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'chat_view' %}"><i class="bi bi-chat-right-dots me-2"></i> chat</a></li>
                     {% elif user.is_donor %}
-                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'viewDons' %}"><i class="fas fa-donate me-2"></i> Dons</a></li>
-                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'donor_event_list' %}"><i class="bi bi-calendar3 me-2"></i>Mes Events</a></li>
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'viewDons' %}"><i class="fas fa-donate me-2"></i> Donations</a></li>
+                        <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'donor_event_list' %}"><i class="bi bi-calendar3 me-2"></i>My Events</a></li>
                         <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'view_reclamations' %}"><i class="bi bi-chat-right-dots"></i> Reclamations</a></li>
                         <li><a class="text-decoration-none px-3 py-2 d-block" href="{% url 'chat_view' %}"><i class="bi bi-chat-right-dots me-2"></i> chat</a></li>
                     {% endif %}
@@ -132,7 +132,7 @@
                     <li><a href="{% url 'update_donor' donor.id %}" class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-bars"></i> Settings</a></li>
                 {% endif %}  
                 <li class="nav-item">
-                    <a class="text-decoration-none px-3 py-2 d-block" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Se déconnecter</a>
+                    <a class="text-decoration-none px-3 py-2 d-block" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Log out</a>
                 </li>
             </ul>
         </div>

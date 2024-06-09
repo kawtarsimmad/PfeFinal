@@ -3,12 +3,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% block extra_styles %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa; /* Changed background color */
+            margin: 0;
+            padding: 0;
+        }
+        .main-content {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 20px
+        }
+        .badge-soft-primary {
+            font-size: 1.0em; padding: 0.5em 1em;
+            color: #3b76e1 !important;
+            background-color: rgba(59,118,225,.1);
+        }
+    </style>
+    {% endblock %}
 </head>
 <body>
 {% block content %}
 
     <div class="main-content">
-        <h2>Add New Association</h2>
+        <h2 style="text-align: center; font-family: serif; font-weight: bold;"><i class="bi bi-building-add"></i></i> Add New Association</h2>
         <form method="post" action="{% url 'add_association' %}">
             {% csrf_token %}
             <div class="mb-3">
@@ -35,7 +58,7 @@
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" name="password">
             </div>
-            <button type="submit" class="btn btn-primary">Add</button>
+            <button type="submit" class="badge badge-soft-primary" style="border:none"> add</button>
         </form>
     </div>
 

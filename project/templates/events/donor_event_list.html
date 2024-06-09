@@ -1,8 +1,10 @@
 {% extends 'sidebar.html' %}
 {% load static %}
+{% load custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  {% block extra_styles %}
     <!-- CSS only -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
 
@@ -14,6 +16,13 @@
             background: #F4F7FD;
             margin-top:20px;
         }
+        .main-content {
+          padding: 20px;
+          background-color: #fff;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          margin: 20px;
+      }
         .card-margin {
             margin-bottom: 1.875rem;
         }
@@ -63,7 +72,7 @@
           justify-content: center;
           flex-direction: column;
           background-color: #edf1fc;
-          width: 4rem;
+          width: 5rem;
           height: 4rem;
           border-radius: 50%;
         }
@@ -285,6 +294,8 @@
         .widget-49 .widget-49-title-wrapper .widget-49-meeting-info {
           display: flex;
           flex-direction: column;
+          justify-content: center;
+          align-items: center;
           margin-left: 1rem;
         }
         
@@ -310,47 +321,71 @@
         }
         
         .widget-49 .widget-49-meeting-points .widget-49-meeting-item span {
-          margin-left: .5rem;
+          margin-left: .10rem;
         }
-        
         .widget-49 .widget-49-meeting-action {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .widget-49 .widget-49-meeting-action-view {
           text-align: right;
+          margin-right: 10px;
+        }
+        .widget-49 .widget-49-meeting-action-cancel {
+          text-align: left;
+          margin-left: 10px;
         }
         
         .widget-49 .widget-49-meeting-action a {
           text-transform: uppercase;
         }
+        .badge-soft-primary {
+          font-size: 0.8em; padding: 0.5em 1em;
+          color: #3b76e1 !important;
+          background-color: rgba(59,118,225,.1);
+      }
+      .badge-soft-danger {
+        font-size: 0.8em; padding: 0.5em 1em;
+        color: #f56e6e !important;
+        background-color: rgba(245,110,110,.1);
+    }
     </style>
+    {% endblock %}
 </head>
 <body>
 {% block content %}
     <div class="main-content">
-        <h1 class="m-4">Events Attended</h1>
-        <div class="container">
+      <h1 class="m-4" style="text-align: center;font-family: serif;"><i class="bi bi-calendar2-check-fill"></i> Events</i></h1><br>
+      <div class="container">
             <div class="row">
                 {% for event in events_attended %}
                     <div class="col-lg-4">
                         <div class="card card-margin">
-                            <div class="card-header no-border">
-                                <h5 class="card-title">Event</h5>
-                            </div>
-                            <div class="card-body pt-0">
+                            
+                            <div class="card-body pt-4">
                                 <div class="widget-49">
                                     <div class="widget-49-title-wrapper">
                                         <div class="widget-49-date-primary">
                                             <span class="widget-49-date-day">{{ event.date.day }}</span>
-                                            <span class="widget-49-date-month">/{{ event.date.month }}</span>
+                                            <span class="widget-49-date-month">{{ event.date.month|month_abbr }}</span>
                                         </div>
                                         <div class="widget-49-meeting-info">
                                             <span class="widget-49-pro-title">{{ event.title }}</span>
-                                        </div>
-                                        <ol class="widget-49-meeting-points">
-                                            <li class="widget-49-meeting-item"><span>{{ event.location }}</span></li>
-                                            <li class="widget-49-meeting-item"><span>{{ event.time }}</span></li>
-                                        </ol>
+                                            
+                                        </div></div><br>
+                                        <ul class="widget-49-meeting-points">
+                                          <li class="widget-49-meeting-item"><span>Organizer: {{ event.user.first_name}}</span></li>
+                                            <li class="widget-49-meeting-item"><span>Location: {{ event.location }}</span></li>
+                                            <li class="widget-49-meeting-item"><span>Time: {{ event.time }}</span></li>
+                                        </ul><br>
                                         <div class="widget-49-meeting-action">
-                                            <a href="{% url 'detail_events' event.id %}" class="btn btn-sm btn-flash-border-primary">View All</a>
-                                            <a href="{% url 'cancel_participation' event.id %}">Cancel Participation</a>
+                                          <div class="widget-49-meeting-action-view">
+                                            <a href="{% url 'detail_events' event.id %}" class="badge badge-soft-primary">View MORE</a>
+                                          </div>
+                                          <div class="widget-49-meeting-action-cancel">
+                                            <a href="{% url 'cancel_participation' event.id %} " class="badge badge-soft-danger">Cancel</a>
+                                          </div>
                                         </div>
                                     </div>                               
                                 </div>

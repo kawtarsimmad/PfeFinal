@@ -3,54 +3,161 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% block extra_styles %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.0/css/boxicons.min.css" integrity="sha512-pVCM5+SN2+qwj36KonHToF2p1oIvoU3bsqxphdOIWMYmgr4ZqD3t5DjKvvetKhXGc/ZG5REYTT6ltKfExEei/Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.3.45/css/materialdesignicons.css" integrity="sha256-NAxhqDvtY0l4xn+YVa6WjAcmd94NNfttjNsDmNatFVc=" crossorigin="anonymous" />
+
+
+    <style>
+            body{
+                margin-top:20px;
+                background-color:#f2f2f2;
+            }
+           
+            .project-list-table {
+                border-collapse: separate;
+                border-spacing: 0 12px
+            }
+            
+            .project-list-table tr {
+                background-color: #fff
+            }
+            
+            .table-nowrap td, .table-nowrap th {
+                white-space: nowrap;
+            }
+            .table-borderless>:not(caption)>*>* {
+                border-bottom-width: 0;
+            }
+            .table>:not(caption)>*>* {
+                padding: 0.75rem 0.75rem;
+                background-color: var(--bs-table-bg);
+                border-bottom-width: 1px;
+                box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+            }
+            
+            .avatar-sm {
+                height: 2rem;
+                width: 2rem;
+            }
+            .rounded-circle {
+                border-radius: 50%!important;
+            }
+            .me-2 {
+                margin-right: 0.5rem!important;
+            }
+            img, svg {
+                vertical-align: middle;
+            }
+            
+            a {
+                color: #3b76e1;
+                text-decoration: none;
+            }
+            
+            .badge-soft-danger {
+                font-size: 1.0em; padding: 0.5em 1em;
+                color: #f56e6e !important;
+                background-color: rgba(245,110,110,.1);
+            }
+            .badge-soft-success {
+                font-size: 1.0em; padding: 0.5em 1em;
+                color: #63ad6f !important;
+                background-color: rgba(99,173,111,.1);
+            }
+            
+            .badge-soft-primary {
+                font-size: 1.0em; padding: 0.5em 1em;
+                color: #3b76e1 !important;
+                background-color: rgba(59,118,225,.1);
+            }
+            
+            .badge-soft-info {
+                color: #57c9eb !important;
+                background-color: rgba(87,201,235,.1);
+            }
+            
+            .bg-soft-primary {
+                background-color: rgba(59,118,225,.25)!important;
+            }
+            .anonyme {
+                font-style: italic;
+                font-weight: bold;
+                color: gray;
+            }
+            .btn-danger {
+                background-color: #dc3545;
+                border: none;
+            }
+            .btn-danger:hover {
+                background-color: #c82333;
+            }
+            .badge-soft-warning {
+                font-size: 1.0em;
+                padding: 0.5em 1em;
+                color: #f6c343 !important; /* Adjust text color as needed */
+                background-color: rgba(246, 195, 67, 0.1); /* Adjust background color as needed */
+            }
+        
+    </style>
+    {% endblock %}
 </head>
 <body>
 {% block content %}
 
 <!-- Main Content -->
-<div class="main-content">
-    <!-- List de publication Header -->
-    <h2 class="m-4">Liste des Evénements</h2>
-    <p class="m-4"><a href="{% url 'create_event' %}" class="btn btn-secondary">Create new Event</a></p>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                {% if events %}
-                <div class="table-reseonsive mt-4">
-                    <table class="table table-bordered table-hover">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th style="text-align: center">Id</th>
-                                <th style="text-align: center">Titre</th>
-                                <th style="text-align: center">Créateur</th>
-                                <th style="text-align: center">Date</th>
-                                <th style="text-align: center">Location </th>
-                                <th style="text-align: center">Actions</th>
+<div class="container">
+    <h1 class="m-4"style="text-align: center;font-family: serif;font-weight: bold;"><i class="bi bi-calendar3 me-2"></i>My Events</h1>
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div>
+                <a href="{% url 'create_event' %}"   class="badge badge-soft-primary"style="font-family: serif;"><i class="bx bx-plus me-1"></i> Add New Event</a> 
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="">
+                <div class="table-responsive">
+                    <table class="table project-list-table table-nowrap align-middle table-borderless">
+                        <thead>
+                            <tr>    
+                                <th style="text-align: center;font-family: serif;">Id</th>
+                                <th style="text-align: center;font-family: serif;">Titte</th>
+                                <th style="text-align: center;font-family: serif;">Create Date</th>
+                                <th style="text-align: center;font-family: serif;">Date</th>
+                                <th style="text-align: center;font-family: serif;">Location </th>
+                                <th style="text-align: center;font-family: serif;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for event in events %}
                             <tr>
-                                <td style="text-align: center"> {{ event.id }}</td>
-                                <td style="text-align: center">
+                                <td style="text-align: center;font-family: serif;"> {{ event.id }}</td>
+                                <td style="text-align: center;font-family: serif;">
                                     <a href="{% url 'detail_events' event.id %}">{{ event.title }}</a>
                                 </td>
-                                <td style="text-align: center"> {{ event.user.first_name}}</td>
-                                <td style="text-align: center"> {{ event.date }}</td>
-                                <td style="text-align: center"> {{ event.location }}</td>
-                                <td style="text-align: center">
-                                    <a href="{% url 'update_event' event.id %}" class="btn btn-info"><i class="fas fa-pencil-alt"></i></a>
-                                    <button class="btn btn-danger" onclick="confirmDelete({{ event.id }})"><i class="fas fa-trash"></i></button>
+                                <td style="text-align: center;font-family: serif;"> {{ event.created_at}}</td>
+                                <td style="text-align: center;font-family: serif;"> {{ event.date }}</td>
+                                <td style="text-align: center;font-family: serif;"> {{ event.location }}</td>
+                                <td style="text-align: center;font-family: serif;">
+                                    <a href="{% url 'update_event' event.id %}" class="badge badge-soft-primary"><i class="fas fa-pencil-alt"></i></a>
+                                    <button class="badge badge-soft-danger mb-0" style="border: none;" onclick="confirmDelete({{ event.id }})"><i class="fas fa-trash"></i></button>
+                                    <a href="{% url 'attendees_list' event.id %}" class="badge badge-soft-success"><i class="fas fa-users"></i></a>
                                 </td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                {% endif %}
+                </div>
             </div>
         </div>
     </div>
+    
 </div>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             function confirmDelete(eventId) {

@@ -13,6 +13,7 @@ urlpatterns = [
     path('delete/<int:event_id>/', views.EventDelete, name='delete'),
     path('update/<int:event_id>/', views.update_event, name='update_event'),
     path('event/<int:event_id>/cancel/', views.cancel_participation, name='cancel_participation'),  # Add this line
+    path('event/<int:event_id>/attendees/', views.attendees_list, name='attendees_list'),
 
 
 

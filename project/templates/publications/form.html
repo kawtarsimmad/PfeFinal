@@ -3,19 +3,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% block extra_styles %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+
+        }
+        .main-content {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+        .badge-soft-primary {
+            font-size: 1.0em; padding: 0.5em 1em;
+            color: #3b76e1 !important;
+            background-color: rgba(59,118,225,.1);
+        }
+    </style>
+    {% endblock %}
 </head>
 <body>
 {% block content %}
     <div class="main-content">
 
-        <br>  
-        <h1> Create publication </h1>
+        <h1 style="text-align: center;font-family: serif;font-weight: bold;"> Create a Post <i class="fas fa-pencil-alt fa-xs"></i></h1>
 
         <br>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %} 
             {{form.as_p}}
-            <button type="submit">Submit</button>
+            <button type="submit" class="badge badge-soft-primary" style="border:none">Create the Post</button>
         </form> 
     </div>
     <!-- Bootstrap JS Bundle (Popper.js included) -->

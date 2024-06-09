@@ -3,29 +3,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% block extra_styles %}
+    <style>
+        body {
+            padding: 100px;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            min-height: 100vh; /* Ensure full height */
+        }
+        .main-content {
+            padding: 100px; /* Increased padding */
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%; /* Adjust width */
+            max-width: 100%; /* Set max-width */
+        }
+        .badge-soft-primary {
+            font-size: 1.2em; /* Increased font size */
+            padding: 0.7em 1.5em; /* Increased padding */
+            color: #3b76e1 !important;
+            background-color: rgba(59,118,225,.1);
+        }
+    </style>
+    {% endblock %}
 </head>
 <body>
 {% block content %}
 <!-- Main Content -->
 <div class="main-content">
-    <!-- Your main content goes here -->
-    <main class="col-md-10 bg-light p-4 content">
-        <h2>Create Reclamation</h2>
-
-        <!-- Form Section -->
-        <form method="post">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="id_recl_type" class="form-label">Type</label>
-                {{ form.recl_type }}
-            </div>
-            <div class="mb-3">
-                <label for="id_description" class="form-label">Description</label>
-                <textarea name="description" class="form-control" rows="4" placeholder="Saisissez votre description ici">{{ form.description.value }}</textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Apply</button>
-        </form>
-    </main>
+    <h1 style="text-align: center;font-family: serif;font-weight: bold;"> Create Reclamation <i class="fas fa-pencil-alt fa-xs"></i></h1><br>
+    <!-- Form Section -->
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_recl_type" class="form-label">Type:</label>
+            {{ form.recl_type }}
+        </div>
+        <div class="mb-3">
+            <label for="id_description" class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="4" placeholder="Saisissez votre description ici">{{ form.description.value }}</textarea>
+        </div>
+        <button type="submit" class="badge badge-soft-primary" style="border:none">Apply</button>
+    </form>
 </div>
 {% endblock content %}
 

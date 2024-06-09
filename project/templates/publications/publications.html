@@ -4,145 +4,175 @@
 <html lang="en">
 <head>
     {% block extra_styles %}
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #fff;
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.0/css/boxicons.min.css" integrity="sha512-pVCM5+SN2+qwj36KonHToF2p1oIvoU3bsqxphdOIWMYmgr4ZqD3t5DjKvvetKhXGc/ZG5REYTT6ltKfExEei/Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.3.45/css/materialdesignicons.css" integrity="sha256-NAxhqDvtY0l4xn+YVa6WjAcmd94NNfttjNsDmNatFVc=" crossorigin="anonymous" />
 
-        }
-        .main-content {
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin: 20px;
-        }
-        .table-container h2 {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-        }
-        .btn-secondary, .btn-danger {
-            border-radius: 20px;
-        }
-        .btn-secondary {
-            background-color: #6c757d;
-            border: none;
-        }
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-        .btn-danger {
-            background-color: #dc3545;
-            border: none;
-        }
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-        .table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-        .table th, .table td {
-            text-align: center;
-            padding: 12px;
-            border: 1px solid #dee2e6;
-        }
-        .table th {
-            background-color: #343a40;
-            color: #fff;
-        }
-        .table tbody tr:nth-child(odd) {
-            background-color: #f2f2f2;
-        }
-        .table tbody tr:hover {
-            background-color: #e9ecef;
-        }
-        .alert-message {
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid transparent;
-            border-radius: 4px;
-        }
-        .alert-success {
-            color: #3c763d;
-            background-color: #dff0d8;
-            border-color: #d6e9c6;
-        }
-        .alert-error {
-            color: #a94442;
-            background-color: #f2dede;
-            border-color: #ebccd1;
-        }
-        .alert-warning {
-            color: #8a6d3b;
-            background-color: #fcf8e3;
-            border-color: #faebcc;
-        }
-        .alert-info {
-            color: #31708f;
-            background-color: #d9edf7;
-            border-color: #bce8f1;
-        }
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-        .alert-auto-close {
-            animation: fadeOut 1s ease forwards;
-            animation-delay: 15s;
-        }
+
+    <style>
+            body{
+                margin-top:20px;
+                background-color:#f2f2f2;
+            }
+           
+            .project-list-table {
+                border-collapse: separate;
+                border-spacing: 0 12px
+            }
+            
+            .project-list-table tr {
+                background-color: #fff
+            }
+            
+            .table-nowrap td, .table-nowrap th {
+                white-space: nowrap;
+            }
+            .table-borderless>:not(caption)>*>* {
+                border-bottom-width: 0;
+            }
+            .table>:not(caption)>*>* {
+                padding: 0.75rem 0.75rem;
+                background-color: var(--bs-table-bg);
+                border-bottom-width: 1px;
+                box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+            }
+            
+            .avatar-sm {
+                height: 2rem;
+                width: 2rem;
+            }
+            .rounded-circle {
+                border-radius: 50%!important;
+            }
+            .me-2 {
+                margin-right: 0.5rem!important;
+            }
+            img, svg {
+                vertical-align: middle;
+            }
+            
+            a {
+                color: #3b76e1;
+                text-decoration: none;
+            }
+            
+            .badge-soft-danger {
+                font-size: 1.0em; padding: 0.5em 1em;
+                color: #f56e6e !important;
+                background-color: rgba(245,110,110,.1);
+            }
+            .badge-soft-success {
+                font-size: 1.0em; padding: 0.5em 1em;
+                color: #63ad6f !important;
+                background-color: rgba(99,173,111,.1);
+            }
+            
+            .badge-soft-primary {
+                font-size: 1.0em; padding: 0.5em 1em;
+                color: #3b76e1 !important;
+                background-color: rgba(59,118,225,.1);
+            }
+            .badge-soft-secondary {
+                font-size: 1.0em; padding: 0.5em 1em;
+                color: #65737e !important;
+                background-color: rgba(59,118,225,.1);
+            }
+            
+            .badge-soft-info {
+                font-size: 1.0em; padding: 0.5em 1em;
+                color: #57c9eb !important;
+                background-color: rgba(87,201,235,.1);
+            }
+            
+            .bg-soft-primary {
+                background-color: rgba(59,118,225,.25)!important;
+            }
+            .anonyme {
+                font-style: italic;
+                font-weight: bold;
+                color: gray;
+            }
+            .badge-soft-warning {
+                font-size: 1.0em;
+                padding: 0.5em 1em;
+                color: #f6c343 !important; /* Adjust text color as needed */
+                background-color: rgba(246, 195, 67, 0.1); /* Adjust background color as needed */
+            }
     </style>
     {% endblock %}
 </head>
 <body>
 {% block content %}
-    <div class="main-content">
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    <div class="alert-message {% if message.tags %} {{ message.tags }}{% endif %} alert-auto-close">{{ message }}</div>
-                {% endfor %}
+<div class="container">
+    <h1 class="m-4" style="text-align: center;font-family: serif;;font-family: serif;font-weight: bold;"><i class="bi bi-journal-richtext"></i> All Posts</i></h1>
+    <span class="badge badge-soft-success mb-0">{{ nombre_publications_total_dons }} posts achived their goal </span>
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
+                {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            <div class="alert-message {% if message.tags %} {{ message.tags }}{% endif %} alert-auto-close">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
-        {% endif %}
-        <h1 class="m-4">Liste des publications</h1>
-        <p class="m-4">Nombre de publications ayant atteint leur objectif : {{ nombre_publications_total_dons }}</p>
-        <div class="container mt-5">
-            <div class="row">
-                <div class="col-md-12">  
+        </div>
+    </div>
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="">
+                <div class="table-responsive">
                     {% if publications %}
-                        <table class="table table-bordered">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Créateur</th>
-                                    <th>Category</th>
-                                    <th>Date_Creation</th>
-                                    <th>Objectif</th>
-                                    <th>Nbre Dons</th>
-                                    <th>Montant_Dons</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for p in publications %}
-                                    {% if p.calculate_total_dons >= p.montant %}
-                                        <tr class="table-secondary">
-                                    {% else %}
-                                        <tr class="warning">
-                                    {% endif %}
-                                    <td>
-                                        <a href="{% url 'detail' p.id %}">{{ p.id }}</a>
+                    <table class="table project-list-table table-nowrap align-middle table-borderless">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;font-family: serif;">Id</th>
+                                <th style="text-align: center;font-family: serif;">Créateur</th>
+                                <th style="text-align: center;font-family: serif;">Category</th>
+                                <th style="text-align: center;font-family: serif;">Date_Creation</th>
+                                <th style="text-align: center;font-family: serif;">Objectif</th>
+                                <th style="text-align: center;font-family: serif;">Nbre Dons</th>
+                                <th style="text-align: center;font-family: serif;">Montant_Dons</th>
+                                <th style="text-align: center;font-family: serif;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in publications %}
+                                {% if p.calculate_total_dons >= p.montant %}
+                                        <tr class="table-secondary" style="background-color: #C0C0C0;">
+                                {% else %}
+                                         <tr class="light" style="background-color: #C0C0C0;">
+                                {% endif %}
+                                    <td style="text-align: center;font-family: serif;">
+                                        <a href="{% url 'detail' p.id %}"><spn class="badge badge-soft-warning">{{ p.id }}</span></a>
                                     </td>
-                                    <td>{{ p.association.user.first_name }}</td>
-                                    <td>{{ p.category.name }}</td>
-                                    <td>{{ p.date }}</td>
-                                    <td>{{ p.montant }}$</td>
-                                    <td>{{ p.dons.all.count }}</td>
-                                    <td>{{ p.calculate_total_dons }}$</td>
-                                    <td>
-                                        <button class="btn btn-danger" onclick="confirmDelete({{ p.id }})"><i class="fas fa-trash"></i></button>
+                                    <td style="text-align: center;font-family: serif;">{{ p.association.user.first_name }}</td>
+                                    <td style="text-align: center;font-family: serif;">{{ p.category.name }}</td>
+                                    <td style="text-align: center;font-family: serif;">{{ p.date }}</td>
+                                    {% if p.calculate_total_dons >= p.montant %}
+                                        <td style="text-align: center;font-family: serif;"><span  class="badge badge-soft-success mb-0"> {{ p.montant }} $</span></td>
+                                    {% else %}
+                                        <td style="text-align: center;font-family: serif;"><span  class="badge badge-soft-primary mb-0"> {{ p.montant }} $</span></td>
+                                    {% endif %}
+                                    {% if p.calculate_total_dons >= p.montant %}
+                                        <td style="text-align: center;font-family: serif;"><span  class="badge badge-soft-success mb-0">{{ p.dons.all.count }}</span></td>
+                                    {% else %}
+                                        <td style="text-align: center;font-family: serif;"><span  class="badge badge-soft-primary mb-0">{{ p.dons.all.count }}</span></td>
+                                    {% endif %}
+                                    {% if p.calculate_total_dons >= p.montant %}
+                                        <td style="text-align: center;font-family: serif;"><span  class="badge badge-soft-success mb-0">{{ p.calculate_total_dons }} $</span></td>
+                                    {% else %}
+                                        <td style="text-align: center;font-family: serif;"><span  class="badge badge-soft-primary mb-0">{{ p.calculate_total_dons }} $</span></td>
+                                    {% endif %}
+                                    <td style="text-align: center;font-family: serif;">
+                                        <button class="badge badge-soft-danger mb-0" style="border: none;" onclick="confirmDelete({{ p.id }})"><i class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
                                 {% endfor %}

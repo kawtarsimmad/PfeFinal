@@ -1,4 +1,6 @@
 from django import template
+import calendar
+
 
 register = template.Library()
 
@@ -47,3 +49,11 @@ def last_line_bold_italic(value):
             lines[-1] = f'<span class="last-line">{lines[-1]}</span>'
             paragraphs[i] = '\n'.join(lines)
     return '\n\n'.join(paragraphs)
+
+@register.filter
+def month_abbr(value):
+    try:
+        month_abbr = calendar.month_abbr[value]
+        return month_abbr
+    except IndexError:
+        return ''

@@ -3,18 +3,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% block extra_styles %}
+    <style>  
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+
+        }
+        .main-content {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+        .nav-link {
+            display: flex;
+            align-items: center;
+        }
+        .larger-font {
+            font-size: 24px; /* or any desired size */
+        }
+    </style>
+    {% endblock %}
 </head>
 <body>
 {% block content %}   
 
     <!-- Main Content -->
     <div class="main-content">
+        <main>
         <!-- Donor Information Header -->
-        <h1 class="mt-4">Espace Association</h1>
+        <a href="{% url 'PubList' %}" class="nav-link" style="font-size: larger;">
+            <i class="bi bi-journal-richtext" style="margin-left:4%;font-size: larger;">
+                <span class="badge badge-danger badge-custom-color " style="font-size: larger;"></span>
+            </i>
+        </a>
     
-        <!-- Your main content goes here -->
-        <!-- For example: -->
-        <main class="col-md-10 bg-light p-4 content">
             <div class="container mt-5">
                 <div class="row">
                     <div class="col-md-3">

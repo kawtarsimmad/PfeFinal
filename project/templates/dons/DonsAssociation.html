@@ -3,70 +3,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     {% block extra_styles %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.0/css/boxicons.min.css" integrity="sha512-pVCM5+SN2+qwj36KonHToF2p1oIvoU3bsqxphdOIWMYmgr4ZqD3t5DjKvvetKhXGc/ZG5REYTT6ltKfExEei/Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.3.45/css/materialdesignicons.css" integrity="sha256-NAxhqDvtY0l4xn+YVa6WjAcmd94NNfttjNsDmNatFVc=" crossorigin="anonymous" />
+
+
     <style>
-        .anonyme {
-            font-style: italic;
-            font-weight: bold;
-            color: gray;
-        }
+            body{
+                margin-top:20px;
+                background-color:#f2f2f2;
+            }
+           
+            .project-list-table {
+                border-collapse: separate;
+                border-spacing: 0 12px
+            }
+            
+            .project-list-table tr {
+                background-color: #fff
+            }
+            
+            .table-nowrap td, .table-nowrap th {
+                white-space: nowrap;
+            }
+            .table-borderless>:not(caption)>*>* {
+                border-bottom-width: 0;
+            }
+            .table>:not(caption)>*>* {
+                padding: 0.75rem 0.75rem;
+                background-color: var(--bs-table-bg);
+                border-bottom-width: 1px;
+                box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+            }
+            
+            .avatar-sm {
+                height: 2rem;
+                width: 2rem;
+            }
+            .rounded-circle {
+                border-radius: 50%!important;
+            }
+            .me-2 {
+                margin-right: 0.5rem!important;
+            }
+            img, svg {
+                vertical-align: middle;
+            }
+            
+            a {
+                color: #3b76e1;
+                text-decoration: none;
+            }
+            
+            .badge-soft-danger {
+                font-size: 1.0em; padding: 0.5em 1em;
+                color: #f56e6e !important;
+                background-color: rgba(245,110,110,.1);
+            }
+            .badge-soft-success {
+                font-size: 1.0em; padding: 0.5em 1em;
+                color: #63ad6f !important;
+                background-color: rgba(99,173,111,.1);
+            }
+            
+            .badge-soft-primary {
+                font-size: 1.0em; padding: 0.5em 1em;
+                color: #3b76e1 !important;
+                background-color: rgba(59,118,225,.1);
+            }
+            
+            .badge-soft-info {
+                color: #57c9eb !important;
+                background-color: rgba(87,201,235,.1);
+            }
+            
+            .bg-soft-primary {
+                background-color: rgba(59,118,225,.25)!important;
+            }
+            .anonyme {
+                font-style: italic;
+                font-weight: bold;
+                color: gray;
+            }
     </style>
     {% endblock %}
 </head>
 <body>
 {% block content %}
 
-    <div class="main-content">
-        <h1 class="m-4">Listes Des Dons</h1>
-        <div class="container mt-5">
-            <div class="row">
-                <div class="col-md-12">          
-                                                         
-                                <table class="table table-bordered">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th scope="col" style="text-align: center">ID</th>
-                                            <th scope="col" style="text-align: center">Donateur </th>
-                                            <th scope="col" style="text-align: center">Id_Pub</th>
-                                            <th scope="col" style="text-align: center">Date </th>
-                                            <th scope="col" style="text-align: center">Montant</th>
-                                            <th scope="col" style="text-align: center">est_paye</th>
-                                            
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for don in don_tab %}
-                                            <tr>
-                                                <td style="text-align: center">{{ don.id }}</td>
-                                                <td style="text-align: center" class="{% if not don.user.first_name %} anonyme {% endif %}">
-                                                    
-                                                    {% if don.user.first_name %}
-                                                        {{ don.user.first_name}}        
-                                                    {% else %}
-                                                        Anonyme
-                                                    {% endif %}
-                                                </td>
-                                                {% if don.publication %}                                                    
-                                                    <td style="text-align: center">
-                                                        <a href="{% url 'detail' don.publication.id %}">{{ don.publication.id }}</a>
-                                                    </td>
-                                                {% endif %}
-                                                {% if don.association %}
-                                                    <td style="text-align: center"> ____ </td>
-                                                {% endif %}
-                                                <td style="text-align: center">{{ don.date }}</td>
-                                                <td style="text-align: center">{{ don.montantDons }}</td>
-                                                <td style="text-align: center">{{ don.est_paye }}</td>
-                                                                                                
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            
-                        </div>
-                    </div>
+<div class="container">
+    <h1 class="m-4" style="text-align: center;font-family: serif;"><i class="fas fa-donate me-2"> Donations</i></h1>
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
+            
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="">
+                <div class="table-responsive">
+                    <table class="table project-list-table table-nowrap align-middle table-borderless">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="text-align: center;font-family: serif;">ID</th>
+                                <th scope="col" style="text-align: center;font-family: serif;">Donateur </th>
+                                <th scope="col" style="text-align: center;font-family: serif;">Id_Pub</th>
+                                <th scope="col" style="text-align: center;font-family: serif;">Date </th>
+                                <th scope="col" style="text-align: center;font-family: serif;">Montant</th>
+                                <th scope="col" style="text-align: center;font-family: serif;">est_paye</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for don in don_tab %}
+                            <tr>
+                               
+                                <tr>
+                                    <td style="text-align: center;font-family: serif;">{{ don.id }}</td>
+                                    <td style="text-align: center;font-family: serif;" class="{% if not don.user.first_name %} anonyme {% endif %}">
+                                        
+                                        {% if don.user.first_name %}
+                                            {{ don.user.first_name}}        
+                                        {% else %}
+                                            Anonyme
+                                        {% endif %}
+                                    </td>
+                                    {% if don.publication %}                                                    
+                                        <td style="text-align: center">
+                                            <a href="{% url 'detail' don.publication.id %}">{{ don.publication.id }}</a>
+                                        </td>
+                                    {% endif %}
+                                    {% if don.association %}
+                                        <td style="text-align: center;font-family: serif;"> ____ </td>
+                                    {% endif %}
+                                    <td style="text-align: center;font-family: serif;">  {{ don.date }}</td>
+                                    <td style="text-align: center;font-family: serif;"><span class="badge badge-soft-primary mb-0">{{ don.montantDons|floatformat:2 }} $</span></td>
+                                    <td style="text-align: center;font-family: serif;">
+                                        {% if don.est_paye %}
+                                            <span  class="badge badge-soft-success mb-0">{{ don.est_paye }}</span>
+                                        {% else %}
+                                            <span class="badge badge-soft-danger mb-0">{{ don.est_paye }}</span>
+                                        {% endif %}   
+                                    </td>
+                                                                                    
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </div>
+    </div>
+    
+    </div>
+</div>
 
     <!-- Bootstrap JS Bundle (Popper.js included) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

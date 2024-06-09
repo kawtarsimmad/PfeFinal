@@ -137,3 +137,18 @@ def update_event(request, event_id):
         form = EventForm(instance=event)
     
     return render(request, 'events/update_event.html', {'form': form, 'association': association, 'donor': donor, 'event': event})
+
+
+@login_required
+def attendees_list(request, event_id):
+    association=None
+    if hasattr(request.user, 'dashboard_association'):
+        association = request.user.dashboard_association
+    event = get_object_or_404(Event, id=event_id)
+    attendees = event.attendees.all()  # Assuming `attendees` is a many-to-many relationship field in the Event model
+    context = {
+        'event': event,
+        'attendees': attendees,
+        'association': association,
+    }
+    return render(request, 'events/attendees_list.html', context)

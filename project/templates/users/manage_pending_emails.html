@@ -10,59 +10,115 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #fff;
+            background-color: #f8f9fa;
         }
-        .main-content {
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin: 20px;
+        .project-list-table {
+            border-collapse: separate;
+            border-spacing: 0 12px
         }
-        .table-responsive {
-            margin-top: 20px;
+        
+        .project-list-table tr {
+            background-color: #fff
         }
-        table {
-            background-color: white;
+        
+        .table-nowrap td, .table-nowrap th {
+            white-space: nowrap;
         }
-        thead {
-            background-color: #343a40;
-            color: white;
+        .table-borderless>:not(caption)>*>* {
+            border-bottom-width: 0;
         }
-        tbody tr:hover {
-            background-color: #f1f1f1;
+        .table>:not(caption)>*>* {
+            padding: 0.75rem 0.75rem;
+            background-color: var(--bs-table-bg);
+            border-bottom-width: 1px;
+            box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
         }
-        .table thead th, .table tbody td {
-            text-align: center;
+        
+        .avatar-sm {
+            height: 2rem;
+            width: 2rem;
+        }
+        .rounded-circle {
+            border-radius: 50%!important;
+        }
+        .me-2 {
+            margin-right: 0.5rem!important;
+        }
+        img, svg {
             vertical-align: middle;
         }
-        .message-content {
-            max-width: 200px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        
+        a {
+            color: #3b76e1;
+            text-decoration: none;
         }
-        .message-content-full {
-            white-space: normal;
+        
+        .badge-soft-danger {
+            font-size: 1.0em; padding: 0.5em 1em;
+            color: #f56e6e !important;
+            background-color: rgba(245,110,110,.1);
         }
-        .btn-toggle-message {
-            cursor: pointer;
-            color: #007bff;
-            text-decoration: underline;
+        .badge-soft-success {
+            font-size: 1.0em; padding: 0.5em 1em;
+            color: #63ad6f !important;
+            background-color: rgba(99,173,111,.1);
+        }
+        
+        .badge-soft-primary {
+            font-size: 1.0em; padding: 0.5em 1em;
+            color: #3b76e1 !important;
+            background-color: rgba(59,118,225,.1);
+        }
+        .badge-soft-secondary {
+            font-size: 1.0em; padding: 0.5em 1em;
+            color: #65737e !important;
+            background-color: rgba(59,118,225,.1);
+        }
+        
+        .badge-soft-info {
+            font-size: 1.0em; padding: 0.5em 1em;
+
+            color: #57c9eb !important;
+            background-color: rgba(87,201,235,.1);
+        }
+        
+        .bg-soft-primary {
+            background-color: rgba(59,118,225,.25)!important;
+        }
+        .badge-soft-warning {
+            font-size: 1.0em;
+            padding: 0.5em 1em;
+            color: #f6c343 !important; /* Adjust text color as needed */
+            background-color: rgba(246, 195, 67, 0.1); /* Adjust background color as needed */
         }
     </style>
     {% endblock %}
 </head>
 <body>
-    {% block content %}
-    <div class="main-content">
-        <div class="container mt-5">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1>Manage Pending Emails</h1>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
-                            <thead class="thead-dark">
+{% block content %}           
+
+<div class="container">
+    <h1 class="m-4" style="text-align: center;font-family: serif;"><i class="fas fa-envelope"></i>
+        Manage Contact Associations</i></h1>
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
+            </div>
+        </div>
+    </div>
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div>
+                <spn class="badge badge-soft-primary">Pending Contacts</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="">
+                <div class="table-responsive">
+                    <table class="table project-list-table table-nowrap align-middle table-borderless">
+                        <thead>
                                 <tr>
                                     <th>Sender Name</th>
                                     <th>Sender Email</th>
@@ -72,7 +128,7 @@
                                     <th>Date</th>
                                     <th>Action</th>
                                 </tr>
-                            </thead>
+                        </thead>
                             <tbody>
                                 {% for email in pending_emails %}
                                 <tr>
@@ -89,8 +145,8 @@
                                         <form method="post">
                                             {% csrf_token %}
                                             <input type="hidden" name="email_id" value="{{ email.id }}">
-                                            <button type="submit" name="action" value="approve" class="btn btn-success"><i class="bi bi-check-circle">Approve</button>
-                                            <button type="submit" name="action" value="deny" class="btn btn-danger"><i class="fas fa-trash">Deny</button>
+                                            <button type="submit" name="action" value="approve" class="badge badge-soft-success"><i class="bi bi-check-circle"></button>
+                                            <button type="submit" name="action" value="deny" class="badge badge-soft-danger"><i class="fas fa-trash"></button>
                                         </form>
                                     </td>
                                 </tr>
@@ -99,24 +155,31 @@
                         </table>
                     </div>
                 </div>
+            </div><br>
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div>
+                        <span class="badge badge-soft-primary">Conatcts</span>
+                    </div>
+                </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
-                    <h1>Emails Sent</h1>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Sender Name</th>
-                                    <th>Sender Email</th>
-                                    <th>To</th>
-                                    <th>Subject</th>
-                                    <th>Message</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                <div class="col-lg-12">
+                    <div class="">
+                        <div class="table-responsive">
+                            <table class="table project-list-table table-nowrap align-middle table-borderless">
+                                <thead>
+                                        <tr>
+                                        <th>Sender Name</th>
+                                        <th>Sender Email</th>
+                                        <th>To</th>
+                                        <th>Subject</th>
+                                        <th>Message</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                 {% for email in emails %}
                                 <tr>
                                     <td>{{ email.sender_name }}</td>
@@ -130,9 +193,9 @@
                                     <td>{{ email.created_at }}</td>
                                     <td>
                                         {% if email.approved %}
-                                            <span class="badge bg-success">Approved</span>
+                                            <span class="badge badge-soft-success">Approved</span>
                                         {% else %}
-                                            <span class="badge bg-danger">Denied</span>
+                                            <span class="badge badge-soft-danger">Denied</span>
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -144,6 +207,7 @@
             </div>
         </div>
     </div>
+     </div>
 
     <script>
         function toggleMessage(id) {
