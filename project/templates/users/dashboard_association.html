@@ -4,27 +4,39 @@
 <html lang="en">
 <head>
     {% block extra_styles %}
-    <style>  
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #fff;
+        <style>  
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #fff;
 
-        }
-        .main-content {
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin: 20px;
-        }
-        .nav-link {
-            display: flex;
-            align-items: center;
-        }
-        .larger-font {
-            font-size: 24px; /* or any desired size */
-        }
-    </style>
+            }
+            .main-content {
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                margin: 20px;
+            }
+            .nav-link {
+                display: flex;
+                align-items: center;
+            }
+            .larger-font {
+                font-size: 24px; /* or any desired size */
+            }
+            .chart-container {
+                display: flex;
+                justify-content: space-around;
+            }
+            .chart-wrapper {
+                width: 300px; /* Ajustez cette valeur selon vos besoins */
+                height: 300px; /* Ajustez cette valeur selon vos besoins */
+            }
+            #monthlyDonationsChart {
+                width: 400px; /* Ajustez cette valeur selon vos besoins */
+                height: 200px; /* Ajustez cette valeur selon vos besoins */
+            }
+        </style>
     {% endblock %}
 </head>
 <body>
@@ -33,13 +45,11 @@
     <!-- Main Content -->
     <div class="main-content">
         <main>
-        <!-- Donor Information Header -->
-        <a href="{% url 'PubList' %}" class="nav-link" style="font-size: larger;">
-            <i class="bi bi-journal-richtext" style="margin-left:4%;font-size: larger;">
-                <span class="badge badge-danger badge-custom-color " style="font-size: larger;"></span>
-            </i>
-        </a>
-    
+            <a href="{% url 'PubList' %}" class="nav-link" style="font-size: larger;">
+                <i class="bi bi-journal-richtext" style="margin-left:4%;font-size: larger;">
+                    <span class="badge badge-danger badge-custom-color " style="font-size: larger;"></span>
+                </i>
+            </a>
             <div class="container mt-5">
                 <div class="row">
                     <div class="col-md-3">
@@ -54,6 +64,136 @@
                         <div class="mb-3"><span class="fw-bold me-2"><i class="fas fa-user me-1"></i>Nom :</span>{{ association.user.first_name }}</div>
                         <div><span class="fw-bold me-2"><i class="fas fa-envelope me-1"></i>Email :</span>{{ association.user.email }}</div>
                     </div>
+                </div>
+            </div>
+            <div>
+                <div class="statistics">
+                    <h2>Statistics</h2>
+                    <div class="chart-container">
+                        <div class="chart-wrapper">
+                            <canvas id="fundingGoalChart"></canvas>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="fundingAmountChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h2>Donations per Month</h2>
+                    <div class="chart-wrapper">
+                        <canvas id="monthlyDonationsChart"></canvas>
+                    </div>
+                    <script>
+                        var ctx = document.getElementById('monthlyDonationsChart').getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: {{ months|safe }},
+                                datasets: [{
+                                    label: 'Donations per Month',
+                                    data: {{ counts|safe }},
+                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                },
+                                categoryPercentage: 0.2,
+                                barSpacing: 0,
+                            }
+                        });
+                    </script>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', (event) => {
+                            const ctx1 = document.getElementById('fundingGoalChart').getContext('2d');
+                            const ctx2 = document.getElementById('fundingAmountChart').getContext('2d');
+                        
+                            const fundingGoalData = {
+                                labels: ['Reached Goal', 'Not Reached Goal'],
+                                datasets: [{
+                                    data: [{{ stats.number_of_funded_publications }}, {{ unfunded_publications }}],
+                                    backgroundColor: ['#ce4a86', '#e9e0e2']
+                                }]
+                            };
+                        
+                            const fundingAmountData = {
+                                labels: ['Total Needed', 'Total Collected'],
+                                datasets: [{
+                                    data: [{{ stats.total_funding_needed }}, {{ stats.total_funding_collected }}],
+                                    backgroundColor: ['#e9e0e2', '#36A2EB']
+                                }]
+                            };
+                        
+                            const fundingGoalChart = new Chart(ctx1, {
+                                type: 'doughnut',
+                                data: fundingGoalData,
+                                options: {
+                                    maintainAspectRatio: false,
+                                    title: {
+                                        display: true,
+                                        text: 'Funding Goal Achievement'
+                                    },
+                                    layout: {
+                                        padding: {
+                                            left: 10,
+                                            right: 10,
+                                            top: 10,
+                                            bottom: 10
+                                        }
+                                    }
+                                }
+                            });
+                        
+                            const fundingAmountChart = new Chart(ctx2, {
+                                type: 'doughnut',
+                                data: fundingAmountData,
+                                options: {
+                                    maintainAspectRatio: false,
+                                    title: {
+                                        display: true,
+                                        text: 'Funding Amounts'
+                                    },
+                                    layout: {
+                                        padding: {
+                                            left: 10,
+                                            right: 10,
+                                            top: 10,
+                                            bottom: 10
+                                        }
+                                    }
+                                }
+                            });
+                        
+                            // Ajouter des événements de souris pour détecter le focus et la sortie du focus
+                            ctx1.canvas.addEventListener('mouseenter', function() {
+                                fundingGoalChart.data.datasets[0].backgroundColor = ['#ce4a86', '#e9e0e2'];
+                                fundingGoalChart.update();
+                            });
+                        
+                            ctx1.canvas.addEventListener('mouseleave', function() {
+                                fundingGoalChart.data.datasets[0].backgroundColor = ['#ce4a86', '#e9e0e2'];
+                                fundingGoalChart.update();
+                            });
+                        
+                            ctx2.canvas.addEventListener('mouseenter', function() {
+                                fundingAmountChart.data.datasets[0].backgroundColor = ['#e9e0e2', '#36A2EB'];
+                                fundingAmountChart.update();
+                            });
+                        
+                            ctx2.canvas.addEventListener('mouseleave', function() {
+                                fundingAmountChart.data.datasets[0].backgroundColor = ['#e9e0e2', '#36A2EB'];
+                                fundingAmountChart.update();
+                            });
+                        });
+                    </script>
                 </div>
             </div>
         </main>

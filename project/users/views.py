@@ -41,6 +41,11 @@ from django.core.exceptions import ValidationError
 from django.http import HttpResponseBadRequest
 from django.contrib.auth import update_session_auth_hash
 from functools import wraps
+from django.db.models import Count
+from django.db.models.functions import ExtractMonth
+import calendar
+from django.db.models.functions import TruncMonth
+from publications.utils import get_funding_statistics 
 
 #
 class HomeView(TemplateView):
@@ -290,7 +295,47 @@ def AssociationSignIn(request):
 def dashboard_association(request):
     user = request.user
     association = Association.objects.filter(user=user).first()
-    return render(request, 'users/dashboard_association.html', {'association': association})
+    publications = Publication.objects.filter(association=association)
+
+    stats =get_funding_statistics(publications)
+    total_dons_all = Publication.calculate_total_dons_all()####total des dons  de tous les publications ou d'une pub 
+    pending_reclamations_count = Reclamation.objects.filter(status='Pending').count()
+    print(stats.keys())
+    if 'number_of_funded_publications' in stats and 'number_of_publications' in stats:
+        # Accédez aux valeurs de `number_of_funded_publications` et `number_of_publications`
+        funded_publications = stats['number_of_funded_publications']
+        total_publications = stats['number_of_publications']
+    else:
+        # Gérez le cas où les clés ne sont pas présentes dans `stats`
+        funded_publications = 0
+        total_publications = 0
+    unfunded_publications=total_publications - funded_publications 
+ 
+
+    donations_per_month = (
+        Don.objects
+        .annotate(month=TruncMonth('date'))
+        .values('month')
+        .annotate(count=Count('id'))
+        .order_by('month')
+    )
+
+    months = [donation['month'].strftime("%B %Y") for donation in donations_per_month]
+    counts = [donation['count'] for donation in donations_per_month]
+
+
+    context = {
+        'association': association,
+        'publications': publications,
+        'total_dons_all' : total_dons_all,
+        'pending_reclamations_count': pending_reclamations_count,
+        'stats':stats,
+        'unfunded_publications':unfunded_publications,
+        'donations_per_month': donations_per_month,
+        'months': months,
+        'counts': counts,
+    }
+    return render(request, 'users/dashboard_association.html', context)
 
 
 def associations(request):
@@ -303,6 +348,7 @@ def associations(request):
         
     }
     return render (request,'users/associations.html',context)
+
 
 #####################/ Association /#############################
 
@@ -370,11 +416,33 @@ def dashboardAdmin(request):
     donors=Donor.objects.all()
     categories= Category.objects.all()
     alert = Alert.objects.first()
-    
+    stats =get_funding_statistics(pub)
     total_dons_all = Publication.calculate_total_dons_all()####total des dons  de tous les publications ou d'une pub 
     pending_reclamations_count = Reclamation.objects.filter(status='Pending').count()
+    print(stats.keys())
+    if 'number_of_funded_publications' in stats and 'number_of_publications' in stats:
+        # Accédez aux valeurs de `number_of_funded_publications` et `number_of_publications`
+        funded_publications = stats['number_of_funded_publications']
+        total_publications = stats['number_of_publications']
+    else:
+        # Gérez le cas où les clés ne sont pas présentes dans `stats`
+        funded_publications = 0
+        total_publications = 0
+    unfunded_publications=total_publications - funded_publications 
 
 
+    donations_per_month = (
+        Don.objects
+        .annotate(month=TruncMonth('date'))
+        .values('month')
+        .annotate(count=Count('id'))
+        .order_by('month')
+    )
+
+    months = [donation['month'].strftime("%B %Y") for donation in donations_per_month]
+    counts = [donation['count'] for donation in donations_per_month]
+
+  
     context = {
         'admin': admin,
         'donors': donors,
@@ -386,7 +454,12 @@ def dashboardAdmin(request):
         'total_dons_all' : total_dons_all,
         'categories': categories,
         'pending_reclamations_count': pending_reclamations_count,
-        'alert': alert
+        'alert': alert,
+        'stats':stats,
+        'unfunded_publications':unfunded_publications,
+        'donations_per_month': donations_per_month,
+        'months': months,
+        'counts': counts,
 
     }
     return render(request, 'users/dashboardAdmin.html', context)
