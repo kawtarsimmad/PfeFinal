@@ -1,5 +1,7 @@
 {% extends 'sidebar.html' %}
 {% load static %}
+{% load custom_filters %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -91,6 +93,12 @@
             color: #f6c343 !important; /* Adjust text color as needed */
             background-color: rgba(246, 195, 67, 0.1); /* Adjust background color as needed */
         }
+        .message-content-limited {
+            max-height: 100px; /* Adjust the maximum height as needed */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     </style>
     {% endblock %}
 </head>
@@ -117,7 +125,7 @@
         <div class="col-lg-12">
             <div class="">
                 <div class="table-responsive">
-                    <table class="table project-list-table table-nowrap align-middle table-borderless">
+                    <table class="table project-list-table  align-middle table-borderless">
                         <thead>
                                 <tr>
                                     <th>Sender Name</th>
@@ -134,19 +142,19 @@
                                 <tr>
                                     <td>{{ email.sender_name }}</td>
                                     <td>{{ email.sender_email }}</td>
-                                    <td>{{ email.association }}</td>
+                                    <td>{{ email.association.user.first_name }}</td>
                                     <td>{{ email.subject }}</td>
                                     <td>
-                                        <div class="message-content" id="message-content-{{ email.id }}">{{ email.message_content }}</div>
-                                        <div class="btn-toggle-message" onclick="toggleMessage({{ email.id }})">Show more</div>
+                                        <div class="message-content" id="message-content-{{ email.id }}" data-full-content="{{ email.message_content }}">{{ email.message_content|truncatechars:50 }}</div>
+                                        <span class="btn-toggle-message" onclick="toggleMessage({{ email.id }})">Show more</span>
                                     </td>
                                     <td>{{ email.created_at }}</td>
                                     <td>
                                         <form method="post">
                                             {% csrf_token %}
                                             <input type="hidden" name="email_id" value="{{ email.id }}">
-                                            <button type="submit" name="action" value="approve" class="badge badge-soft-success"><i class="bi bi-check-circle"></button>
-                                            <button type="submit" name="action" value="deny" class="badge badge-soft-danger"><i class="fas fa-trash"></button>
+                                            <button type="submit" name="action" value="approve" class="badge badge-soft-success" style="border: none;">approve</button>
+                                            <button type="submit" name="action" value="deny" class="badge badge-soft-danger" style="border: none;">deny</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -167,7 +175,7 @@
                 <div class="col-lg-12">
                     <div class="">
                         <div class="table-responsive">
-                            <table class="table project-list-table table-nowrap align-middle table-borderless">
+                            <table class="table project-list-table align-middle table-borderless">
                                 <thead>
                                         <tr>
                                         <th>Sender Name</th>
@@ -187,7 +195,7 @@
                                     <td>{{ email.association.user.first_name }}</td>
                                     <td>{{ email.subject }}</td>
                                     <td>
-                                        <div class="message-content" id="message-content-{{ email.id }}">{{ email.message_content }}</div>
+                                        <div class="message-content" id="message-content-{{ email.id }}" data-full-content="{{ email.message_content }}">{{ email.message_content|truncatechars:50 }}</div>
                                         <div class="btn-toggle-message" onclick="toggleMessage({{ email.id }})">Show more</div>
                                     </td>
                                     <td>{{ email.created_at }}</td>
@@ -211,18 +219,32 @@
 
     <script>
         function toggleMessage(id) {
+            console.log('Toggle function called for ID:', id);
             var messageDiv = document.getElementById('message-content-' + id);
-            if (messageDiv.classList.contains('message-content')) {
-                messageDiv.classList.remove('message-content');
-                messageDiv.classList.add('message-content-full');
-                messageDiv.nextElementSibling.textContent = 'Show less';
+            if (messageDiv) {
+                console.log('Found message div:', messageDiv);
+                console.log('Current classes:', messageDiv.className);
+                if (messageDiv.classList.contains('message-content-limited')) {
+                    console.log('Toggling to full content');
+                    messageDiv.classList.remove('message-content-limited');
+                    messageDiv.classList.add('message-content-full');
+                    messageDiv.nextElementSibling.textContent = 'Show less';
+                } else {
+                    console.log('Toggling to limited content');
+                    messageDiv.classList.remove('message-content-full');
+                    messageDiv.classList.add('message-content-limited');
+                    messageDiv.nextElementSibling.textContent = 'Show more';
+                }
+                console.log('Updated classes:', messageDiv.className);
             } else {
-                messageDiv.classList.remove('message-content-full');
-                messageDiv.classList.add('message-content');
-                messageDiv.nextElementSibling.textContent = 'Show more';
+                console.error('Message div not found for ID:', id);
             }
         }
-    </script>
+        
+</script>
+
+    
+    
     {% endblock content %}
 </body>
 </html>

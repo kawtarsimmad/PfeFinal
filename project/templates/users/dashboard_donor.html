@@ -119,30 +119,27 @@
 <body>
 {% block content %}   
 
-    
-        <div class="fixed-hdr">
-            <header class="d-flex align-items-center justify-content-between p-1">
-                <div class="d-flex align-items-center ms-auto " style=" margin-right: 20px;">
-                    <a href="{% url 'view_reclamations' %}" class="me-3">
-                        <i class="fas fa-bell">
-                            <span class="badge badge-danger position-absolute top-0 start-100 translate-middle badge-custom-color" id="reclamationsCount">{{  resolu_reclamations_count}}</span>
-                        </i>
-                    </a>
-                    <div class="user-info d-flex align-items-center">
-                        <span class="ms-2 me-2" style="font-family: Times New Roman, serif; color:black;">{{ donor.user.first_name }}</span>
-                        {% if donor.image %}
-                        <a class="user-image-container " href="{% url 'dashboard_donor' %}" style="max-width: 30px;">
-                            <img src="{{ donor.image.url }}" alt="User Image" class="img-fluid rounded-circle">
-                        </a>
-                        {% else %}
-                            <i class="fas fa-user-circle fa-2x text-secondary" ></i>
-                        {% endif %}
-                    </div>    
-                </div>
-            </header>
-        </div>
         <div class="main-content">
             <div class="container mt-5">
+                <header class="d-flex align-items-center justify-content-between p-1">
+                    <div class="d-flex align-items-center ms-auto " style=" margin-right: 20px;">
+                        <a href="{% url 'view_reclamations' %}" class="me-3">
+                            <i class="fas fa-bell">
+                                <span class="badge badge-danger position-absolute top-0 start-100 translate-middle badge-custom-color" id="reclamationsCount">{{  resolu_reclamations_count}}</span>
+                            </i>
+                        </a>
+                        <div class="user-info d-flex align-items-center">
+                            <span class="ms-2 me-2" style="font-family: Times New Roman, serif; color:black;">{{ donor.user.first_name }}</span>
+                            {% if donor.image %}
+                            <a class="user-image-container " href="{% url 'dashboard_donor' %}" style="max-width: 30px;">
+                                <img src="{{ donor.image.url }}" alt="User Image" class="img-fluid rounded-circle">
+                            </a>
+                            {% else %}
+                                <i class="fas fa-user-circle fa-2x text-secondary" ></i>
+                            {% endif %}
+                        </div>    
+                    </div>
+                </header>
                 <section id="cnt" class="cnt">
                     <div class="row flex-container">
                         
