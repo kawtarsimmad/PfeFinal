@@ -116,7 +116,8 @@
         .fixed-hdr {
             position: fixed;
             top: 0;
-            width: 80%;
+            padding-right: 5 px;
+            width: 100%;
             height:8%;
             background-color: white;
             z-index: 1000;
@@ -128,50 +129,49 @@
    {% endblock %}
 </head>
 <body>
-    <div class="fixed-hdr">
-        <header class="d-flex align-items-center justify-content-between p-1">
-            <div class="d-flex align-items-center p-1">
-                    <div class="form-check form-switch"style="margin-right:20px;">
-                        <form action="{% url 'activate_alert' %}" method="post">
-                            {% csrf_token %}
-                            <input class="form-check-input" type="checkbox" role="switch" id="alertSwitch" name="alertSwitch" onchange="this.form.submit()" {% if alert and alert.is_active %}checked{% endif %} />
-                            <label class="form-check-label" for="alertSwitch">Activer l'alerte</label>
-                        </form>
-                    </div>
-                    <div class="form-check form-switch">
-                        <form action="{% url 'desactivate_alert' %}" method="post">
-                            {% csrf_token %}
-                            <input class="form-check-input" type="checkbox" role="switch" id="alertSwitchOff" name="alertSwitchOff" onchange="this.form.submit()" {% if alert and not alert.is_active %}checked{% endif %} />
-                            <label class="form-check-label" for="alertSwitchOff">Désactiver l'alerte</label>
-                        </form>
-                    </div>
-            </div>
-            <div class="d-flex align-items-center ms-auto " style=" margin-right: 10px;">
-                    <a href="{% url 'reclamations' %}" class="me-3">
-                        <i class="fas fa-bell">
-                            <span class="badge badge-danger position-absolute top-0 start-100 translate-middle badge-custom-color" id="reclamationsCount">{{ pending_reclamations_count }}</span>
-                        </i>
-                    </a>
-                    <a href="{% url 'manage_pending_emails' %}" class="me-3">
-                        <i class="fas fa-envelope">
-                            <span class="badge badge-danger position-absolute top-0 start-100 translate-middle " id="PendingCount">{{ pending_count }}</span>
-                        </i>
-                    </a>
-                <div class="user-info d-flex align-items-center">
-                    <span class="ms-2 me-2" style="font-family: Times New Roman, serif; color:black;">{{ admin.user.first_name }}</span>
-                    {% if admin.image %}
-                    <a class="user-image-container " href="{% url 'dashboardAdmin' %}" style="max-width: 30px;">
-                        <img src="{{ admin.image.url }}" alt="User Image" class="img-fluid rounded-circle">
-                    </a>
-                    {% else %}
-                        <i class="fas fa-user-circle fa-2x text-secondary" ></i>
-                    {% endif %}
-                </div>    
-            </div>
-        </header>
-    </div>
+    
     <div class="main-content">
             <div class="container mt-5">
+                <header class="d-flex align-items-center justify-content-between p-1">
+                    <div class="d-flex align-items-center p-1">
+                            <div class="form-check form-switch"style="margin-right:20px;">
+                                <form action="{% url 'activate_alert' %}" method="post">
+                                    {% csrf_token %}
+                                    <input class="form-check-input" type="checkbox" role="switch" id="alertSwitch" name="alertSwitch" onchange="this.form.submit()" {% if alert and alert.is_active %}checked{% endif %} />
+                                    <label class="form-check-label" for="alertSwitch">Activer l'alerte</label>
+                                </form>
+                            </div>
+                            <div class="form-check form-switch">
+                                <form action="{% url 'desactivate_alert' %}" method="post">
+                                    {% csrf_token %}
+                                    <input class="form-check-input" type="checkbox" role="switch" id="alertSwitchOff" name="alertSwitchOff" onchange="this.form.submit()" {% if alert and not alert.is_active %}checked{% endif %} />
+                                    <label class="form-check-label" for="alertSwitchOff">Désactiver l'alerte</label>
+                                </form>
+                            </div>
+                    </div>
+                    <div class="d-flex align-items-center ms-auto " style=" margin-right: 10px;">
+                            <a href="{% url 'reclamations' %}" class="me-3">
+                                <i class="fas fa-bell">
+                                    <span class="badge badge-danger position-absolute top-0 start-100 translate-middle badge-custom-color" id="reclamationsCount">{{ pending_reclamations_count }}</span>
+                                </i>
+                            </a>
+                            <a href="{% url 'manage_pending_emails' %}" class="me-3">
+                                <i class="fas fa-envelope">
+                                    <span class="badge badge-danger position-absolute top-0 start-100 translate-middle " id="PendingCount">{{ pending_count }}</span>
+                                </i>
+                            </a>
+                        <div class="user-info d-flex align-items-center">
+                            <span class="ms-2 me-2" style="font-family: Times New Roman, serif; color:black;">{{ admin.user.first_name }}</span>
+                            {% if admin.image %}
+                            <a class="user-image-container " href="{% url 'dashboardAdmin' %}" style="max-width: 30px;">
+                                <img src="{{ admin.image.url }}" alt="User Image" class="img-fluid rounded-circle">
+                            </a>
+                            {% else %}
+                                <i class="fas fa-user-circle fa-2x text-secondary" ></i>
+                            {% endif %}
+                        </div>    
+                    </div>
+                </header>
                 <section id="cnt" class="cnt">
                     <div class="row flex-container">
                         <div class="count-box">
