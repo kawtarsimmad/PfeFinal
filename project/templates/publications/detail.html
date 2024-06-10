@@ -373,7 +373,7 @@
                                 <li class="list-group-item"><strong>Date:</strong> {{ publication.date|date:"j F Y" }}</li>
                                 <li class="list-group-item"><strong>Time:</strong> {{ publication.date.time }}</li>
                                 <li class="list-group-item"><strong>Category:</strong> {{ publication.category }}</li>
-                                <li class="list-group-item"><strong>Objectif:</strong> {{ publication.montant }}$</li>
+                                <li class="list-group-item"><strong>Goal:</strong> {{ publication.montant }}$</li>
                                 <li class="list-group-item">
                                     <div class="progress">
                                         <div class="progress-bar" role="progressbar"
@@ -383,7 +383,7 @@
                                         </div>
                                     </div>
                                     {% if publication.Montant_rest > 0 %}
-                                    <div style="font-style: italic; text-decoration: underline;"><strong>Montant restant
+                                    <div style="font-style: italic; text-decoration: underline;"><strong>Amount Remaining
                                             {{ publication.Montant_rest|floatformat:2 }}$</strong></div>
                                     {% else %}
                                     <div style="font-style: italic; text-decoration: underline;"><strong></strong>
@@ -394,7 +394,7 @@
                                     {% if publication.Montant_rest > 0 %}
                                     <div class="widget-button d-flex justify-content-between">
                                         <div class="half-width">
-                                            <a href="{% url 'faire_don' publication.id %}" class="btn" style="background-color:#5d7990; width: 98%; color: white;">Faire un Don</a>
+                                            <a href="{% url 'faire_don' publication.id %}" class="btn" style="background-color:#5d7990; width: 98%; color: white;">Donate</a>
                                         </div>
                                         <div class="half-width">
                                             <button class="btn-share" data-bs-toggle="modal" data-bs-target="#shareModal">Share Event</button>
