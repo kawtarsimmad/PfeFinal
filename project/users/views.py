@@ -175,42 +175,49 @@ def DonorSignIn(request):
  
 
 
+from django.db.models import Sum, F ,Count
+from django.db.models.functions import ExtractMonth, ExtractYear,TruncMonth
 @login_required(login_url="")
 def dashboard_donor(request):
     user = request.user
     donor = Donor.objects.filter(user=user).first()
-    association = Association.objects.filter()
+    association = Association.objects.all()
 
     if user.is_authenticated:
         nombre_dons = Don.objects.filter(user=user, est_paye=True).count()
     else:
         nombre_dons = 0 
 
-    somme_dons_effectues = Don.objects.filter(user=request.user, est_paye=True).aggregate(total=Sum('montantDons'))['total']
+    somme_dons_effectues = Don.objects.filter(user=user, est_paye=True).aggregate(total=Sum('montantDons'))['total']
     pending_reclamations_count = Reclamation.objects.filter(status='Pending').count()
     resolu_reclamations_count = Reclamation.objects.exclude(status='Pending').count()
+    nombre_evenements_participes = Event.objects.filter(attendees=user).count()
+    nombre_reclamations_creees = Reclamation.objects.filter(user=user).count()
 
-    nombre_evenements_participes = Event.objects.filter(attendees=request.user).count()
-    nombre_reclamations_creees = Reclamation.objects.filter(user=request.user).count()
-
-    dons_non_payes = Don.objects.filter(user=request.user, est_paye=True).order_by('-date')[:5]
-
-
-    donations = Don.objects.filter(user=request.user)
-    monthly_donations = donations.annotate(month=TruncMonth('date')).values('month').annotate(total_donations=Count('id')).order_by('month')
-
+    # Agréger les dons par mois
+    dons_mensuels = Don.objects.filter(user=user, est_paye=True) \
+                        .annotate(month=ExtractMonth('date'), year=ExtractYear('date')) \
+                        .values('year', 'month') \
+                        .annotate(total=Sum('montantDons')) \
+                        .order_by('year', 'month')
+    
+    nombre_dons_mensuels = Don.objects.filter(user=user, est_paye=True) \
+                            .annotate(month=ExtractMonth('date'), year=ExtractYear('date')) \
+                            .values('year', 'month') \
+                            .annotate(count=Count('id')) \
+                            .order_by('year', 'month')
 
     context = {
-        'nombre_dons':nombre_dons,
-        'somme_dons_effectues':somme_dons_effectues,
+        'nombre_dons': nombre_dons,
+        'somme_dons_effectues': somme_dons_effectues,
         'donor': donor,
-        'pending_reclamations_count':pending_reclamations_count,
-        'resolu_reclamations_count':resolu_reclamations_count,
-        'nombre_evenements_participes':nombre_evenements_participes,
-        'nombre_reclamations_creees':nombre_reclamations_creees,
-        'dons_non_payes':dons_non_payes,
-        'association':association,
-        'monthly_donations': monthly_donations,
+        'pending_reclamations_count': pending_reclamations_count,
+        'resolu_reclamations_count': resolu_reclamations_count,
+        'nombre_evenements_participes': nombre_evenements_participes,
+        'nombre_reclamations_creees': nombre_reclamations_creees,
+        'association': association,
+        'dons_mensuels': dons_mensuels,  
+        'nombre_dons_mensuels':nombre_dons_mensuels,
     }
     return render(request, 'users/dashboard_donor.html', context)
 

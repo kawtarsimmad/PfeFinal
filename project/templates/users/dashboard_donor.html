@@ -4,6 +4,8 @@
 <html lang="en">
 <head>
     {% block extra_styles %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
         <style>  
             body {
                 font-family: Arial, sans-serif;
@@ -15,7 +17,6 @@
                 background-color: #fff;
                 border-radius: 8px;
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                margin: 20px;
             }
             .nav-link {
                 display: flex;
@@ -25,7 +26,7 @@
                 font-size: 24px; /* or any desired size */
             }
             .cnt {
-                padding: 10px 0; 
+                padding: 30px 30px; 
             }
             .don-box{
                 width: 90%;
@@ -37,6 +38,7 @@
                 transition: all 0.3s ease; 
                 margin: 10px; 
             }
+            
 
             .count-box {
                 flex: 1;
@@ -62,28 +64,33 @@
             }
         
             .count-box span {
-                display: block; /* Make the count number a block element */
-                font-size: 24px; /* Count number font size */
-                font-weight: 700; /* Count number font weight */
-                color: #343a40; /* Count number color */
-                margin-bottom: 5px; /* Bottom margin for the count number */
+                display: block; 
+                font-size: 24px; 
+                font-weight: 700; 
+                color: #343a40;
+                margin-bottom: 5px; 
             }
         
             .count-box p {
-                font-size: 12px; /* Text size */
-                color: #6c757d; /* Text color */
+                font-size: 12px; 
+                color: #6c757d; 
+            }
+            .statistics{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
             .chart-container {
                 display: flex;
                 justify-content: space-around;
             }
             .chart-wrapper {
-                width: 300px; /* Ajustez cette valeur selon vos besoins */
-                height: 300px; /* Ajustez cette valeur selon vos besoins */
+                width: 450px; 
+                height: 400px; 
             }
             #monthlyDonationsChart {
-                width: 400px; /* Ajustez cette valeur selon vos besoins */
-                height: 200px; /* Ajustez cette valeur selon vos besoins */
+                width: 400px; 
+                height: 200px; 
             }
             .fas.fa-bell {
                 position: relative;
@@ -165,50 +172,91 @@
                         </div>
                     </div>
                 </section>
-                <div class="container mt-5">
+            
+                <div class="statistics">
+                    <h2>Statistics</h2>
                     <div class="row flex-container">
-                        <div class="chart-wrapper">
-                            <div class="chart-wrapper">
-                                <canvas id="monthlyDonationsChart"></canvas>
-                            </div>
-                        </div>
-                        <script>
-                            var ctx = document.getElementById('monthlyDonationsChart').getContext('2d');
-                            var myChart = new Chart(ctx, {
-                                type: 'bar',
-                                data: {
-                                    labels: {{ months|safe }},
-                                    datasets: [{
-                                        label: 'Donations per Month',
-                                        data: {{ counts|safe }},
-                                        backgroundColor: 'rgba(54, 162, 235, 1)',
-                                        
-                                    }]
-                                },
-                                options: {
-                                    maintainAspectRatio: false,
-                                    scales: {
-                                        yAxes: [{
-                                            ticks: {
-                                                beginAtZero: true
-                                            }
-                                        }]
-                                    },
-                                    categoryPercentage: 0.2,
-                                    barSpacing: 0,
-                                }
-                            });
-                        </script>
+                    <div class="chart-wrapper">
+                        <canvas id="donsChart"></canvas>    
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="nombreDonsChart"></canvas>    
                     </div>
                 </div>
-                
+                </div>        
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        var ctx = document.getElementById('donsChart').getContext('2d');
+                        var months = [];
+                        var totals = [];
+                        {% for entry in dons_mensuels %}
+                            months.push('{{ entry.year }}-{{ entry.month }}');
+                            totals.push('{{ entry.total }}');
+                        {% endfor %}
+
+                        var chart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: months,
+                                datasets: [{
+                                    label: 'Total des dons ($)',
+                                    data: totals,
+                                    backgroundColor: 'rgba(54, 162, 235, 1)',
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true,
+                                            stepSize: 1
+                                        }
+                                    }]
+                                },
+                                categoryPercentage: 0.2,
+                                barSpacing: 0,
+                            }
+                        });
+                        var ctx2 = document.getElementById('nombreDonsChart').getContext('2d');
+                        var months2 = [];
+                        var counts2 = [];
+                        {% for entry in nombre_dons_mensuels %}
+                            months2.push('{{ entry.year }}-{{ entry.month }}');
+                            counts2.push('{{ entry.count }}');
+                        {% endfor %}
+
+                        var chart2 = new Chart(ctx2, {
+                            type: 'bar',
+                            data: {
+                                labels: months2,
+                                datasets: [{
+                                    label: 'Nombre de dons',
+                                    data: counts2,
+                                    backgroundColor: 'rgba(54, 162, 235, 1)',
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true,
+                                            stepSize: 1
+                                        }
+                                    }]
+                                },
+                                categoryPercentage: 0.2,
+                                barSpacing: 0,
+                            }
+                        });
+                    });
+                </script>
             </div>
         </div>
-     
     <!-- Bootstrap JS Bundle (Popper.js included) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock content %}
 
-  </body>
+</body>
 </html>
 
