@@ -17,6 +17,8 @@ from io import BytesIO
 from django.views import View
 from django.utils import timezone
 from django.db.models import F
+from django.contrib.auth.decorators import login_required
+from .decorators import donor_required 
 
 
 
@@ -26,6 +28,8 @@ def dons(request):
     dn=Don.objects.all().order_by(F('date').desc())
     return render(request, 'dons/dons.html',{'dn':dn})
 
+@login_required
+@donor_required 
 def faire_don(request,  publication_id=None, association_id=None):
     publication = None
     association = None

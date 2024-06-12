@@ -7,6 +7,7 @@ from .models import Event
 from .forms import EventForm
 from publications.models import Publication
 from django.utils import timezone
+from .decorators import donor_required 
 
 
 
@@ -61,7 +62,7 @@ def create_event(request):
         form = EventForm()
     
     return render(request, 'events/create_event.html', {'form': form,'association':association,'donor':donor})
-
+@donor_required 
 def participate_event(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     

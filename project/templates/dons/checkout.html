@@ -58,7 +58,7 @@
         <div class="card">
             <div class="card-body">
                 <h6 class="card-title">Payment Summary</h6>
-                {% if publication %}
+                {% if don.publication %}
                     <div class="d-flex justify-content-between mb-1 small">
                         <span>Post</span> <span>{{ don.publication.titre }}</span>
                     </div>
@@ -73,7 +73,7 @@
                     </div>                        
                     <hr>
                 {%endif%}
-                {% if association %}
+                {% if don.association %}
                     <div class="d-flex justify-content-between mb-1 small">
                         <span>Association:</span> <span>{{ don.association.user.first_name }}</span>
                     </div>
