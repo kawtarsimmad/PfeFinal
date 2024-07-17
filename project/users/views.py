@@ -189,8 +189,8 @@ def dashboard_donor(request):
         nombre_dons = 0 
 
     somme_dons_effectues = Don.objects.filter(user=user, est_paye=True).aggregate(total=Sum('montantDons'))['total']
-    pending_reclamations_count = Reclamation.objects.filter(status='Pending').count()
-    resolu_reclamations_count = Reclamation.objects.exclude(status='Pending').count()
+    pending_reclamations_count = Reclamation.objects.filter(user=user,status='Pending').count()
+    resolu_reclamations_count = Reclamation.objects.filter(user=user).exclude(status='Pending').count()
     nombre_evenements_participes = Event.objects.filter(attendees=user).count()
     nombre_reclamations_creees = Reclamation.objects.filter(user=user).count()
 
@@ -339,9 +339,9 @@ def dashboard_association(request):
     publications = Publication.objects.filter(association=association)
 
     stats =get_funding_statistics(publications)
-    total_dons_all = Publication.calculate_total_dons_all()####total des dons  de tous les publications ou d'une pub 
-    pending_reclamations_count = Reclamation.objects.filter(status='Pending').count()
-    resolu_reclamations_count = Reclamation.objects.exclude(status='Pending').count()
+    total_dons_all = Publication.calculate_total_dons_all()
+    pending_reclamations_count = Reclamation.objects.filter(user=user,status='Pending').count()
+    resolu_reclamations_count = Reclamation.objects.filter(user=user).exclude(status='Pending').count()
     print(stats.keys())
     if 'number_of_funded_publications' in stats and 'number_of_publications' in stats:
         # Accédez aux valeurs de `number_of_funded_publications` et `number_of_publications`
@@ -354,7 +354,7 @@ def dashboard_association(request):
     unfunded_publications=total_publications - funded_publications 
 
     donations_per_month = (
-        Don.objects
+        Don.objects.filter(Q(association=association) | Q(publication__association=association), est_paye=True)
         .annotate(month=TruncMonth('date'))
         .values('month')
         .annotate(count=Count('id'))
@@ -365,8 +365,13 @@ def dashboard_association(request):
     counts = [donation['count'] for donation in donations_per_month]
     nombre_reclamations_creees = Reclamation.objects.filter(user=request.user).count()
     nombre_evenements = Event.objects.filter(user=user).count()
-    nombre_dons_effectues = Don.objects.filter(association=association, est_paye=True).count()
+    nombre_dons_effectues = Don.objects.filter(
+        Q(association=association) | Q(publication__association=association), est_paye=True
+    ).count()
 
+    total_dons_collecter = Don.objects.filter(
+        Q(association=association) | Q(publication__association=association), est_paye=True
+    ).aggregate(total=Sum('montantDons'))['total'] or 0
 
     context = {
         'association': association,
@@ -383,6 +388,7 @@ def dashboard_association(request):
         'nombre_evenements':nombre_evenements,
         'nombre_dons_effectues':nombre_dons_effectues,
         'total_publications':total_publications,
+        'total_dons_collecter':total_dons_collecter,
     }
     return render(request, 'users/dashboard_association.html', context)
 

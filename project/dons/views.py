@@ -93,11 +93,11 @@ def viewDons(request):
     return render(request, 'dons/viewDons.html', {'dons': dons,'donor':donor})
 
 def DonsAssociation(request):
-    association=None
+    association=request.user
     if hasattr(request.user, 'dashboard_association'):
         association = request.user.dashboard_association
-    direct_donations = Don.objects.filter(publication__isnull=True).order_by(F('date').desc())
-    publication_donations = Don.objects.filter(publication__isnull=False).order_by(F('date').desc())
+    direct_donations = Don.objects.filter(publication__isnull=True,association=association,).order_by(F('date').desc())
+    publication_donations = Don.objects.filter(publication__isnull=False,publication__association=association).order_by(F('date').desc())
     
     don_tab = list(direct_donations) + list(publication_donations)
     don_tab.sort(key=lambda x: x.date, reverse=True)
